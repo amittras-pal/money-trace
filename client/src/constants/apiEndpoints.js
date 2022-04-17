@@ -4,7 +4,7 @@ const endpoints = {
   USER_DETAILS: "/api/user/",
   CHANGE_PASSWORD: "/api/user/change-password",
   EXPENSE_BY_CATEGORY: "/api/expenses/categories",
-  EXPENSE_FULL_DETAILS: "/api/expenses/full",
+  EXPENSE_BREAKDOWN: "/api/expenses/full",
 };
 
 export default endpoints;

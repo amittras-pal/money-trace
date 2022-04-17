@@ -40,7 +40,6 @@ const getExpensesByCategory = asyncHandler(async (req, res) => {
         _id: 0,
       },
     },
-    { $sort: { name: 1 } },
   ]);
   return res.json({
     message: "Expenses retrieved",

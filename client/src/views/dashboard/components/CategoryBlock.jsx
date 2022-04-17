@@ -17,13 +17,8 @@ function CategoryBlock({ amount, name }) {
           padding: theme.spacing.md,
           width: "100%",
           boxShadow: theme.shadows.sm,
-          borderTop: `2px solid ${theme.colors[CATEGORIES[name].color][8]}`,
           borderRadius: theme.radius.md,
-          backgroundImage: theme.fn.linearGradient(
-            180,
-            theme.colors[CATEGORIES[name].color][2],
-            theme.colors[CATEGORIES[name].color][0]
-          ),
+          backgroundColor: theme.colors[CATEGORIES[name].color][1],
         })}>
         <Group spacing="xs">
           <Icon
@@ -32,7 +27,7 @@ function CategoryBlock({ amount, name }) {
           />
           <Text
             weight={500}
-            size={isMobile ? "xs" : "lg"}
+            size={isMobile ? "sm" : "lg"}
             color={colors[CATEGORIES[name].color][8]}>
             {name}
           </Text>

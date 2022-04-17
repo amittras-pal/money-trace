@@ -1,10 +1,10 @@
 import { Box, Button, Group, Progress, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import React from "react";
 import { AlertTriangle, ChevronDown } from "tabler-icons-react";
 import { MONTHLY_BUDGET } from "../../../constants/appConstants";
 import { percentage, severityColor } from "../../../utils/app.utils";
 import { currencyFormat, monthFormat } from "../../../utils/formatter.utils";
+import NewExpense from "./NewExpense";
 
 function BudgetSummary({ totalSpent, onToggleBreakdown, breakdownVisible }) {
   const isMobile = useMediaQuery("(max-width: 755px)");
@@ -46,7 +46,8 @@ function BudgetSummary({ totalSpent, onToggleBreakdown, breakdownVisible }) {
         value={spentPercentage}
         size="sm"
       />
-      <Group position="apart" mt={8}>
+      <Group position="apart" mt={8} sx={{ alignItems: "center" }}>
+        <NewExpense />
         <Group sx={{ alignItems: "center" }} spacing={0} ml="auto">
           <Text weight={600} color={severityColor(spentPercentage)}>
             Spent: {currencyFormat.format(totalSpent)}

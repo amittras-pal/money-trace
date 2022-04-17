@@ -11,9 +11,9 @@ export const APP_TITLE = "Expense Tracker";
 export const MONTHLY_BUDGET = 25000;
 export const CATEGORIES = {
   Food: { icon: Coffee, color: "green" },
+  Medical: { icon: Stethoscope, color: "red" },
+  Personal: { icon: User, color: "blue" },
+  Shopping: { icon: ShoppingCart, color: "violet" },
   Transport: { icon: Car, color: "yellow" },
   Utilities: { icon: Recharging, color: "orange" },
-  Shopping: { icon: ShoppingCart, color: "violet" },
-  Personal: { icon: User, color: "blue" },
-  Medical: { icon: Stethoscope, color: "red" },
 };

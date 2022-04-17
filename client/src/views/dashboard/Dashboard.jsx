@@ -1,11 +1,11 @@
 import { Grid, Group } from "@mantine/core";
+import { useState } from "react";
+import LoaderOverlay from "../../components/LoaderOverlay";
+import { CATEGORIES } from "../../constants/appConstants";
+import { useExpenseByCategories } from "../../queries/expense.query";
+import BudgetBreakdown from "./components/BudgetBreakdown";
 import BudgetSummary from "./components/BudgetSummary";
 import CategoryBlock from "./components/CategoryBlock";
-import NewExpense from "./components/NewExpense";
-import { useExpenseByCategories } from "../../queries/expense.query";
-import LoaderOverlay from "../../components/LoaderOverlay";
-import { useState } from "react";
-import BudgetBreakdown from "./components/BudgetBreakdown";
 
 function Dashboard() {
   const { data, isLoading } = useExpenseByCategories(
@@ -33,12 +33,18 @@ function Dashboard() {
         <BudgetBreakdown />
       ) : (
         <Grid my={0} mx={-8}>
-          {data?.data?.response?.categories.map((o) => (
-            <CategoryBlock amount={o.value} name={o.name} key={o.name} />
+          {Object.keys(CATEGORIES).map((key) => (
+            <CategoryBlock
+              key={key}
+              name={key}
+              amount={
+                data?.data?.response?.categories?.find((o) => o.name === key)
+                  ?.value || 0
+              }
+            />
           ))}
         </Grid>
       )}
-      <NewExpense />
     </>
   );
 }
