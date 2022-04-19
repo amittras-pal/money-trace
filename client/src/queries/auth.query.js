@@ -1,5 +1,5 @@
-import { useMutation } from "react-query";
-import { loginUser, signUp } from "../api/auth.api";
+import { useMutation, useQuery } from "react-query";
+import { getUserDetails, loginUser, signUp, updateUser } from "../api/auth.api";
 
 export function useLogin(options) {
   return useMutation(loginUser, options);
@@ -7,4 +7,12 @@ export function useLogin(options) {
 
 export function useSignUp(options) {
   return useMutation(signUp, options);
+}
+
+export function useUserData(options) {
+  return useQuery("user-details", getUserDetails, options);
+}
+
+export function useUpdateUser(options) {
+  return useMutation(updateUser, options);
 }

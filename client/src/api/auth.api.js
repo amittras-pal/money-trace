@@ -8,3 +8,11 @@ export function loginUser(formData) {
 export function signUp(formData) {
   return axios.post(endpoints.SIGN_UP, formData);
 }
+
+export function getUserDetails() {
+  return axios.get(endpoints.USER_DETAILS);
+}
+
+export function updateUser(formData) {
+  return axios.put(endpoints.UPDATE_USER, formData);
+}

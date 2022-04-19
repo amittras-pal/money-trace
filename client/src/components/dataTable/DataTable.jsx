@@ -44,35 +44,6 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
 
   return (
     <>
-      {data.length > 0 && (
-        <Group position="apart" mb="md" sx={{ alignItems: "center" }}>
-          <Box>
-            <Text size="xs" color={colors.gray[7]}>
-              <Text component="span" weight={500}>
-                {pageIndex * pageSize + 1}
-              </Text>{" "}
-              to{" "}
-              <Text component="span" weight={500}>
-                {(pageIndex + 1) * pageSize > data.length
-                  ? data.length
-                  : (pageIndex + 1) * pageSize}
-              </Text>{" "}
-              of{" "}
-              <Text component="span" weight={500}>
-                {rows.length}
-              </Text>
-            </Text>
-          </Box>
-          <Pagination
-            total={pageCount}
-            page={pageIndex + 1}
-            color="indigo"
-            spacing={4}
-            size="sm"
-            onChange={(v) => gotoPage(v - 1)}
-          />
-        </Group>
-      )}
       <Box
         p={12}
         sx={{
@@ -94,17 +65,7 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
             <Table verticalSpacing="sm" highlightOnHover {...getTableProps()}>
               <Box component="thead">
                 {headerGroups.map((hGroup) => (
-                  <Box
-                    component="tr"
-                    // sx={{
-                    //   position: "sticky",
-                    //   top: 0,
-                    //   zIndex: 10,
-                    //   backgroundColor: colors.gray[0],
-                    //   boxShadow: shadows.sm,
-                    //   cursor: "pointer",
-                    // }}
-                    {...hGroup.getHeaderGroupProps()}>
+                  <Box component="tr" {...hGroup.getHeaderGroupProps()}>
                     {hGroup.headers.map((col) => (
                       <Box
                         component="th"
@@ -166,6 +127,35 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
           </ScrollArea>
         )}
       </Box>
+      {data.length > 0 && (
+        <Group position="apart" mt={12} sx={{ alignItems: "center" }}>
+          <Box>
+            <Text size="xs" color={colors.gray[7]}>
+              <Text component="span" size="xs" weight={500}>
+                {pageIndex * pageSize + 1}
+              </Text>{" "}
+              to{" "}
+              <Text component="span" size="xs" weight={500}>
+                {(pageIndex + 1) * pageSize > data.length
+                  ? data.length
+                  : (pageIndex + 1) * pageSize}
+              </Text>{" "}
+              of{" "}
+              <Text component="span" size="xs" weight={500}>
+                {rows.length}
+              </Text>
+            </Text>
+          </Box>
+          <Pagination
+            total={pageCount}
+            page={pageIndex + 1}
+            color="indigo"
+            spacing={4}
+            size="sm"
+            onChange={(v) => gotoPage(v - 1)}
+          />
+        </Group>
+      )}
     </>
   );
 }

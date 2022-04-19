@@ -1,18 +1,22 @@
 import {
-  ActionIcon,
   Box,
   createStyles,
   Group,
   Text,
+  ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
-import { Archive, Home, Lock, User } from "tabler-icons-react";
+import { ArrowsDoubleNeSw, Home, Lock, User } from "tabler-icons-react";
 import { isAuthenticated } from "../utils/app.utils";
 
 const menuButtons = [
   { label: "Home", icon: <Home size={20} />, path: "/home" },
-  { label: "Transactions", icon: <Archive size={20} />, path: "/transactions" },
+  {
+    label: "Transactions",
+    icon: <ArrowsDoubleNeSw size={20} />,
+    path: "/transactions",
+  },
   { label: "User", icon: <User size={20} />, path: "/user" },
 ];
 
@@ -72,12 +76,12 @@ function Navigation({ setOpened }) {
           onClick={() => setOpened(false)}
           to={item.path}
           key={item.path}>
-          <ActionIcon
+          <ThemeIcon
             size={30}
             variant={pathname.includes(item.path) ? "light" : "filled"}
             color="indigo">
             {item.icon}
-          </ActionIcon>
+          </ThemeIcon>
           <Text weight="bold">{item.label}</Text>
         </Box>
       ))}

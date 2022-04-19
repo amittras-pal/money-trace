@@ -97,6 +97,29 @@ const getUserDetails = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @description Update user Details
+ * @method PUT /api/user/update
+ * @access private
+ */
+const updateUserDetails = asyncHandler(async (req, res) => {
+  const {
+    userId,
+    body: { update },
+  } = req;
+
+  console.log(update);
+
+  const updated = await User.findByIdAndUpdate(userId, update, {
+    new: true,
+  });
+  const { name, email, defaultBudget, _id } = updated;
+  return res.json({
+    message: "Updated successfully",
+    response: { name, email, defaultBudget, _id },
+  });
+});
+
+/**
  * @description change password
  * @method POST /api/user/change-password
  * @access private
@@ -137,4 +160,5 @@ module.exports = {
   loginUser,
   getUserDetails,
   updatePassword,
+  updateUserDetails,
 };

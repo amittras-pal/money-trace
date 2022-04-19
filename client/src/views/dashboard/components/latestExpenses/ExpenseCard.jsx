@@ -2,12 +2,28 @@ import { ActionIcon, Badge, Box, Group, Menu, Text } from "@mantine/core";
 import { DotsVertical, Edit, Trash } from "tabler-icons-react";
 import { CATEGORIES } from "../../../../constants/appConstants";
 import { currencyFormat } from "../../../../utils/formatter.utils";
+import { useModals } from "@mantine/modals";
+import ExpenseForm from "../ExpenseForm";
 
 function ExpenseCard({ data }) {
   const day = (dateString) => {
     return new Date().getDate() === new Date(dateString).getDate()
       ? "Today"
       : "Yesterday";
+  };
+
+  const { openModal, closeModal } = useModals();
+  const openUpdateModal = (item) => {
+    openModal({
+      children: (
+        <ExpenseForm
+          data={item}
+          onComplete={closeModal}
+          onCancel={closeModal}
+        />
+      ),
+      withCloseButton: false,
+    });
   };
 
   return (
@@ -41,7 +57,11 @@ function ExpenseCard({ data }) {
             <DotsVertical size={16} />
           </ActionIcon>
         }>
-        <Menu.Item icon={<Edit size={14} />}>Edit Expense</Menu.Item>
+        <Menu.Item
+          icon={<Edit size={14} />}
+          onClick={() => openUpdateModal(data)}>
+          Edit Expense
+        </Menu.Item>
         <Menu.Item color="red" icon={<Trash size={14} />}>
           Delete
         </Menu.Item>

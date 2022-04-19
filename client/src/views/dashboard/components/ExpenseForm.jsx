@@ -3,7 +3,7 @@ import { useForm, yupResolver } from "@mantine/form";
 import { DeviceFloppy, X } from "tabler-icons-react";
 import * as yup from "yup";
 
-function NewExpense({ onCancel, onComplete }) {
+function ExpenseForm({ onCancel, onComplete, data }) {
   // const getMinDate = () => {
   //   const date = new Date();
   //   date.setDate(new Date().getDate() - 7);
@@ -12,9 +12,9 @@ function NewExpense({ onCancel, onComplete }) {
 
   const expenseForm = useForm({
     initialValues: {
-      title: "",
-      description: "",
-      amount: 0,
+      title: data?.title || "",
+      description: data?.description || "",
+      amount: data?.amount || 0,
       // olderExpense: false,
       // expenseDate: new Date(),
     },
@@ -52,7 +52,7 @@ function NewExpense({ onCancel, onComplete }) {
       grow
       spacing={0}>
       <Text color="indigo" size="lg" weight={500}>
-        Add a new Expense
+        {data ? "Update Expense" : "Add a new Expense"}
       </Text>
       <Divider color="indigo" my={12} />
       <TextInput
@@ -86,6 +86,7 @@ function NewExpense({ onCancel, onComplete }) {
           type="button"
           size="sm"
           variant="light"
+          color="indigo"
           leftIcon={<X />}
           onClick={onCancel}>
           Cancel
@@ -94,6 +95,7 @@ function NewExpense({ onCancel, onComplete }) {
           type="submit"
           size="sm"
           variant="filled"
+          color="indigo"
           leftIcon={<DeviceFloppy />}>
           Save
         </Button>
@@ -102,4 +104,4 @@ function NewExpense({ onCancel, onComplete }) {
   );
 }
 
-export default NewExpense;
+export default ExpenseForm;

@@ -1,26 +1,13 @@
-import {
-  ActionIcon,
-  Badge,
-  Group,
-  Menu,
-  Text,
-  ThemeIcon,
-  Tooltip,
-} from "@mantine/core";
+import { Badge, Group, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import {
-  Calendar,
-  DotsVertical,
-  Edit,
-  InfoCircle,
-  Trash,
-} from "tabler-icons-react";
+import { Calendar, InfoCircle } from "tabler-icons-react";
 import DataTable from "../../components/dataTable/DataTable";
 import LoaderOverlay from "../../components/LoaderOverlay";
 import { CATEGORIES } from "../../constants/appConstants";
 import { useExpenseBreakdown } from "../../queries/expense.query";
+import { getUserData, percentage, severityColor } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
 function Transactions() {
@@ -31,35 +18,8 @@ function Transactions() {
     timeFrame.getFullYear()
   );
 
-  const columns = useMemo(() => {
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
-    const columnConfigs = [
-      {
-        accessor: "_id",
-        cellClass: "action",
-        disableSoryBy: true,
-        Cell: ({ value = "" }) => (
-          <Menu
-            control={
-              <ActionIcon variant="light">
-                <DotsVertical size={16} />
-              </ActionIcon>
-            }>
-            <Menu.Item
-              onClick={() => console.log(value)}
-              icon={<Edit size={14} />}>
-              Edit
-            </Menu.Item>
-            <Menu.Item
-              onClick={() => console.log(value)}
-              color="red"
-              icon={<Trash size={14} />}>
-              Delete
-            </Menu.Item>
-          </Menu>
-        ),
-      },
+  const columns = useMemo(
+    () => [
       {
         Header: "Title",
         accessor: "title",
@@ -123,19 +83,21 @@ function Transactions() {
           );
         },
       },
-    ];
-    if (
-      currentMonth > timeFrame.getMonth() + 1 ||
-      currentYear > timeFrame.getFullYear()
-    )
-      columnConfigs.splice(0, 1);
-    return columnConfigs;
-  }, [timeFrame]);
+    ],
+    []
+  );
 
   const tableData = useMemo(
     () => expenseList?.data?.response || [],
     [expenseList]
   );
+
+  const spentValueAndPerc = () => {
+    const amount = tableData.reduce((prev, curr) => prev + curr.amount, 0);
+    return { amount, perc: percentage(amount, getUserData().defaultBudget) };
+  };
+
+  const { amount, perc } = spentValueAndPerc();
 
   return (
     <>
@@ -150,8 +112,18 @@ function Transactions() {
         clearable={false}
         initialLevel="month"
         dropdownType="modal"
-        mb="md"
+        mb={12}
       />
+      <Text weight={500} size="xs" mb={12}>
+        Spent{" "}
+        <Text component="span" size="xs" color={severityColor(perc)}>
+          {currencyFormat.format(amount)}
+        </Text>{" "}
+        of{" "}
+        <Text component="span" size="xs">
+          {currencyFormat.format(getUserData().defaultBudget)} .
+        </Text>{" "}
+      </Text>
       {isLoading ? (
         <Group sx={{ height: "60%" }} direction="column" position="center">
           <LoaderOverlay />
@@ -159,7 +131,7 @@ function Transactions() {
       ) : (
         <DataTable
           data={tableData}
-          tableHeight={"calc(100vh - 230px)"}
+          tableHeight={"calc(100vh - 255px)"}
           sortBy={[{ id: "expenseDate", desc: true }]}
           columns={columns}
         />

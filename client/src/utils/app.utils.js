@@ -8,7 +8,6 @@ export function getAuthTokem() {
 
 export function getUserData() {
   const userData = localStorage.getItem("userData");
-  console.log("userData");
   return userData ? JSON.parse(userData) : null;
 }
 

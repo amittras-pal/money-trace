@@ -3,13 +3,13 @@ import { useModals } from "@mantine/modals";
 import { Plus } from "tabler-icons-react";
 import ExpenseSummary from "./components/ExpenseSummary";
 import LastTwoDays from "./components/latestExpenses/LastTwoDays";
-import NewExpense from "./components/NewExpense";
+import ExpenseForm from "./components/ExpenseForm";
 
 function Dashboard() {
   const { openModal, closeModal } = useModals();
   const openExpenseForm = () => {
     openModal({
-      children: <NewExpense onComplete={closeModal} onCancel={closeModal} />,
+      children: <ExpenseForm onComplete={closeModal} onCancel={closeModal} />,
       withCloseButton: false,
     });
   };
