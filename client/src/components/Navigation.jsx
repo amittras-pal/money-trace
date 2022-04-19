@@ -24,16 +24,16 @@ const useNavigationStyles = createStyles((theme) => ({
   navButton: {
     padding: theme.spacing.xs,
     borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.gray[0],
+    backgroundColor: theme.colors.gray[theme.colorScheme === "light" ? 0 : 9],
     width: "100%",
     display: "flex",
     alignItems: "center",
     gap: theme.spacing.sm,
     textDecoration: "none",
-    color: theme.colors.gray[8],
+    color: theme.colors.gray[theme.colorScheme === "light" ? 8 : 5],
     transition: "all o.25s ease-in-out",
     "&:hover": {
-      backgroundColor: theme.colors.gray[3],
+      backgroundColor: theme.colors.gray[theme.colorScheme === "light" ? 3 : 7],
     },
   },
   navButtonActive: {

@@ -69,7 +69,10 @@ function ExpenseSummary() {
       pt={4}
       sx={{
         borderRadius: theme.radius.md,
-        backgroundColor: theme.colors.gray[0],
+        backgroundColor:
+          theme.colorScheme === "light"
+            ? theme.colors.gray[0]
+            : theme.colors.gray[8],
         boxShadow: theme.shadows.sm,
       }}>
       <Group px={16} pt={16} sx={{ width: "100%" }} spacing={8}>
@@ -100,8 +103,8 @@ function ExpenseSummary() {
                 defaultBudget
                   ? spentPercentage >= 100
                     ? "red"
-                    : theme.colors.gray[7]
-                  : theme.colors.gray[7]
+                    : theme.colors.gray[theme.colorScheme === "light" ? 7 : 5]
+                  : theme.colors.gray[theme.colorScheme === "light" ? 7 : 5]
               }>
               {currencyFormat.format(data?.data?.response.total)}
             </Text>
@@ -112,7 +115,7 @@ function ExpenseSummary() {
                 sx={{ alignItems: "center" }}>
                 {spentPercentage >= 95 && (
                   <ThemeIcon color="red" variant="light" size={30}>
-                    <AlertTriangle size={28} />
+                    <AlertTriangle size={20} />
                   </ThemeIcon>
                 )}
                 <Text

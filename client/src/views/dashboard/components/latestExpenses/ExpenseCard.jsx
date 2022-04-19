@@ -35,7 +35,8 @@ function ExpenseCard({ data }) {
       position="apart"
       sx={(theme) => ({
         alignItems: "flex-start",
-        backgroundColor: "#fff",
+        backgroundColor:
+          theme.colorScheme === "light" ? "#fff" : theme.colors.gray[8],
         marginBottom: theme.spacing.sm,
         borderRadius: theme.radius.md,
         boxShadow: theme.shadows.sm,

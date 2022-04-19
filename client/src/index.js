@@ -9,7 +9,8 @@ import App from "./App";
 
 const themeOverrides = {
   loader: "dots",
-  // colorScheme: "dark",
+  colorScheme:
+    new Date().getHours() > 20 && new Date().getHours() < 7 ? "light" : "dark",
 };
 
 const client = new QueryClient();

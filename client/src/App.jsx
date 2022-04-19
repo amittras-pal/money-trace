@@ -28,7 +28,10 @@ function App() {
     <AppShell
       styles={{
         main: {
-          backgroundColor: theme.colors.gray[2],
+          backgroundColor:
+            theme.colorScheme === "light"
+              ? theme.colors.gray[2]
+              : theme.colors.gray[9],
         },
       }}
       navbarOffsetBreakpoint="sm"
@@ -69,7 +72,10 @@ function App() {
 
 const useAppStyles = createStyles((theme) => ({
   header: {
-    backgroundColor: theme.colors.indigo[6],
+    backgroundColor:
+      theme.colorScheme === "light"
+        ? theme.colors.indigo[6]
+        : theme.colors.indigo[9],
     boxShadow: theme.shadows.lg,
     color: theme.colors.gray[0],
     display: "flex",

@@ -13,7 +13,8 @@ function ActionBlock({ children, ...boxProps }) {
       sx={(theme) => ({
         padding: theme.spacing.md,
         borderRadius: theme.radius.md,
-        backgroundColor: "#fff",
+        backgroundColor:
+          theme.colorScheme === "light" ? "#fff" : theme.colors.gray[8],
         boxShadow: theme.shadows.sm,
         marginBottom: theme.spacing.sm,
         width: "100%",
