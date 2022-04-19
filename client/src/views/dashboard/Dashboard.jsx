@@ -1,24 +1,19 @@
-import { ActionIcon } from "@mantine/core";
-import { useModals } from "@mantine/modals";
+import { ActionIcon, Modal } from "@mantine/core";
+import { useState } from "react";
 import { Plus } from "tabler-icons-react";
+import ExpenseForm from "./components/ExpenseForm";
 import ExpenseSummary from "./components/ExpenseSummary";
 import LastTwoDays from "./components/latestExpenses/LastTwoDays";
-import ExpenseForm from "./components/ExpenseForm";
 
 function Dashboard() {
-  const { openModal, closeModal } = useModals();
-  const openExpenseForm = () => {
-    openModal({
-      children: <ExpenseForm onComplete={closeModal} onCancel={closeModal} />,
-      withCloseButton: false,
-    });
-  };
+  const [open, setOpen] = useState(false);
+
   return (
     <>
       <ExpenseSummary />
       <LastTwoDays />
       <ActionIcon
-        onClick={openExpenseForm}
+        onClick={() => setOpen(true)}
         size="xl"
         color="indigo"
         variant="filled"
@@ -30,6 +25,15 @@ function Dashboard() {
         })}>
         <Plus size={24} />
       </ActionIcon>
+      <Modal
+        opened={open}
+        onClose={() => setOpen(false)}
+        withCloseButton={false}>
+        <ExpenseForm
+          onComplete={() => setOpen(false)}
+          onCancel={() => setOpen(false)}
+        />
+      </Modal>
     </>
   );
 }

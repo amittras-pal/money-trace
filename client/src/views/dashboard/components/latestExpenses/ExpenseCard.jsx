@@ -32,6 +32,7 @@ function ExpenseCard({ data }) {
       py={8}
       px={12}
       spacing={8}
+      position="apart"
       sx={(theme) => ({
         alignItems: "flex-start",
         backgroundColor: "#fff",
@@ -51,22 +52,7 @@ function ExpenseCard({ data }) {
           backgroundColor: theme.colors[CATEGORIES[data.category].color][5],
         },
       })}>
-      <Menu
-        control={
-          <ActionIcon variant="hover" color="gray" radius="xl">
-            <DotsVertical size={16} />
-          </ActionIcon>
-        }>
-        <Menu.Item
-          icon={<Edit size={14} />}
-          onClick={() => openUpdateModal(data)}>
-          Edit Expense
-        </Menu.Item>
-        <Menu.Item color="red" icon={<Trash size={14} />}>
-          Delete
-        </Menu.Item>
-      </Menu>
-      <Box>
+      <Box ml={8}>
         <Text weight={500} lineClamp={1}>
           {data.title}
         </Text>
@@ -86,14 +72,30 @@ function ExpenseCard({ data }) {
           <Badge
             color={CATEGORIES[data.category].color}
             variant="filled"
-            size="sm">
+            size="sm"
+            mr={8}>
             {data.category}
           </Badge>
           <Badge color="gray" variant="light" size="sm">
-            {day(data.dataDate)}
+            {day(data.expenseDate)}
           </Badge>
         </Group>
       </Box>
+      <Menu
+        control={
+          <ActionIcon variant="hover" color="gray" radius="xl" mt={4}>
+            <DotsVertical size={16} />
+          </ActionIcon>
+        }>
+        <Menu.Item
+          icon={<Edit size={14} />}
+          onClick={() => openUpdateModal(data)}>
+          Edit Expense
+        </Menu.Item>
+        <Menu.Item color="red" icon={<Trash size={14} />}>
+          Delete
+        </Menu.Item>
+      </Menu>
     </Group>
   );
 }

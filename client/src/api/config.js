@@ -11,14 +11,14 @@ instance.interceptors.request.use(function (config) {
   return config;
 });
 
-// instance.interceptors.response.use(
-//   (res) => res,
-//   (err) => {
-//     if (err.response.status === 401) {
-//       localStorage.clear();
-//       window.location = "/login";
-//     }
-//   }
-// );
+instance.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response.status === 401) {
+      localStorage.clear();
+      window.location = "/login";
+    } else return err;
+  }
+);
 
 export default instance;

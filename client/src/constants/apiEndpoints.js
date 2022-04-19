@@ -7,6 +7,7 @@ const endpoints = {
   EXPENSE_BY_CATEGORY: "/api/expenses/categories",
   EXPENSE_BREAKDOWN: "/api/expenses/full",
   EXPENSE_LAST_2_DAYS: "/api/expenses/last-two-days",
+  EXPENSE_ADD_EDIT_DELETE: "/api/expenses",
 };
 
 export default endpoints;

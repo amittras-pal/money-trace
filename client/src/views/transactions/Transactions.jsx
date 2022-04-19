@@ -25,7 +25,7 @@ function Transactions() {
         accessor: "title",
         width: 10,
         Cell: ({ value = "", row }) => (
-          <Group noWrap spacing={8}>
+          <Group noWrap spacing={8} sx={{ minWidth: "150px" }}>
             {value.slice(0, 40)}
             <Tooltip
               label={row.original?.description}

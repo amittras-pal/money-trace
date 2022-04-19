@@ -1,22 +1,55 @@
-import { Button, Divider, Group, Text, TextInput } from "@mantine/core";
+import { Button, Divider, Group, Select, Text, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
-import { DeviceFloppy, X } from "tabler-icons-react";
+import { Check, DeviceFloppy, X } from "tabler-icons-react";
+import { CATEGORIES } from "../../../constants/appConstants";
 import * as yup from "yup";
+import { forwardRef } from "react";
+import { useCreateExpense } from "../../../queries/expense.query";
+import { useQueryClient } from "react-query";
+import { useNotifications } from "@mantine/notifications";
+import { nonAuthErrorHandler } from "../../../utils/app.utils";
 
-function ExpenseForm({ onCancel, onComplete, data }) {
-  // const getMinDate = () => {
-  //   const date = new Date();
-  //   date.setDate(new Date().getDate() - 7);
-  //   return date;
-  // };
+function ExpenseForm({ onCancel, onComplete, data = null }) {
+  const { showNotification } = useNotifications();
+
+  const client = useQueryClient();
+
+  const onSuccess = ({ data }) => {
+    client.invalidateQueries([
+      "expense-summary",
+      new Date().getMonth() + 1,
+      new Date().getFullYear(),
+    ]);
+    client.invalidateQueries("last-two-days");
+    showNotification({
+      title: data.message,
+      color: "green",
+      icon: <Check />,
+    });
+    onComplete();
+  };
+
+  const onError = (err) => {
+    nonAuthErrorHandler(err, () => {
+      showNotification({
+        title: err.response.message,
+        color: "red",
+        icon: <X />,
+      });
+    });
+  };
+
+  const { mutate: addExpense, isLoading: addingExpense } = useCreateExpense({
+    onSuccess,
+    onError,
+  });
 
   const expenseForm = useForm({
     initialValues: {
       title: data?.title || "",
       description: data?.description || "",
       amount: data?.amount || 0,
-      // olderExpense: false,
-      // expenseDate: new Date(),
+      category: data?.category || "",
     },
     schema: yupResolver(
       yup.object().shape({
@@ -27,6 +60,7 @@ function ExpenseForm({ onCancel, onComplete, data }) {
         description: yup
           .string()
           .max(260, "Description should be 260 characters or less."),
+        category: yup.string().required("Category is required"),
         amount: yup
           .number()
           .min(1, "Amount is required.")
@@ -36,11 +70,43 @@ function ExpenseForm({ onCancel, onComplete, data }) {
   });
 
   const saveExpense = (values) => {
-    if (!values.olderExpense) delete values.expenseDate;
-    delete values.olderExpense;
-    console.log(values);
-    onComplete();
+    if (!data) {
+      addExpense(values);
+    }
   };
+
+  const SelectItem = forwardRef(({ value, ...other }, ref) => (
+    <Group
+      {...other}
+      ref={ref}
+      direction="column"
+      spacing={0}
+      py={6}
+      pr={6}
+      pl={16}
+      sx={(theme) => ({
+        marginBottom: 4,
+        position: "relative",
+        "&:before": {
+          content: "''",
+          height: "85%",
+          width: 4,
+          borderRadius: "4px",
+          position: "absolute",
+          top: "50%",
+          left: 4,
+          transform: "translateY(-50%)",
+          backgroundColor: theme.colors[CATEGORIES[value].color][5],
+        },
+      })}>
+      <Text size="sm" weight={500}>
+        {value}
+      </Text>
+      <Text size="xs" color="dimmed">
+        {CATEGORIES[value].description}
+      </Text>
+    </Group>
+  ));
 
   return (
     <Group
@@ -70,6 +136,15 @@ function ExpenseForm({ onCancel, onComplete, data }) {
         placeholder="Expense Description"
         mb={12}
       />
+      <Select
+        required
+        itemComponent={SelectItem}
+        data={Object.keys(CATEGORIES)}
+        label="Category"
+        placeholder="Select Category"
+        mb={12}
+        {...expenseForm.getInputProps("category")}
+      />
       <TextInput
         {...expenseForm.getInputProps("amount")}
         type="number"
@@ -96,6 +171,7 @@ function ExpenseForm({ onCancel, onComplete, data }) {
           size="sm"
           variant="filled"
           color="indigo"
+          loading={addingExpense}
           leftIcon={<DeviceFloppy />}>
           Save
         </Button>

@@ -12,3 +12,7 @@ export function getExpenseBreakdown(month, year) {
 export function getLast2DaysExpense() {
   return axios.get(endpoints.EXPENSE_LAST_2_DAYS);
 }
+
+export function addExpense(formData) {
+  return axios.post(endpoints.EXPENSE_ADD_EDIT_DELETE, formData);
+}

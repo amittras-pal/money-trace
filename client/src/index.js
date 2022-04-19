@@ -3,24 +3,33 @@ import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
 import React from "react";
 import ReactDOM from "react-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 
 const themeOverrides = {
   loader: "dots",
+  // colorScheme: "dark",
 };
+
+const client = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <MantineProvider withNormalizeCSS withGlobalStyles theme={themeOverrides}>
-        <NotificationsProvider autoClose={5000}>
-          <ModalsProvider>
-            <App />
-          </ModalsProvider>
-        </NotificationsProvider>
-      </MantineProvider>
-    </Router>
+    <QueryClientProvider client={client}>
+      <Router>
+        <MantineProvider
+          withNormalizeCSS
+          withGlobalStyles
+          theme={themeOverrides}>
+          <NotificationsProvider autoClose={5000}>
+            <ModalsProvider>
+              <App />
+            </ModalsProvider>
+          </NotificationsProvider>
+        </MantineProvider>
+      </Router>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

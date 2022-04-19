@@ -106,4 +106,36 @@ const getLastTwoDays = asyncHandler(async (req, res) => {
   return res.json({ message: "Last 2 days expenses", response: expenses });
 });
 
-module.exports = { getExpensesByCategory, getAllExpenses, getLastTwoDays };
+/**
+ * @description add expense
+ * @method POST /api/expenses/
+ * @access private
+ */
+const addExpense = asyncHandler(async (req, res) => {
+  const {
+    userId: user,
+    body: { title, description, amount, category },
+  } = req;
+  console.log(req.body);
+  if (!title || !amount || !category) {
+    res.status(http.BAD_REQUEST);
+    throw new Error("Please provide all amndatory fields.");
+  }
+
+  await Expense.create({
+    title,
+    description,
+    category,
+    amount,
+    user,
+  });
+
+  res.status(http.CREATED).json({ message: "Expense created successfully." });
+});
+
+module.exports = {
+  getExpensesByCategory,
+  getAllExpenses,
+  getLastTwoDays,
+  addExpense,
+};
