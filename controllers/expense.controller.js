@@ -40,6 +40,7 @@ const getExpensesByCategory = asyncHandler(async (req, res) => {
         _id: 0,
       },
     },
+    { $sort: { name: 1 } },
   ]);
   return res.json({
     message: "Expenses retrieved",
@@ -84,4 +85,25 @@ const getAllExpenses = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { getExpensesByCategory, getAllExpenses };
+/**
+ * @description get full expense details for last 2 days
+ * @method GET /api/expenses/last-two-days
+ * @access private
+ */
+const getLastTwoDays = asyncHandler(async (req, res) => {
+  const { userId } = req;
+  const startDate = new Date().setDate(new Date().getDate() - 2);
+  const expenses = await Expense.find(
+    {
+      user: ObjectId(userId),
+      expenseDate: {
+        $gte: startDate,
+      },
+    },
+    { user: 0, __v: 0 },
+    { sort: { expenseDate: -1 } }
+  );
+  return res.json({ message: "Last 2 days expenses", response: expenses });
+});
+
+module.exports = { getExpensesByCategory, getAllExpenses, getLastTwoDays };

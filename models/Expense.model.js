@@ -6,7 +6,7 @@ const expenseSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add a title for the expense"],
       trim: true,
-      maxlength: 80,
+      maxlength: 40,
     },
     description: {
       type: String,
