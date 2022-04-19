@@ -15,11 +15,11 @@ import {
   InfoCircle,
   Trash,
 } from "tabler-icons-react";
-import DataTable from "../../../components/dataTable/DataTable";
-import LoaderOverlay from "../../../components/LoaderOverlay";
-import { CATEGORIES } from "../../../constants/appConstants";
-import { useExpenseBreakdown } from "../../../queries/expense.query";
-import { currencyFormat, datOfMonth } from "../../../utils/formatter.utils";
+import DataTable from "../../components/dataTable/DataTable";
+import LoaderOverlay from "../../components/LoaderOverlay";
+import { CATEGORIES } from "../../constants/appConstants";
+import { useExpenseBreakdown } from "../../queries/expense.query";
+import { currencyFormat, datOfMonth } from "../../utils/formatter.utils";
 
 function BudgetBreakdown() {
   const { data: expenseList, isLoading } = useExpenseBreakdown(

@@ -57,7 +57,7 @@ function ExpenseSummary() {
         backgroundColor: theme.colors.gray[0],
         boxShadow: theme.shadows.lg,
       }}>
-      <Group px={16} sx={{ width: "100%" }} spacing={8}>
+      <Group px={16} pt={16} sx={{ width: "100%" }} spacing={8}>
         <Text size="lg" color="indigo" weight={500}>
           Summary
         </Text>
@@ -114,14 +114,13 @@ function ExpenseSummary() {
             </Text>
           </>
         }
-        sections={
-          spentPercentage >= 100
-            ? [{ value: 100, color: "red" }]
-            : data?.data?.response?.categories.map((item) => ({
-                value: percentage(item.value, MONTHLY_BUDGET),
-                color: theme.colors[CATEGORIES[item.name].color][5],
-              }))
-        }
+        sections={data?.data?.response?.categories.map((item) => ({
+          value: percentage(
+            item.value,
+            spentPercentage >= 100 ? data?.data?.response.total : MONTHLY_BUDGET
+          ),
+          color: theme.colors[CATEGORIES[item.name].color][5],
+        }))}
       />
       <Group
         direction="row"

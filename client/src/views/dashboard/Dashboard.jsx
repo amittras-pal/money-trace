@@ -1,5 +1,5 @@
 import ExpenseSummary from "./components/ExpenseSummary";
-import LastTwoDays from "./components/LastTwoDays";
+import LastTwoDays from "./components/latestExpenses/LastTwoDays";
 
 function Dashboard() {
   // const theme = useMantineTheme();
