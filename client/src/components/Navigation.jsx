@@ -12,7 +12,7 @@ import { isAuthenticated } from "../utils/app.utils";
 
 const menuButtons = [
   { label: "Home", icon: <Home size={20} />, path: "/home" },
-  { label: "Archive", icon: <Archive size={20} />, path: "/archive" },
+  { label: "Transactions", icon: <Archive size={20} />, path: "/transactions" },
   { label: "User", icon: <User size={20} />, path: "/user" },
 ];
 

@@ -4,7 +4,7 @@ import Dashboard from "../views/dashboard/Dashboard";
 import Login from "../views/login/Login";
 import RouteGuard from "./RouteGuard";
 
-const Archived = lazy(() => import("../views/archive/Archived"));
+const Transactions = lazy(() => import("../views/transactions/Transactions"));
 const SignUp = lazy(() => import("../views/signUp/SignUp"));
 const User = lazy(() => import("../views/user/User"));
 
@@ -21,10 +21,10 @@ function RouterOutlet() {
         }
       />
       <Route
-        path="/archive"
+        path="/transactions"
         element={
           <RouteGuard>
-            <Archived />
+            <Transactions />
           </RouteGuard>
         }
       />

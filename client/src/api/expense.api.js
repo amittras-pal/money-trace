@@ -8,3 +8,7 @@ export function getExpenseByCategories(month, year) {
 export function getExpenseBreakdown(month, year) {
   return axios.get(endpoints.EXPENSE_BREAKDOWN, { params: { month, year } });
 }
+
+export function getLast2DaysExpense() {
+  return axios.get(endpoints.EXPENSE_LAST_2_DAYS);
+}

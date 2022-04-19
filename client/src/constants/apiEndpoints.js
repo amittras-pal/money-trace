@@ -5,6 +5,7 @@ const endpoints = {
   CHANGE_PASSWORD: "/api/user/change-password",
   EXPENSE_BY_CATEGORY: "/api/expenses/categories",
   EXPENSE_BREAKDOWN: "/api/expenses/full",
+  EXPENSE_LAST_2_DAYS: "/api/expenses/last-two-days",
 };
 
 export default endpoints;
