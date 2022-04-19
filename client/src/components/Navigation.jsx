@@ -28,10 +28,16 @@ const useNavigationStyles = createStyles((theme) => ({
     textDecoration: "none",
     color: theme.colors.gray[8],
     transition: "all o.25s ease-in-out",
+    "&:hover": {
+      backgroundColor: theme.colors.gray[3],
+    },
   },
   navButtonActive: {
     backgroundColor: theme.colors.indigo[6],
     color: theme.colors.gray[0],
+    "&:hover": {
+      backgroundColor: theme.colors.indigo[6],
+    },
   },
   locked: {
     justifyContent: "center",

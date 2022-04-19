@@ -6,6 +6,12 @@ export function getAuthTokem() {
   return localStorage.getItem("user");
 }
 
+export function getUserData() {
+  const userData = localStorage.getItem("userData");
+  console.log("userData");
+  return userData ? JSON.parse(userData) : null;
+}
+
 export const nonAuthErrorHandler = (error, func) => {
   if (error.response.status !== 401) {
     func();

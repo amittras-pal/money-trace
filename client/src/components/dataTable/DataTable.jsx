@@ -75,7 +75,11 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
       )}
       <Box
         p={12}
-        sx={{ backgroundColor: colors.gray[0], borderRadius: radius.md }}>
+        sx={{
+          backgroundColor: colors.gray[0],
+          borderRadius: radius.md,
+          boxShadow: shadows.md,
+        }}>
         {data.length === 0 ? (
           <Group py={100} position="center" direction="column">
             <ThemeIcon size={200} color="indigo" variant="light" radius="xl">

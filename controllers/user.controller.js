@@ -67,9 +67,12 @@ const loginUser = asyncHandler(async (req, res) => {
     res.json({
       message: `Login Successful! Welcome ${user.name}`,
       response: {
-        _id: user.id,
-        name: user.name,
-        email: user.email,
+        userDetails: {
+          _id: user.id,
+          name: user.name,
+          email: user.email,
+          defaultBudget: user.defaultBudget,
+        },
         token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
           expiresIn: "8h",
         }),

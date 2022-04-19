@@ -24,6 +24,10 @@ function Login() {
   const { mutate: loginUser, isLoading } = useLogin({
     onSuccess: ({ data }) => {
       localStorage.setItem("user", data.response.token);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify(data.response.userDetails)
+      );
       navigate("/home");
       showNotification({
         message: data.message,

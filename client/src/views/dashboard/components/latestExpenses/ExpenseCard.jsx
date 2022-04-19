@@ -1,7 +1,7 @@
 import { ActionIcon, Badge, Box, Group, Menu, Text } from "@mantine/core";
-import React from "react";
 import { DotsVertical, Edit, Trash } from "tabler-icons-react";
 import { CATEGORIES } from "../../../../constants/appConstants";
+import { currencyFormat } from "../../../../utils/formatter.utils";
 
 function ExpenseCard({ data }) {
   const day = (dateString) => {
@@ -17,10 +17,11 @@ function ExpenseCard({ data }) {
       px={12}
       spacing={8}
       sx={(theme) => ({
-        backgroundColor: theme.colors[CATEGORIES[data.category].color][0],
-        marginBottom: theme.spacing.md,
+        alignItems: "flex-start",
+        backgroundColor: "#fff",
+        marginBottom: theme.spacing.sm,
         borderRadius: theme.radius.md,
-        boxShadow: theme.shadows.md,
+        boxShadow: theme.shadows.sm,
         position: "relative",
         "&:before": {
           content: "''",
@@ -52,16 +53,26 @@ function ExpenseCard({ data }) {
         <Text size="sm" color="dimmed">
           {data.description}
         </Text>
-        <Badge
-          color={CATEGORIES[data.category].color}
-          variant="filled"
-          size="sm"
-          mr={8}>
-          {data.category}
-        </Badge>
-        <Badge color="gray" variant="light" size="sm">
-          {day(data.dataDate)}
-        </Badge>
+        <Group spacing={0}>
+          <Text
+            weight={500}
+            lineClamp={1}
+            size="lg"
+            color="gray"
+            my={4}
+            mr={12}>
+            {currencyFormat.format(data.amount)}
+          </Text>
+          <Badge
+            color={CATEGORIES[data.category].color}
+            variant="filled"
+            size="sm">
+            {data.category}
+          </Badge>
+          <Badge color="gray" variant="light" size="sm">
+            {day(data.dataDate)}
+          </Badge>
+        </Group>
       </Box>
     </Group>
   );

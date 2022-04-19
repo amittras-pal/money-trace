@@ -9,11 +9,15 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { Link } from "react-router-dom";
-import { AlertTriangle, ArrowsDoubleNeSw, Plus } from "tabler-icons-react";
+import { AlertTriangle, ArrowsDoubleNeSw } from "tabler-icons-react";
 import LoaderOverlay from "../../../components/LoaderOverlay";
-import { CATEGORIES, MONTHLY_BUDGET } from "../../../constants/appConstants";
+import { CATEGORIES } from "../../../constants/appConstants";
 import { useExpenseSummary } from "../../../queries/expense.query";
-import { percentage, severityColor } from "../../../utils/app.utils";
+import {
+  getUserData,
+  percentage,
+  severityColor,
+} from "../../../utils/app.utils";
 import { currencyFormat } from "../../../utils/formatter.utils";
 
 function ExpenseSummary() {
@@ -25,6 +29,8 @@ function ExpenseSummary() {
     new Date().getFullYear()
   );
 
+  const { defaultBudget = 0 } = getUserData() || {};
+
   const getCategoryAmount = (categoryName) => {
     return currencyFormat.format(
       data?.data?.response.categories.find((o) => o.name === categoryName)
@@ -32,10 +38,7 @@ function ExpenseSummary() {
     );
   };
 
-  const spentPercentage = percentage(
-    data?.data?.response.total,
-    MONTHLY_BUDGET
-  );
+  const spentPercentage = percentage(data?.data?.response.total, defaultBudget);
 
   if (isLoading)
     return (
@@ -43,6 +46,18 @@ function ExpenseSummary() {
         <LoaderOverlay />
       </Group>
     );
+
+  const getChartSections = () => {
+    if (defaultBudget)
+      return data?.data?.response?.categories.map((item) => ({
+        value: percentage(
+          item.value,
+          spentPercentage >= 100 ? data?.data?.response.total : defaultBudget
+        ),
+        color: theme.colors[CATEGORIES[item.name].color][5],
+      }));
+    else return [{ value: 0, color: theme.colors.gray[3] }];
+  };
 
   return (
     <Group
@@ -55,7 +70,7 @@ function ExpenseSummary() {
       sx={{
         borderRadius: theme.radius.md,
         backgroundColor: theme.colors.gray[0],
-        boxShadow: theme.shadows.lg,
+        boxShadow: theme.shadows.sm,
       }}>
       <Group px={16} pt={16} sx={{ width: "100%" }} spacing={8}>
         <Text size="lg" color="indigo" weight={500}>
@@ -63,13 +78,6 @@ function ExpenseSummary() {
         </Text>
         <ActionIcon
           ml="auto"
-          radius="xl"
-          size="lg"
-          color="indigo"
-          variant="filled">
-          <Plus size={20} />
-        </ActionIcon>
-        <ActionIcon
           radius="xl"
           size="lg"
           color="indigo"
@@ -88,46 +96,53 @@ function ExpenseSummary() {
               size="xl"
               weight={700}
               align="center"
-              color={spentPercentage >= 100 ? "red" : theme.colors.gray[7]}>
+              color={
+                defaultBudget
+                  ? spentPercentage >= 100
+                    ? "red"
+                    : theme.colors.gray[7]
+                  : theme.colors.gray[7]
+              }>
               {currencyFormat.format(data?.data?.response.total)}
             </Text>
-            <Group spacing={4} position="center" sx={{ alignItems: "center" }}>
-              {spentPercentage >= 95 && (
-                <ThemeIcon color="red" variant="light" size={30}>
-                  <AlertTriangle size={28} />
-                </ThemeIcon>
-              )}
-              <Text
-                weight={700}
-                align="center"
-                sx={{ fontSize: "1.25rem" }}
-                color={severityColor(spentPercentage)}>
-                {spentPercentage}%
-              </Text>
-            </Group>
+            {defaultBudget > 0 && (
+              <Group
+                spacing={4}
+                position="center"
+                sx={{ alignItems: "center" }}>
+                {spentPercentage >= 95 && (
+                  <ThemeIcon color="red" variant="light" size={30}>
+                    <AlertTriangle size={28} />
+                  </ThemeIcon>
+                )}
+                <Text
+                  weight={700}
+                  align="center"
+                  sx={{ fontSize: "1.25rem" }}
+                  color={severityColor(spentPercentage)}>
+                  {spentPercentage}%
+                </Text>
+              </Group>
+            )}
             <Text
               size="sm"
               align="center"
-              color={theme.colors.gray[5]}
+              color={defaultBudget ? theme.colors.gray[5] : "red"}
               weight={500}>
-              {currencyFormat.format(MONTHLY_BUDGET)}
+              {defaultBudget
+                ? currencyFormat.format(defaultBudget)
+                : "Budget not set."}
             </Text>
           </>
         }
-        sections={data?.data?.response?.categories.map((item) => ({
-          value: percentage(
-            item.value,
-            spentPercentage >= 100 ? data?.data?.response.total : MONTHLY_BUDGET
-          ),
-          color: theme.colors[CATEGORIES[item.name].color][5],
-        }))}
+        sections={getChartSections()}
       />
       <Group
         direction="row"
         spacing="sm"
         position={isMobile ? "center" : "center"}>
         {Object.entries(CATEGORIES).map(([name]) => (
-          <Badge color={CATEGORIES[name].color} variant="light">
+          <Badge color={CATEGORIES[name].color} variant="light" key={name}>
             {name}: {getCategoryAmount(name)}
           </Badge>
         ))}

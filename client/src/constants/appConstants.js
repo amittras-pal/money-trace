@@ -8,7 +8,6 @@ import {
 } from "tabler-icons-react";
 
 export const APP_TITLE = "Expense Tracker";
-export const MONTHLY_BUDGET = 25000;
 export const CATEGORIES = {
   Food: { icon: Coffee, color: "green" },
   Medical: { icon: Stethoscope, color: "red" },
