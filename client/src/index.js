@@ -7,10 +7,14 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 
+// const themeOverrides = {
+//   loader: "dots",
+//   colorScheme:
+//     new Date().getHours() > 20 || new Date().getHours() < 7 ? "dark" : "light",
+// };
 const themeOverrides = {
   loader: "dots",
-  colorScheme:
-    new Date().getHours() > 20 || new Date().getHours() < 7 ? "dark" : "light",
+  colorScheme: "dark",
 };
 
 const client = new QueryClient();

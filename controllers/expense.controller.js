@@ -14,7 +14,7 @@ const getExpensesByCategory = asyncHandler(async (req, res) => {
     query: { month, year },
   } = req;
   const expenses = await Expense.aggregate([
-    { $match: { user: ObjectId(userId) } },
+    { $match: { user: ObjectId(userId), report: null } },
     {
       $addFields: {
         month: { $month: "$expenseDate" },
@@ -62,7 +62,7 @@ const getAllExpenses = asyncHandler(async (req, res) => {
     query: { month, year },
   } = req;
   const expenses = await Expense.aggregate([
-    { $match: { user: ObjectId(userId) } },
+    { $match: { user: ObjectId(userId), report: null } },
     {
       $addFields: {
         month: { $month: "$expenseDate" },
@@ -96,6 +96,7 @@ const getLastTwoDays = asyncHandler(async (req, res) => {
   const expenses = await Expense.find(
     {
       user: ObjectId(userId),
+      report: null,
       expenseDate: {
         $gte: startDate,
       },
@@ -114,7 +115,7 @@ const getLastTwoDays = asyncHandler(async (req, res) => {
 const addExpense = asyncHandler(async (req, res) => {
   const {
     userId: user,
-    body: { title, description, amount, category },
+    body: { title, description, amount, category, report },
   } = req;
   if (!title || !amount || !category) {
     res.status(http.BAD_REQUEST);
@@ -127,6 +128,7 @@ const addExpense = asyncHandler(async (req, res) => {
     category,
     amount,
     user,
+    report,
   });
 
   if (created)
@@ -141,7 +143,7 @@ const addExpense = asyncHandler(async (req, res) => {
 const editExpense = asyncHandler(async (req, res) => {
   const {
     userId: user,
-    body: { _id, title, description, amount, category },
+    body: { _id, title, description, amount, category, report },
   } = req;
 
   if (!title || !amount || !category) {
@@ -154,6 +156,7 @@ const editExpense = asyncHandler(async (req, res) => {
     description,
     amount,
     category,
+    report,
   });
 
   if (updated) res.json({ message: "Expense record updated successfully." });
@@ -170,6 +173,34 @@ const deleteExpense = asyncHandler(async (req, res) => {
   if (deleted) res.json({ message: "Expense record deleted successfylly." });
 });
 
+/**
+ * @description get expenses for a report
+ * @method GET /api/expenses/for-report
+ * @access private
+ */
+const getExpensesForReport = asyncHandler(async (req, res) => {
+  const {
+    userId,
+    query: { reportId },
+  } = req;
+  try {
+    const expenses = await Expense.find(
+      {
+        user: ObjectId(userId),
+        report: ObjectId(reportId),
+      },
+      { __v: 0, user: 0, report: 0 }
+    );
+    res.json({
+      message: "Expenses for report is retrieved",
+      response: expenses,
+    });
+  } catch (error) {
+    res.status(http.INTERNAL_SERVER_ERROR);
+    throw new Error(error);
+  }
+});
+
 module.exports = {
   getExpensesByCategory,
   getAllExpenses,
@@ -177,4 +208,5 @@ module.exports = {
   addExpense,
   editExpense,
   deleteExpense,
+  getExpensesForReport,
 };

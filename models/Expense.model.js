@@ -26,6 +26,11 @@ const expenseSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    report: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Report",
+      default: null,
+    },
     amount: {
       type: Number,
       required: true,
