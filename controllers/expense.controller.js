@@ -116,13 +116,12 @@ const addExpense = asyncHandler(async (req, res) => {
     userId: user,
     body: { title, description, amount, category },
   } = req;
-  console.log(req.body);
   if (!title || !amount || !category) {
     res.status(http.BAD_REQUEST);
     throw new Error("Please provide all amndatory fields.");
   }
 
-  await Expense.create({
+  const created = await Expense.create({
     title,
     description,
     category,
@@ -130,7 +129,45 @@ const addExpense = asyncHandler(async (req, res) => {
     user,
   });
 
-  res.status(http.CREATED).json({ message: "Expense created successfully." });
+  if (created)
+    res.status(http.CREATED).json({ message: "Expense created successfully." });
+});
+
+/**
+ * @description update expense
+ * @method PUT /api/expenses/
+ * @access private
+ */
+const editExpense = asyncHandler(async (req, res) => {
+  const {
+    userId: user,
+    body: { _id, title, description, amount, category },
+  } = req;
+
+  if (!title || !amount || !category) {
+    res.status(http.BAD_REQUEST);
+    throw new Error("Please provide all amndatory fields.");
+  }
+
+  const updated = await Expense.findByIdAndUpdate(_id, {
+    title,
+    description,
+    amount,
+    category,
+  });
+
+  if (updated) res.json({ message: "Expense record updated successfully." });
+});
+
+/**
+ * @description delete expense
+ * @method DELETE /api/expenses/
+ * @access private
+ */
+const deleteExpense = asyncHandler(async (req, res) => {
+  const { expenseId } = req.query;
+  const deleted = await Expense.findByIdAndDelete(expenseId);
+  if (deleted) res.json({ message: "Expense record deleted successfylly." });
 });
 
 module.exports = {
@@ -138,4 +175,6 @@ module.exports = {
   getAllExpenses,
   getLastTwoDays,
   addExpense,
+  editExpense,
+  deleteExpense,
 };

@@ -4,7 +4,10 @@ import { Check, DeviceFloppy, X } from "tabler-icons-react";
 import { CATEGORIES } from "../../../constants/appConstants";
 import * as yup from "yup";
 import { forwardRef } from "react";
-import { useCreateExpense } from "../../../queries/expense.query";
+import {
+  useCreateExpense,
+  useEditExpense,
+} from "../../../queries/expense.query";
 import { useQueryClient } from "react-query";
 import { useNotifications } from "@mantine/notifications";
 import { nonAuthErrorHandler } from "../../../utils/app.utils";
@@ -43,6 +46,10 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
     onSuccess,
     onError,
   });
+  const { mutate: editExpense, isLoading: editingingExpense } = useEditExpense({
+    onSuccess,
+    onError,
+  });
 
   const expenseForm = useForm({
     initialValues: {
@@ -72,6 +79,9 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
   const saveExpense = (values) => {
     if (!data) {
       addExpense(values);
+    } else {
+      values._id = data._id;
+      editExpense(values);
     }
   };
 
@@ -171,7 +181,7 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
           size="sm"
           variant="filled"
           color="indigo"
-          loading={addingExpense}
+          loading={addingExpense || editingingExpense}
           leftIcon={<DeviceFloppy />}>
           Save
         </Button>

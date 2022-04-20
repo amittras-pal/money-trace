@@ -1,29 +1,14 @@
 import { ActionIcon, Badge, Box, Group, Menu, Text } from "@mantine/core";
+// import { useQueryClient } from "react-query";
 import { DotsVertical, Edit, Trash } from "tabler-icons-react";
 import { CATEGORIES } from "../../../../constants/appConstants";
 import { currencyFormat } from "../../../../utils/formatter.utils";
-import { useModals } from "@mantine/modals";
-import ExpenseForm from "../ExpenseForm";
 
-function ExpenseCard({ data }) {
+function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
   const day = (dateString) => {
     return new Date().getDate() === new Date(dateString).getDate()
       ? "Today"
       : "Yesterday";
-  };
-
-  const { openModal, closeModal } = useModals();
-  const openUpdateModal = (item) => {
-    openModal({
-      children: (
-        <ExpenseForm
-          data={item}
-          onComplete={closeModal}
-          onCancel={closeModal}
-        />
-      ),
-      withCloseButton: false,
-    });
   };
 
   return (
@@ -82,21 +67,24 @@ function ExpenseCard({ data }) {
           </Badge>
         </Group>
       </Box>
-      <Menu
-        control={
-          <ActionIcon variant="hover" color="gray" radius="xl" mt={4}>
-            <DotsVertical size={16} />
-          </ActionIcon>
-        }>
-        <Menu.Item
-          icon={<Edit size={14} />}
-          onClick={() => openUpdateModal(data)}>
-          Edit Expense
-        </Menu.Item>
-        <Menu.Item color="red" icon={<Trash size={14} />}>
-          Delete
-        </Menu.Item>
-      </Menu>
+      {!hideMenus && (
+        <Menu
+          control={
+            <ActionIcon variant="hover" color="gray" radius="xl" mt={4}>
+              <DotsVertical size={16} />
+            </ActionIcon>
+          }>
+          <Menu.Item icon={<Edit size={14} />} onClick={() => onEdit(data)}>
+            Edit Expense
+          </Menu.Item>
+          <Menu.Item
+            color="red"
+            icon={<Trash size={14} />}
+            onClick={() => onDelete(data)}>
+            Delete
+          </Menu.Item>
+        </Menu>
+      )}
     </Group>
   );
 }

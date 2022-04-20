@@ -16,3 +16,13 @@ export function getLast2DaysExpense() {
 export function addExpense(formData) {
   return axios.post(endpoints.EXPENSE_ADD_EDIT_DELETE, formData);
 }
+
+export function editExpense(formData) {
+  return axios.put(endpoints.EXPENSE_ADD_EDIT_DELETE, formData);
+}
+
+export function deleteExpense(expenseId) {
+  return axios.delete(endpoints.EXPENSE_ADD_EDIT_DELETE, {
+    params: { expenseId },
+  });
+}

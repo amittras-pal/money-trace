@@ -1,6 +1,8 @@
 import { useMutation, useQuery } from "react-query";
 import {
   addExpense,
+  deleteExpense,
+  editExpense,
   getExpenseBreakdown,
   getExpenseByCategories,
   getLast2DaysExpense,
@@ -28,4 +30,12 @@ export function useLast2DaysExpenses(options) {
 
 export function useCreateExpense(options) {
   return useMutation(addExpense, options);
+}
+
+export function useEditExpense(options) {
+  return useMutation(editExpense, options);
+}
+
+export function useDeleteExpense(options) {
+  return useMutation(deleteExpense, options);
 }

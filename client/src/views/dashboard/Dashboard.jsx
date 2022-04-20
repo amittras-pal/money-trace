@@ -7,9 +7,6 @@ import LastTwoDays from "./components/latestExpenses/LastTwoDays";
 
 function Dashboard() {
   const [open, setOpen] = useState(false);
-  console.log(
-    new Date().getHours() > 20 && new Date().getHours() < 7 ? "light" : "dark"
-  );
   return (
     <>
       <ExpenseSummary />
