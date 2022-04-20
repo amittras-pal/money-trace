@@ -1,29 +1,33 @@
-import { Button, Divider, Group, Select, Text, TextInput } from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { Check, DeviceFloppy, X } from "tabler-icons-react";
-import { CATEGORIES } from "../../../constants/appConstants";
-import * as yup from "yup";
-import { forwardRef } from "react";
 import {
-  useCreateExpense,
-  useEditExpense,
-} from "../../../queries/expense.query";
-import { useQueryClient } from "react-query";
+  Button,
+  Checkbox,
+  Divider,
+  Group,
+  Select,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
 import { useNotifications } from "@mantine/notifications";
-import { nonAuthErrorHandler } from "../../../utils/app.utils";
+import { useEffect } from "react";
+import { useQueryClient } from "react-query";
+import { Check, DeviceFloppy, X } from "tabler-icons-react";
+import * as yup from "yup";
+import { CATEGORIES } from "../../constants/appConstants";
+import { useCreateExpense, useEditExpense } from "../../queries/expense.query";
+import { useReports } from "../../queries/report.query";
+import { nonAuthErrorHandler } from "../../utils/app.utils";
+import { CategorySelectItem, ReportSelectItem } from "./SelectItem";
 
-function ExpenseForm({ onCancel, onComplete, data = null }) {
+function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
   const { showNotification } = useNotifications();
 
   const client = useQueryClient();
 
   const onSuccess = ({ data }) => {
-    client.invalidateQueries([
-      "expense-summary",
-      new Date().getMonth() + 1,
-      new Date().getFullYear(),
-    ]);
-    client.invalidateQueries("last-two-days");
+    for (const query of relatedQueries) {
+      client.invalidateQueries(query);
+    }
     showNotification({
       title: data.message,
       color: "green",
@@ -42,10 +46,17 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
     });
   };
 
+  const {
+    data: reports,
+    isLoading,
+    refetch: getReports,
+  } = useReports(false, { enabled: false });
+
   const { mutate: addExpense, isLoading: addingExpense } = useCreateExpense({
     onSuccess,
     onError,
   });
+
   const { mutate: editExpense, isLoading: editingingExpense } = useEditExpense({
     onSuccess,
     onError,
@@ -57,6 +68,8 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
       description: data?.description || "",
       amount: data?.amount || 0,
       category: data?.category || "",
+      attachToReport: data?.report ? true : false,
+      report: data?.report || "",
     },
     schema: yupResolver(
       yup.object().shape({
@@ -72,11 +85,26 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
           .number()
           .min(1, "Amount is required.")
           .required("Amount is required."),
+        attachToReport: yup.boolean(),
+        report: yup.string().when("attachToReport", {
+          is: true,
+          then: yup.string().required("Report name is required"),
+        }),
       })
     ),
   });
 
+  useEffect(() => {
+    if (expenseForm.values.attachToReport && !reports?.data?.response) {
+      getReports();
+    }
+    // eslint-disable-next-line
+  }, [expenseForm.values.attachToReport, getReports, reports]);
+
   const saveExpense = (values) => {
+    if (!values.attachToReport) {
+      values.report = "";
+    }
     if (!data) {
       addExpense(values);
     } else {
@@ -84,39 +112,6 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
       editExpense(values);
     }
   };
-
-  const SelectItem = forwardRef(({ value, ...other }, ref) => (
-    <Group
-      {...other}
-      ref={ref}
-      direction="column"
-      spacing={0}
-      py={6}
-      pr={6}
-      pl={16}
-      sx={(theme) => ({
-        marginBottom: 4,
-        position: "relative",
-        "&:before": {
-          content: "''",
-          height: "85%",
-          width: 4,
-          borderRadius: "4px",
-          position: "absolute",
-          top: "50%",
-          left: 4,
-          transform: "translateY(-50%)",
-          backgroundColor: theme.colors[CATEGORIES[value].color][5],
-        },
-      })}>
-      <Text size="sm" weight={500}>
-        {value}
-      </Text>
-      <Text size="xs" color="dimmed">
-        {CATEGORIES[value].description}
-      </Text>
-    </Group>
-  ));
 
   return (
     <Group
@@ -148,7 +143,8 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
       />
       <Select
         required
-        itemComponent={SelectItem}
+        transition="fade"
+        itemComponent={CategorySelectItem}
         data={Object.keys(CATEGORIES)}
         label="Category"
         placeholder="Select Category"
@@ -165,6 +161,31 @@ function ExpenseForm({ onCancel, onComplete, data = null }) {
         placeholder="Expense Amount"
         mb={12}
       />
+      <Checkbox
+        {...expenseForm.getInputProps("attachToReport")}
+        checked={expenseForm.values.attachToReport}
+        label="Attach to report"
+        mb={12}
+      />
+      {expenseForm.values.attachToReport && (
+        <Select
+          transition="pop"
+          nothingFound="You do not have any open reports."
+          required
+          itemComponent={ReportSelectItem}
+          data={
+            reports?.data?.response?.map((item) => ({
+              ...item,
+              value: item._id,
+              label: item.name,
+            })) || []
+          }
+          label="Report"
+          placeholder={isLoading ? "Loading Reports" : "Select Report"}
+          mb={12}
+          {...expenseForm.getInputProps("report")}
+        />
+      )}
       <Divider variant="dashed" color="indigo" mb={12} />
       <Group position="right">
         <Button

@@ -5,6 +5,7 @@ import {
   editExpense,
   getExpenseBreakdown,
   getExpenseByCategories,
+  getExpensesForReport,
   getLast2DaysExpense,
 } from "../api/expense.api";
 
@@ -38,4 +39,12 @@ export function useEditExpense(options) {
 
 export function useDeleteExpense(options) {
   return useMutation(deleteExpense, options);
+}
+
+export function useExpensesForReport(reportId, options) {
+  return useQuery(
+    ["expense-for-report", reportId],
+    () => getExpensesForReport(reportId),
+    options
+  );
 }

@@ -1,7 +1,7 @@
 import { ActionIcon, Modal } from "@mantine/core";
 import { useState } from "react";
 import { Plus } from "tabler-icons-react";
-import ExpenseForm from "./components/ExpenseForm";
+import ExpenseForm from "../../components/expenseForm/ExpenseForm";
 import ExpenseSummary from "./components/ExpenseSummary";
 import LastTwoDays from "./components/latestExpenses/LastTwoDays";
 

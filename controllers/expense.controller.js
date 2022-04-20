@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const http = require("../constants/http");
 const Expense = require("../models/Expense.model");
+const Report = require("../models/Report.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 /**
@@ -122,17 +123,25 @@ const addExpense = asyncHandler(async (req, res) => {
     throw new Error("Please provide all amndatory fields.");
   }
 
-  const created = await Expense.create({
+  const expenseBody = {
     title,
     description,
     category,
     amount,
     user,
-    report,
-  });
+  };
+  if (report) expenseBody.report = report;
 
-  if (created)
+  try {
+    await Expense.create(expenseBody);
+    if (report) {
+      await Report.findByIdAndUpdate(report, { $inc: { total: amount } });
+    }
     res.status(http.CREATED).json({ message: "Expense created successfully." });
+  } catch (error) {
+    res.status(http.INTERNAL_SERVER_ERROR);
+    throw new Error(error);
+  }
 });
 
 /**
@@ -151,15 +160,15 @@ const editExpense = asyncHandler(async (req, res) => {
     throw new Error("Please provide all amndatory fields.");
   }
 
-  const updated = await Expense.findByIdAndUpdate(_id, {
-    title,
-    description,
-    amount,
-    category,
-    report,
-  });
+  const targetExpense = await Expense.findById(_id);
+  // const targetReport = await Report.findById(targetExpense.report);
 
-  if (updated) res.json({ message: "Expense record updated successfully." });
+  const expensePayload = { title, description, amount, category };
+  if (report) expensePayload.report = report;
+  else expensePayload.report = null;
+
+  await Expense.findByIdAndUpdate(_id, expensePayload);
+  res.json({ message: "Expense record updated successfully." });
 });
 
 /**
@@ -169,8 +178,13 @@ const editExpense = asyncHandler(async (req, res) => {
  */
 const deleteExpense = asyncHandler(async (req, res) => {
   const { expenseId } = req.query;
-  const deleted = await Expense.findByIdAndDelete(expenseId);
-  if (deleted) res.json({ message: "Expense record deleted successfylly." });
+  try {
+    await Expense.findByIdAndDelete(expenseId);
+    res.json({ message: "Expense record deleted successfylly." });
+  } catch (error) {
+    res.status(http.INTERNAL_SERVER_ERROR);
+    throw new Error(error);
+  }
 });
 
 /**
@@ -189,8 +203,8 @@ const getExpensesForReport = asyncHandler(async (req, res) => {
         user: ObjectId(userId),
         report: ObjectId(reportId),
       },
-      { __v: 0, user: 0, report: 0 }
-    );
+      { __v: 0, user: 0 }
+    ).sort({ expenseDate: -1 });
     res.json({
       message: "Expenses for report is retrieved",
       response: expenses,

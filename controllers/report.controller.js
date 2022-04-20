@@ -20,7 +20,9 @@ const getReports = asyncHandler(async (req, res) => {
   }
 
   try {
-    const reports = await Report.find(query, { __v: 0, user: 0 });
+    const reports = await Report.find(query, { __v: 0, user: 0 }).sort({
+      createdAt: -1,
+    });
     return res.json({
       message: "Reports retrieved successfully.",
       response: reports,
@@ -29,8 +31,6 @@ const getReports = asyncHandler(async (req, res) => {
     res.status(http.INTERNAL_SERVER_ERROR);
     throw new Error(error);
   }
-
-  console.log(query);
 });
 
 /**
@@ -39,7 +39,6 @@ const getReports = asyncHandler(async (req, res) => {
  * @access private
  */
 const createReport = asyncHandler(async (req, res) => {
-  console.log("I'm here.");
   const {
     userId,
     body: { name, description },

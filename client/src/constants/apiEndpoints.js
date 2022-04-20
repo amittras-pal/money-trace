@@ -8,6 +8,8 @@ const endpoints = {
   EXPENSE_BREAKDOWN: "/api/expenses/full",
   EXPENSE_LAST_2_DAYS: "/api/expenses/last-two-days",
   EXPENSE_ADD_EDIT_DELETE: "/api/expenses",
+  EXPENSE_FOR_REPORT: "/api/expenses/for-report",
+  REPORTS: "/api/reports",
 };
 
 export default endpoints;

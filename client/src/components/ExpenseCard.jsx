@@ -1,14 +1,16 @@
 import { ActionIcon, Badge, Box, Group, Menu, Text } from "@mantine/core";
 // import { useQueryClient } from "react-query";
 import { DotsVertical, Edit, Trash } from "tabler-icons-react";
-import { CATEGORIES } from "../../../../constants/appConstants";
-import { currencyFormat } from "../../../../utils/formatter.utils";
+import { CATEGORIES } from "../constants/appConstants";
+import { currencyFormat } from "../utils/formatter.utils";
+import dayjs from "dayjs";
 
 function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
-  const day = (dateString) => {
-    return new Date().getDate() === new Date(dateString).getDate()
-      ? "Today"
-      : "Yesterday";
+  const getDayString = (dateString) => {
+    if (dayjs(dateString).isSame(dayjs(), "date")) return "Today";
+    else if (dayjs(dateString).isSame(dayjs().subtract(1, "day"), "date"))
+      return "Yesterday";
+    else return dayjs(dateString).format("MMM DD, YYYY");
   };
 
   return (
@@ -63,7 +65,7 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
             {data.category}
           </Badge>
           <Badge color="gray" variant="light" size="sm">
-            {day(data.expenseDate)}
+            {getDayString(data.expenseDate)}
           </Badge>
         </Group>
       </Box>
