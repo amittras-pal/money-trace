@@ -107,8 +107,6 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     body: { update },
   } = req;
 
-  console.log(update);
-
   const updated = await User.findByIdAndUpdate(userId, update, {
     new: true,
   });

@@ -18,3 +18,7 @@ export function getReports(all) {
   if (all) params.all = 1;
   return axios.get(endpoints.REPORTS, { params });
 }
+
+export function getReportDetails(reportId) {
+  return axios.get(endpoints.REPORT_DETAILS, { params: { reportId } });
+}

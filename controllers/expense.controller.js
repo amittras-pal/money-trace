@@ -187,34 +187,6 @@ const deleteExpense = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * @description get expenses for a report
- * @method GET /api/expenses/for-report
- * @access private
- */
-const getExpensesForReport = asyncHandler(async (req, res) => {
-  const {
-    userId,
-    query: { reportId },
-  } = req;
-  try {
-    const expenses = await Expense.find(
-      {
-        user: ObjectId(userId),
-        report: ObjectId(reportId),
-      },
-      { __v: 0, user: 0 }
-    ).sort({ expenseDate: -1 });
-    res.json({
-      message: "Expenses for report is retrieved",
-      response: expenses,
-    });
-  } catch (error) {
-    res.status(http.INTERNAL_SERVER_ERROR);
-    throw new Error(error);
-  }
-});
-
 module.exports = {
   getExpensesByCategory,
   getAllExpenses,
@@ -222,5 +194,4 @@ module.exports = {
   addExpense,
   editExpense,
   deleteExpense,
-  getExpensesForReport,
 };

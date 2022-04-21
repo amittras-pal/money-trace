@@ -26,7 +26,3 @@ export function deleteExpense(expenseId) {
     params: { expenseId },
   });
 }
-
-export function getExpensesForReport(reportId) {
-  return axios.get(endpoints.EXPENSE_FOR_REPORT, { params: { reportId } });
-}

@@ -7,13 +7,11 @@ const {
   addExpense,
   editExpense,
   deleteExpense,
-  getExpensesForReport,
 } = require("../controllers/expense.controller");
 
 router.get("/categories", authenticate, getExpensesByCategory);
 router.get("/full", authenticate, getAllExpenses);
 router.get("/last-two-days", authenticate, getLastTwoDays);
-router.get("/for-report", authenticate, getExpensesForReport);
 router
   .route("/")
   .post(authenticate, addExpense)

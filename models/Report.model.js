@@ -6,10 +6,12 @@ const reportSchema = mongoose.Schema(
       type: String,
       required: [true, "Report name is required."],
       trim: true,
+      maxlength: 40,
     },
     description: {
       type: String,
       required: [true, "Report description is required."],
+      maxlength: 260,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

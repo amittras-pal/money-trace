@@ -10,7 +10,7 @@ function LastTwoDays() {
     <>
       <Box mt="md">
         <Text weight={500} color="indigo" mb={0}>
-          Last 2 Days' Expenses
+          Last 2 Days' Transactions
         </Text>
         <Divider variant="dashed" color="indigo" my="md" />
         {isLoading ? (

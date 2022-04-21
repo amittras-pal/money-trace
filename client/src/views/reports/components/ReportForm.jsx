@@ -48,8 +48,14 @@ function ReportForm({ onComplete, onCancel, data = null }) {
     },
     schema: yupResolver(
       yup.object().shape({
-        name: yup.string().required("Report Title is required"),
-        description: yup.string().required("Report Description is required."),
+        name: yup
+          .string()
+          .max(40, "Title should be 40 characters or less.")
+          .required("Report Title is required"),
+        description: yup
+          .string()
+          .max(260, "Description should be 260 characters or less.")
+          .required("Report Description is required."),
       })
     ),
   });

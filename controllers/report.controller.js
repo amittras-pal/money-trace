@@ -34,6 +34,28 @@ const getReports = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @description get details of a single report,
+ * @method GET /api/reports/details
+ * @access private
+ */
+const getReportDetails = asyncHandler(async (req, res) => {
+  const { reportId } = req.query;
+  try {
+    const report = await Report.findById(reportId, { __v: 0, user: 0 });
+    const expenses = await Expense.find({ report: ObjectId(reportId) }).sort({
+      expenseDate: -1,
+    });
+    return res.json({
+      message: "Report details retrieved successfully.",
+      response: { report, expenses },
+    });
+  } catch (error) {
+    res.status(http.INTERNAL_SERVER_ERROR);
+    throw new Error("Something went wrong.");
+  }
+});
+
+/**
  * @description create a new report
  * @method POST /api/reports
  * @access private
@@ -94,4 +116,10 @@ const deleteReport = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getReports, createReport, updateReport, deleteReport };
+module.exports = {
+  getReports,
+  createReport,
+  updateReport,
+  deleteReport,
+  getReportDetails,
+};

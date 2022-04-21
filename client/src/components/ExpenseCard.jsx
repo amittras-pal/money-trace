@@ -1,9 +1,16 @@
-import { ActionIcon, Badge, Box, Group, Menu, Text } from "@mantine/core";
-// import { useQueryClient } from "react-query";
+import {
+  ActionIcon,
+  Badge,
+  Box,
+  Group,
+  Menu,
+  Text,
+  Tooltip,
+} from "@mantine/core";
+import dayjs from "dayjs";
 import { DotsVertical, Edit, Trash } from "tabler-icons-react";
 import { CATEGORIES } from "../constants/appConstants";
 import { currencyFormat } from "../utils/formatter.utils";
-import dayjs from "dayjs";
 
 function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
   const getDayString = (dateString) => {
@@ -11,6 +18,11 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
     else if (dayjs(dateString).isSame(dayjs().subtract(1, "day"), "date"))
       return "Yesterday";
     else return dayjs(dateString).format("MMM DD, YYYY");
+  };
+
+  const isOldReport = () => {
+    const isOld = dayjs(data.expenseDate).isBefore(dayjs().subtract(2, "day"));
+    return isOld;
   };
 
   return (
@@ -69,7 +81,7 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
           </Badge>
         </Group>
       </Box>
-      {!hideMenus && (
+      {!hideMenus && !isOldReport() && (
         <Menu
           control={
             <ActionIcon variant="hover" color="gray" radius="xl" mt={4}>
@@ -77,7 +89,7 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
             </ActionIcon>
           }>
           <Menu.Item icon={<Edit size={14} />} onClick={() => onEdit(data)}>
-            Edit Expense
+            Edit
           </Menu.Item>
           <Menu.Item
             color="red"
@@ -86,6 +98,16 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
             Delete
           </Menu.Item>
         </Menu>
+      )}
+      {!hideMenus && isOldReport() && (
+        <Tooltip
+          position="bottom"
+          placement="end"
+          label="Expense older than 2 days cannot be edited.">
+          <ActionIcon color="gray" variant="hover" disabled>
+            <DotsVertical size={16} />
+          </ActionIcon>
+        </Tooltip>
       )}
     </Group>
   );

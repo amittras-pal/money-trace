@@ -4,9 +4,11 @@ const {
   createReport,
   updateReport,
   deleteReport,
+  getReportDetails,
 } = require("../controllers/report.controller");
 const authenticate = require("../middlewares/auth.middleware");
 
+router.get("/details", authenticate, getReportDetails);
 router
   .route("/")
   .get(authenticate, getReports)

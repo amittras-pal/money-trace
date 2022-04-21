@@ -9,7 +9,11 @@ import { nonAuthErrorHandler } from "../../utils/app.utils";
 import ExpenseCard from "../ExpenseCard";
 import ExpenseForm from "../expenseForm/ExpenseForm";
 
-function ExpensesList({ relatedQueries, expenseList }) {
+function ExpensesList({
+  relatedQueries,
+  expenseList,
+  disableExpenseActions = false,
+}) {
   const client = useQueryClient();
   const [selectedItem, setSelectedItem] = useState(null);
   const { openConfirmModal, closeModal } = useModals();
@@ -70,6 +74,7 @@ function ExpensesList({ relatedQueries, expenseList }) {
           key={expense._id}
           onEdit={setSelectedItem}
           onDelete={confirmDelete}
+          hideMenus={disableExpenseActions}
         />
       ))}
       <Modal

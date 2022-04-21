@@ -89,7 +89,7 @@ function ReportCard({ data, hideMenus, onEdit }) {
       children: (
         <>
           <Text size="lg" weight={700}>
-            Are you sure you want to close the following eport?
+            Are you sure you want to delete the following eport?
           </Text>
           <Box my={12}>
             <ReportCard data={item} hideMenus />

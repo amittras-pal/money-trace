@@ -7,6 +7,11 @@ import LastTwoDays from "./components/latestExpenses/LastTwoDays";
 
 function Dashboard() {
   const [open, setOpen] = useState(false);
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <ExpenseSummary />
@@ -24,13 +29,18 @@ function Dashboard() {
         })}>
         <Plus size={24} />
       </ActionIcon>
-      <Modal
-        opened={open}
-        onClose={() => setOpen(false)}
-        withCloseButton={false}>
+      <Modal opened={open} onClose={closeModal} withCloseButton={false}>
         <ExpenseForm
-          onComplete={() => setOpen(false)}
-          onCancel={() => setOpen(false)}
+          onComplete={closeModal}
+          onCancel={closeModal}
+          relatedQueries={[
+            [
+              "expense-summary",
+              new Date().getMonth() + 1,
+              new Date().getFullYear(),
+            ],
+            "last-two-days",
+          ]}
         />
       </Modal>
     </>

@@ -3,6 +3,7 @@ import {
   createReport,
   deleteReport,
   editReport,
+  getReportDetails,
   getReports,
 } from "../api/reports.api";
 
@@ -20,4 +21,12 @@ export function useCreateReport(options) {
 
 export function useDeleteReport(options) {
   return useMutation(deleteReport, options);
+}
+
+export function useReportDetails(reportId, options) {
+  return useQuery(
+    ["report-details", reportId],
+    () => getReportDetails(reportId),
+    options
+  );
 }
