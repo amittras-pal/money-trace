@@ -6,14 +6,20 @@ import { Calendar, InfoCircle } from "tabler-icons-react";
 import DataTable from "../../components/dataTable/DataTable";
 import LoaderOverlay from "../../components/LoaderOverlay";
 import { CATEGORIES } from "../../constants/appConstants";
+import { useBudget } from "../../queries/budget.query";
 import { useExpenseBreakdown } from "../../queries/expense.query";
-import { getUserData, percentage, severityColor } from "../../utils/app.utils";
+import { percentage, severityColor } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
 function Transactions() {
   const [timeFrame, setTimeFrame] = useState(new Date());
 
   const { data: expenseList, isLoading } = useExpenseBreakdown(
+    timeFrame.getMonth() + 1,
+    timeFrame.getFullYear()
+  );
+
+  const { data: budget } = useBudget(
     timeFrame.getMonth() + 1,
     timeFrame.getFullYear()
   );
@@ -94,13 +100,14 @@ function Transactions() {
 
   const spentValueAndPerc = () => {
     const amount = tableData.reduce((prev, curr) => prev + curr.amount, 0);
-    return { amount, perc: percentage(amount, getUserData().defaultBudget) };
+    return { amount, perc: percentage(amount, budget?.data?.response?.amount) };
   };
 
   const { amount, perc } = spentValueAndPerc();
 
   return (
     <>
+      {/* {!getSavedBudget() && <BudgetMonitor />} */}
       <DatePicker
         value={timeFrame}
         onChange={setTimeFrame}
@@ -121,7 +128,7 @@ function Transactions() {
         </Text>{" "}
         of{" "}
         <Text component="span" size="xs">
-          {currencyFormat.format(getUserData().defaultBudget)} .
+          {currencyFormat.format(budget?.data?.response?.amount || 0)} .
         </Text>{" "}
       </Text>
       {isLoading ? (

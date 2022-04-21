@@ -14,6 +14,10 @@ import Navigation from "./components/Navigation";
 import SignOut from "./components/SignOut";
 import { APP_TITLE } from "./constants/appConstants";
 import RouterOutlet from "./router/RouterOutlet";
+import { BudgetContext } from "./context/budget.context";
+import BudgetMonitor from "./components/budgetMonitor/BudgetMonitor";
+import { isAuthenticated } from "./utils/app.utils";
+import { useLocation } from "react-router-dom";
 
 function App() {
   // Remove this piece of code before committing.
@@ -24,6 +28,13 @@ function App() {
   const theme = useMantineTheme();
   const { classes } = useAppStyles();
   const [opened, setOpened] = useState(false);
+  const [budget, setBudget] = useState(0);
+
+  const { pathname } = useLocation();
+  const isGuardedRoute = () => {
+    return ["/home", "/transactions", "/reports"].includes(pathname);
+  };
+
   return (
     <AppShell
       styles={{
@@ -64,7 +75,10 @@ function App() {
         </Header>
       }>
       <Suspense fallback={<LoaderOverlay />}>
-        <RouterOutlet />
+        <BudgetContext.Provider value={{ budget, setBudget }}>
+          {isGuardedRoute() && !budget && <BudgetMonitor />}
+          <RouterOutlet />
+        </BudgetContext.Provider>
       </Suspense>
     </AppShell>
   );

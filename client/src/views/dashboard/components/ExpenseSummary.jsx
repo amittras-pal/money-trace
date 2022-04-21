@@ -8,16 +8,14 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AlertTriangle, ArrowsDoubleNeSw } from "tabler-icons-react";
 import LoaderOverlay from "../../../components/LoaderOverlay";
 import { CATEGORIES } from "../../../constants/appConstants";
+import { BudgetContext } from "../../../context/budget.context";
 import { useExpenseSummary } from "../../../queries/expense.query";
-import {
-  getUserData,
-  percentage,
-  severityColor,
-} from "../../../utils/app.utils";
+import { percentage, severityColor } from "../../../utils/app.utils";
 import { currencyFormat } from "../../../utils/formatter.utils";
 
 function ExpenseSummary() {
@@ -29,7 +27,9 @@ function ExpenseSummary() {
     new Date().getFullYear()
   );
 
-  const { defaultBudget = 0 } = getUserData() || {};
+  // const defaultBudget = getSavedBudget();
+
+  const { budget: defaultBudget } = useContext(BudgetContext);
 
   const getCategoryAmount = (categoryName) => {
     return currencyFormat.format(

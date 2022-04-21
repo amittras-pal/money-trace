@@ -11,6 +11,12 @@ export function getUserData() {
   return userData ? JSON.parse(userData) : null;
 }
 
+export function getSavedBudget() {
+  const userBudget = localStorage.getItem("userBudget");
+  console.log(userBudget);
+  return userBudget ? JSON.parse(userBudget) : null;
+}
+
 export const nonAuthErrorHandler = (error, func) => {
   if (error.response.status !== 401) {
     func();

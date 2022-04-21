@@ -1,7 +1,7 @@
 const endpoints = {
   SIGN_UP: "/api/user/sign-up",
   LOGIN: "/api/user/login",
-  USER_DETAILS: "/api/user/",
+  USER_DETAILS: "/api/user",
   UPDATE_USER: "/api/user/update",
   CHANGE_PASSWORD: "/api/user/change-password",
   EXPENSE_BY_CATEGORY: "/api/expenses/categories",
@@ -10,6 +10,7 @@ const endpoints = {
   EXPENSE_ADD_EDIT_DELETE: "/api/expenses",
   REPORTS: "/api/reports",
   REPORT_DETAILS: "/api/reports/details",
+  BUDGET: "/api/budget",
 };
 
 export default endpoints;

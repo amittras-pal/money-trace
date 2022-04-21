@@ -19,6 +19,7 @@ app.use("/api/user", require("./routes/user.routes"));
 app.use("/api/categories", require("./routes/category.routes"));
 app.use("/api/expenses", require("./routes/expense.routes"));
 app.use("/api/reports", require("./routes/report.routes"));
+app.use("/api/budget", require("./routes/budget.routes"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

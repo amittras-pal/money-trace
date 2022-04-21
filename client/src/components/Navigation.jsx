@@ -7,7 +7,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowsDoubleNeSw, Home, Lock, Report, User } from "tabler-icons-react";
+import { ArrowsDoubleNeSw, Home, Lock, Report } from "tabler-icons-react";
 import { isAuthenticated } from "../utils/app.utils";
 
 const menuButtons = [
@@ -18,7 +18,7 @@ const menuButtons = [
     path: "/transactions",
   },
   { label: "Reports", icon: <Report size={20} />, path: "/reports" },
-  { label: "User", icon: <User size={20} />, path: "/user" },
+  // { label: "User", icon: <User size={20} />, path: "/user" },
 ];
 
 const useNavigationStyles = createStyles((theme) => ({
