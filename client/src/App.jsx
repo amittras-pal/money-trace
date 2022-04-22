@@ -19,6 +19,7 @@ import { APP_TITLE } from "./constants/appConstants";
 import { BudgetContext } from "./context/budget.context";
 import { ReactComponent as Logo } from "./resources/icons/app-logo.svg";
 import RouterOutlet from "./router/RouterOutlet";
+import { isAuthenticated } from "./utils/app.utils";
 
 function App() {
   // Remove this piece of code before committing.
@@ -65,8 +66,13 @@ function App() {
               opened={opened}
               onClick={() => setOpened((o) => !o)}
               size="sm"
-              color={theme.colors.gray[0]}
+              color={
+                !isAuthenticated()
+                  ? theme.colors.indigo[4]
+                  : theme.colors.gray[0]
+              }
               mr={8}
+              disabled={!isAuthenticated()}
             />
           </MediaQuery>
           <ThemeIcon variant="outline" color="indigo" mr={8} size={36}>

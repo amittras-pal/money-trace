@@ -71,7 +71,7 @@ const loginUser = asyncHandler(async (req, res) => {
           _id: user.id,
           name: user.name,
           email: user.email,
-          defaultBudget: user.defaultBudget,
+          createdAt: user.createdAt,
         },
         token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
           expiresIn: "8h",

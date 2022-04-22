@@ -9,7 +9,11 @@ import { CATEGORIES } from "../../constants/appConstants";
 import { useErrorHandler } from "../../hooks/errorHandler";
 import { useBudget } from "../../queries/budget.query";
 import { useExpenseBreakdown } from "../../queries/expense.query";
-import { percentage, severityColor } from "../../utils/app.utils";
+import {
+  getUserDetails,
+  percentage,
+  severityColor,
+} from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
 function Transactions() {
@@ -112,12 +116,11 @@ function Transactions() {
 
   return (
     <>
-      {/* {!getSavedBudget() && <BudgetMonitor />} */}
       <DatePicker
         value={timeFrame}
         onChange={setTimeFrame}
         maxDate={new Date()}
-        minDate={new Date("2021-11-01")}
+        minDate={new Date(getUserDetails()?.createdAt)}
         allowLevelChange={false}
         size="sm"
         description="Records will be shown for the selected month"

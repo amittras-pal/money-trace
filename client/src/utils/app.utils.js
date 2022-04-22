@@ -6,10 +6,9 @@ export function getAuthTokem() {
   return localStorage.getItem("user");
 }
 
-export function getSavedBudget() {
-  const userBudget = localStorage.getItem("userBudget");
-  console.log(userBudget);
-  return userBudget ? JSON.parse(userBudget) : null;
+export function getUserDetails() {
+  const userData = localStorage.getItem("userData");
+  return userData ? JSON.parse(userData) : null;
 }
 
 export function percentage(amount, total) {
