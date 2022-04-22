@@ -1,19 +1,18 @@
 import { Badge, Box, Divider, Group, Text } from "@mantine/core";
 import { useParams } from "react-router-dom";
-import BudgetMonitor from "../../components/budgetMonitor/BudgetMonitor";
 import ExpensesList from "../../components/expensesList/ExpensesList";
 import LoaderOverlay from "../../components/LoaderOverlay";
+import { useErrorHandler } from "../../hooks/errorHandler";
 import { useReportDetails } from "../../queries/report.query";
-import { getSavedBudget } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
 function ReportExpenses() {
   const { id } = useParams();
-  const { isLoading, data: reportDetails } = useReportDetails(id);
+  const { onError } = useErrorHandler();
+  const { isLoading, data: reportDetails } = useReportDetails(id, { onError });
 
   return (
     <>
-      {!getSavedBudget() && <BudgetMonitor />}
       <Box>
         <Group position="apart" align="flex-start" noWrap>
           <Box>

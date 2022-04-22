@@ -1,12 +1,11 @@
-import React from "react";
+import { Button, Divider, Group, Text, TextInput } from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
 import { useNotifications } from "@mantine/notifications";
 import { useQueryClient } from "react-query";
 import { Check, DeviceFloppy, X } from "tabler-icons-react";
-import { nonAuthErrorHandler } from "../../../utils/app.utils";
-import { useCreateReport, useEditReport } from "../../../queries/report.query";
-import { useForm, yupResolver } from "@mantine/form";
 import * as yup from "yup";
-import { Button, Divider, Group, Text, TextInput } from "@mantine/core";
+import { useErrorHandler } from "../../../hooks/errorHandler";
+import { useCreateReport, useEditReport } from "../../../queries/report.query";
 
 function ReportForm({ onComplete, onCancel, data = null }) {
   const { showNotification } = useNotifications();
@@ -22,10 +21,12 @@ function ReportForm({ onComplete, onCancel, data = null }) {
     onComplete();
   };
 
-  const onError = (err) => {
-    nonAuthErrorHandler(err, () => {
+  const { onError } = useErrorHandler();
+
+  const handleError = (err) => {
+    onError(err, () => {
       showNotification({
-        title: err.response.message,
+        title: err?.response?.data?.message,
         color: "red",
         icon: <X />,
       });
@@ -34,11 +35,11 @@ function ReportForm({ onComplete, onCancel, data = null }) {
 
   const { mutate: addReport, isLoading: addingReport } = useCreateReport({
     onSuccess,
-    onError,
+    onError: handleError,
   });
   const { mutate: editReport, isLoading: editingReport } = useEditReport({
     onSuccess,
-    onError,
+    onError: handleError,
   });
 
   const reportForm = useForm({

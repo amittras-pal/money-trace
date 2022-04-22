@@ -2,6 +2,7 @@ import { ActionIcon, Box, Group, Modal, Switch } from "@mantine/core";
 import { useState } from "react";
 import { Plus } from "tabler-icons-react";
 import LoaderOverlay from "../../components/LoaderOverlay";
+import { useErrorHandler } from "../../hooks/errorHandler";
 import { useReports } from "../../queries/report.query";
 import ReportCard from "./components/ReportCard";
 import ReportForm from "./components/ReportForm";
@@ -11,7 +12,8 @@ function Reports() {
   const [allReports, setAllReports] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const { data: reportsList, isLoading } = useReports(allReports);
+  const { onError } = useErrorHandler();
+  const { data: reportsList, isLoading } = useReports(allReports, { onError });
 
   const closeReportForm = () => {
     if (selectedItem) setSelectedItem(null);
@@ -20,7 +22,6 @@ function Reports() {
 
   return (
     <>
-      {/* {!getSavedBudget() && <BudgetMonitor />} */}
       <Switch
         mb={12}
         label="All Reports"

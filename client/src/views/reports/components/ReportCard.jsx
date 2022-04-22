@@ -19,8 +19,8 @@ import {
   Trash,
   X,
 } from "tabler-icons-react";
+import { useErrorHandler } from "../../../hooks/errorHandler";
 import { useDeleteReport, useEditReport } from "../../../queries/report.query";
-import { nonAuthErrorHandler } from "../../../utils/app.utils";
 
 function ReportCard({ data, hideMenus, onEdit }) {
   const { showNotification } = useNotifications();
@@ -37,22 +37,24 @@ function ReportCard({ data, hideMenus, onEdit }) {
     });
   };
 
-  const onError = (err) => {
-    nonAuthErrorHandler(err, () => {
+  const { onError } = useErrorHandler();
+  const handleError = (err) => {
+    onError(err, () => {
       showNotification({
-        title: err.response.message,
-        color: "red",
+        title: err?.response?.data?.message,
         icon: <X />,
+        color: "red",
       });
     });
   };
+
   const { mutate: editReport } = useEditReport({
     onSuccess,
-    onError,
+    onError: handleError,
   });
   const { mutate: deleteReport } = useDeleteReport({
     onSuccess,
-    onError,
+    onError: handleError,
   });
 
   const confirmClose = (item) => {

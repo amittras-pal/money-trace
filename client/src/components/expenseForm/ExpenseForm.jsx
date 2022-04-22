@@ -14,9 +14,9 @@ import { useQueryClient } from "react-query";
 import { Check, DeviceFloppy, X } from "tabler-icons-react";
 import * as yup from "yup";
 import { CATEGORIES } from "../../constants/appConstants";
+import { useErrorHandler } from "../../hooks/errorHandler";
 import { useCreateExpense, useEditExpense } from "../../queries/expense.query";
 import { useReports } from "../../queries/report.query";
-import { nonAuthErrorHandler } from "../../utils/app.utils";
 import { CategorySelectItem, ReportSelectItem } from "./SelectItem";
 
 function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
@@ -36,10 +36,11 @@ function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
     onComplete();
   };
 
-  const onError = (err) => {
-    nonAuthErrorHandler(err, () => {
+  const { onError } = useErrorHandler();
+  const handleError = (err) => {
+    onError(err, () => {
       showNotification({
-        title: err.response.message,
+        title: err?.response?.data?.message,
         color: "red",
         icon: <X />,
       });
@@ -50,16 +51,16 @@ function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
     data: reports,
     isLoading,
     refetch: getReports,
-  } = useReports(false, { enabled: false });
+  } = useReports(false, { enabled: false, onError });
 
   const { mutate: addExpense, isLoading: addingExpense } = useCreateExpense({
     onSuccess,
-    onError,
+    onError: handleError,
   });
 
   const { mutate: editExpense, isLoading: editingingExpense } = useEditExpense({
     onSuccess,
-    onError,
+    onError: handleError,
   });
 
   const expenseForm = useForm({

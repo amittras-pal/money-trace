@@ -1,11 +1,11 @@
 import { Box, Divider, Modal, Text } from "@mantine/core";
 import { useModals } from "@mantine/modals";
 import { useNotifications } from "@mantine/notifications";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQueryClient } from "react-query";
 import { Check, Trash, X } from "tabler-icons-react";
+import { useErrorHandler } from "../../hooks/errorHandler";
 import { useDeleteExpense } from "../../queries/expense.query";
-import { nonAuthErrorHandler } from "../../utils/app.utils";
 import ExpenseCard from "../ExpenseCard";
 import ExpenseForm from "../expenseForm/ExpenseForm";
 
@@ -18,6 +18,8 @@ function ExpensesList({
   const [selectedItem, setSelectedItem] = useState(null);
   const { openConfirmModal, closeModal } = useModals();
   const { showNotification } = useNotifications();
+
+  const { onError } = useErrorHandler();
 
   const { mutate: deleteExpense } = useDeleteExpense({
     onSuccess: ({ data }) => {
@@ -32,9 +34,9 @@ function ExpensesList({
       });
     },
     onError: (err) => {
-      nonAuthErrorHandler(err, () => {
+      onError(err, () => {
         showNotification({
-          title: err.response.message,
+          title: err?.response?.data?.message,
           color: "red",
           icon: <X />,
         });

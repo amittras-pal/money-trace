@@ -1,18 +1,19 @@
 import { Box, Button, Divider, Modal, Text, TextInput } from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useNotifications } from "@mantine/notifications";
 import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
-import { useAddBudget, useBudget } from "../../queries/budget.query";
-import { useForm, yupResolver } from "@mantine/form";
-import * as yup from "yup";
 import { Check, DeviceFloppy, X } from "tabler-icons-react";
-import { useNotifications } from "@mantine/notifications";
-import { nonAuthErrorHandler } from "../../utils/app.utils";
+import * as yup from "yup";
 import { BudgetContext } from "../../context/budget.context";
+import { useErrorHandler } from "../../hooks/errorHandler";
+import { useAddBudget, useBudget } from "../../queries/budget.query";
 
 function BudgetMonitor() {
   const [openModal, setOpenModal] = useState(false);
   const { setBudget } = useContext(BudgetContext);
   const { showNotification } = useNotifications();
+  const { onError } = useErrorHandler();
 
   const {
     isLoading: loadingBudget,
@@ -33,20 +34,17 @@ function BudgetMonitor() {
         icon: <Check />,
       });
     },
-    onError: (err) => {
-      nonAuthErrorHandler(err, () =>
+    onError: (err) =>
+      onError(err, () => {
         showNotification({
-          title: "Failed to save budget.",
-          message: err.response.data.message,
+          title: err.response?.data?.message,
           color: "red",
           icon: <X />,
-        })
-      );
-    },
+        });
+      }),
   });
 
   useEffect(() => {
-    console.log("running");
     if (!loadingBudget && error?.response?.status === 404) {
       setOpenModal(true);
     } else if (data?.data?.response) {

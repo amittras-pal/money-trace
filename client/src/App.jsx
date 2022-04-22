@@ -10,16 +10,15 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { Suspense, useState } from "react";
+import { useLocation } from "react-router-dom";
+import BudgetMonitor from "./components/budgetMonitor/BudgetMonitor";
 import LoaderOverlay from "./components/LoaderOverlay";
 import Navigation from "./components/Navigation";
 import SignOut from "./components/SignOut";
 import { APP_TITLE } from "./constants/appConstants";
-import RouterOutlet from "./router/RouterOutlet";
 import { BudgetContext } from "./context/budget.context";
-import BudgetMonitor from "./components/budgetMonitor/BudgetMonitor";
-import { isAuthenticated } from "./utils/app.utils";
 import { ReactComponent as Logo } from "./resources/icons/app-logo.svg";
-import { useLocation } from "react-router-dom";
+import RouterOutlet from "./router/RouterOutlet";
 
 function App() {
   // Remove this piece of code before committing.

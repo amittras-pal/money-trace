@@ -7,19 +7,21 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { yupResolver, useForm } from "@mantine/form";
+import { useForm, yupResolver } from "@mantine/form";
 import { useNotifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import { Check, Login as LoginIcon, X } from "tabler-icons-react";
 import * as yup from "yup";
+import { useErrorHandler } from "../../hooks/errorHandler";
 import { useLogin } from "../../queries/auth.query";
 import { useLoginStyles } from "../../styles/authPage.styles";
-import { nonAuthErrorHandler } from "../../utils/app.utils";
 
 function Login() {
   const { classes } = useLoginStyles();
   const { showNotification } = useNotifications();
   const navigate = useNavigate();
+
+  const { onError } = useErrorHandler();
 
   const { mutate: loginUser, isLoading } = useLogin({
     onSuccess: ({ data }) => {
@@ -36,7 +38,7 @@ function Login() {
       });
     },
     onError: (err) => {
-      nonAuthErrorHandler(err, () =>
+      onError(err, () =>
         showNotification({
           title: "Login Failed",
           message: err.response.data.message,

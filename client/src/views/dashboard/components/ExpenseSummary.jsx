@@ -14,6 +14,7 @@ import { AlertTriangle, ArrowsDoubleNeSw } from "tabler-icons-react";
 import LoaderOverlay from "../../../components/LoaderOverlay";
 import { CATEGORIES } from "../../../constants/appConstants";
 import { BudgetContext } from "../../../context/budget.context";
+import { useErrorHandler } from "../../../hooks/errorHandler";
 import { useExpenseSummary } from "../../../queries/expense.query";
 import { percentage, severityColor } from "../../../utils/app.utils";
 import { currencyFormat } from "../../../utils/formatter.utils";
@@ -21,10 +22,14 @@ import { currencyFormat } from "../../../utils/formatter.utils";
 function ExpenseSummary() {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery("(max-width: 755px)");
+  const { onError } = useErrorHandler();
 
   const { data, isLoading } = useExpenseSummary(
     new Date().getMonth() + 1,
-    new Date().getFullYear()
+    new Date().getFullYear(),
+    {
+      onError,
+    }
   );
 
   // const defaultBudget = getSavedBudget();

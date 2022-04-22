@@ -6,6 +6,7 @@ import { Calendar, InfoCircle } from "tabler-icons-react";
 import DataTable from "../../components/dataTable/DataTable";
 import LoaderOverlay from "../../components/LoaderOverlay";
 import { CATEGORIES } from "../../constants/appConstants";
+import { useErrorHandler } from "../../hooks/errorHandler";
 import { useBudget } from "../../queries/budget.query";
 import { useExpenseBreakdown } from "../../queries/expense.query";
 import { percentage, severityColor } from "../../utils/app.utils";
@@ -14,14 +15,18 @@ import { currencyFormat } from "../../utils/formatter.utils";
 function Transactions() {
   const [timeFrame, setTimeFrame] = useState(new Date());
 
+  const { onError } = useErrorHandler();
+
   const { data: expenseList, isLoading } = useExpenseBreakdown(
     timeFrame.getMonth() + 1,
-    timeFrame.getFullYear()
+    timeFrame.getFullYear(),
+    { onError }
   );
 
   const { data: budget } = useBudget(
     timeFrame.getMonth() + 1,
-    timeFrame.getFullYear()
+    timeFrame.getFullYear(),
+    { onError }
   );
 
   const columns = useMemo(
