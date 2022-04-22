@@ -10,7 +10,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { Suspense, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import BudgetMonitor from "./components/budgetMonitor/BudgetMonitor";
 import LoaderOverlay from "./components/LoaderOverlay";
 import Navigation from "./components/Navigation";
@@ -72,7 +72,7 @@ function App() {
           <ThemeIcon variant="outline" color="indigo" mr={8} size={36}>
             <Logo />
           </ThemeIcon>
-          <Text size="xl" weight="bold">
+          <Text component={Link} to="/home" size="xl" weight="bold">
             {APP_TITLE}
           </Text>
           <SignOut />

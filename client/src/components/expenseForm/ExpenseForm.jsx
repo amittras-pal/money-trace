@@ -164,6 +164,7 @@ function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
       />
       <Checkbox
         {...expenseForm.getInputProps("attachToReport")}
+        color="indigo"
         checked={expenseForm.values.attachToReport}
         label="Attach to report"
         mb={12}

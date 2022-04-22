@@ -17,7 +17,7 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
     if (dayjs(dateString).isSame(dayjs(), "date")) return "Today";
     else if (dayjs(dateString).isSame(dayjs().subtract(1, "day"), "date"))
       return "Yesterday";
-    else return dayjs(dateString).format("MMM DD, YYYY");
+    else return dayjs(dateString).format("MMM DD, 'YY");
   };
 
   const isOldReport = () => {
