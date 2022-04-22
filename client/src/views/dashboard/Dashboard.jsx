@@ -14,7 +14,6 @@ function Dashboard() {
 
   return (
     <>
-      {/* {!getSavedBudget() && <BudgetMonitor />} */}
       <ExpenseSummary />
       <LastTwoDays />
       <ActionIcon

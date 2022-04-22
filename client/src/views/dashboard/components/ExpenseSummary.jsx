@@ -32,8 +32,6 @@ function ExpenseSummary() {
     }
   );
 
-  // const defaultBudget = getSavedBudget();
-
   const { budget: defaultBudget } = useContext(BudgetContext);
 
   const getCategoryAmount = (categoryName) => {
