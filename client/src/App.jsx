@@ -6,6 +6,7 @@ import {
   MediaQuery,
   Navbar,
   Text,
+  ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
 import { Suspense, useState } from "react";
@@ -17,6 +18,7 @@ import RouterOutlet from "./router/RouterOutlet";
 import { BudgetContext } from "./context/budget.context";
 import BudgetMonitor from "./components/budgetMonitor/BudgetMonitor";
 import { isAuthenticated } from "./utils/app.utils";
+import { ReactComponent as Logo } from "./resources/icons/app-logo.svg";
 import { useLocation } from "react-router-dom";
 
 function App() {
@@ -65,9 +67,12 @@ function App() {
               onClick={() => setOpened((o) => !o)}
               size="sm"
               color={theme.colors.gray[0]}
-              mr="xl"
+              mr={8}
             />
           </MediaQuery>
+          <ThemeIcon variant="outline" color="indigo" mr={8} size={36}>
+            <Logo />
+          </ThemeIcon>
           <Text size="xl" weight="bold">
             {APP_TITLE}
           </Text>
