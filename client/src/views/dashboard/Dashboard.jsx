@@ -22,11 +22,12 @@ function Dashboard() {
         color="indigo"
         variant="filled"
         radius="xl"
-        sx={(theme) => ({
+        sx={{
           position: "fixed",
           bottom: "1rem",
           right: "1rem",
-        })}>
+          zIndex: 1000,
+        }}>
         <Plus size={24} />
       </ActionIcon>
       <Modal opened={open} onClose={closeModal} withCloseButton={false}>
