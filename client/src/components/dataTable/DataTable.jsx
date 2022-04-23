@@ -1,20 +1,16 @@
 import {
   Box,
   Group,
+  Image,
   Pagination,
   ScrollArea,
   Table,
   Text,
-  ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
-import React from "react";
-import { useTable, usePagination, useSortBy } from "react-table";
-import {
-  ClipboardOff,
-  SortAscending2,
-  SortDescending2,
-} from "tabler-icons-react";
+import { usePagination, useSortBy, useTable } from "react-table";
+import { SortAscending2, SortDescending2 } from "tabler-icons-react";
+import emptyState from "../../resources/illustrations/Clipboard.svg";
 
 function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
   const { colors, shadows, radius, colorScheme } = useMantineTheme();
@@ -52,12 +48,10 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
           boxShadow: shadows.md,
         }}>
         {data.length === 0 ? (
-          <Group py={100} position="center" direction="column">
-            <ThemeIcon size={200} color="indigo" variant="light" radius="xl">
-              <ClipboardOff size={175} />
-            </ThemeIcon>
-            <Text size="xl" weight={600} color="indigo">
-              No Records found.
+          <Group position="center" direction="column" py={24}>
+            <Image src={emptyState} />
+            <Text color="dimmed" align="center">
+              No Records found for the selected month.
             </Text>
           </Group>
         ) : (

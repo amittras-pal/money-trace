@@ -8,8 +8,8 @@ export function useErrorHandler() {
   const { showNotification } = useNotifications();
 
   const onError = (err, func) => {
-    console.log(err.response);
     if (err.response.status === 401 && pathname !== "/login") {
+      localStorage.clear();
       showNotification({
         title: "Session Expired or Invalid Session",
         message: "Please login again to continue.",

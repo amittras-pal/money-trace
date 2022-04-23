@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Badge,
   Group,
+  Image,
   RingProgress,
   Text,
   ThemeIcon,
@@ -18,6 +19,8 @@ import { useErrorHandler } from "../../../hooks/errorHandler";
 import { useExpenseSummary } from "../../../queries/expense.query";
 import { percentage, severityColor } from "../../../utils/app.utils";
 import { currencyFormat } from "../../../utils/formatter.utils";
+import emptyState from "../../../resources/illustrations/Clipboard.svg";
+import dayjs from "dayjs";
 
 function ExpenseSummary() {
   const theme = useMantineTheme();
@@ -80,7 +83,7 @@ function ExpenseSummary() {
       }}>
       <Group px={16} pt={16} sx={{ width: "100%" }} spacing={8}>
         <Text size="lg" color="indigo" weight={500}>
-          Summary
+          Summary {dayjs().format("MMM, 'YY")}
         </Text>
         <ActionIcon
           ml="auto"
@@ -93,66 +96,81 @@ function ExpenseSummary() {
           <ArrowsDoubleNeSw size={20} />
         </ActionIcon>
       </Group>
-      <RingProgress
-        size={225}
-        thickness={16}
-        label={
-          <>
-            <Text
-              size="xl"
-              weight={700}
-              align="center"
-              color={
-                defaultBudget
-                  ? spentPercentage >= 100
-                    ? "red"
-                    : theme.colors.gray[theme.colorScheme === "light" ? 7 : 5]
-                  : theme.colors.gray[theme.colorScheme === "light" ? 7 : 5]
-              }>
-              {currencyFormat.format(data?.data?.response.total)}
-            </Text>
-            {defaultBudget > 0 && (
-              <Group
-                spacing={4}
-                position="center"
-                sx={{ alignItems: "center" }}>
-                {spentPercentage >= 95 && (
-                  <ThemeIcon color="red" variant="light" size={30}>
-                    <AlertTriangle size={20} />
-                  </ThemeIcon>
-                )}
+      {data?.data?.response.total > 0 ? (
+        <>
+          <RingProgress
+            size={225}
+            thickness={16}
+            label={
+              <>
                 <Text
+                  size="xl"
                   weight={700}
                   align="center"
-                  sx={{ fontSize: "1.25rem" }}
-                  color={severityColor(spentPercentage)}>
-                  {spentPercentage}%
+                  color={
+                    defaultBudget
+                      ? spentPercentage >= 100
+                        ? "red"
+                        : theme.colors.gray[
+                            theme.colorScheme === "light" ? 7 : 5
+                          ]
+                      : theme.colors.gray[theme.colorScheme === "light" ? 7 : 5]
+                  }>
+                  {currencyFormat.format(data?.data?.response.total)}
                 </Text>
-              </Group>
-            )}
-            <Text
-              size="sm"
-              align="center"
-              color={defaultBudget ? theme.colors.gray[5] : "red"}
-              weight={500}>
-              {defaultBudget
-                ? currencyFormat.format(defaultBudget)
-                : "Budget not set."}
+                {defaultBudget > 0 && (
+                  <Group
+                    spacing={4}
+                    position="center"
+                    sx={{ alignItems: "center" }}>
+                    {spentPercentage >= 95 && (
+                      <ThemeIcon color="red" variant="light" size={30}>
+                        <AlertTriangle size={20} />
+                      </ThemeIcon>
+                    )}
+                    <Text
+                      weight={700}
+                      align="center"
+                      sx={{ fontSize: "1.25rem" }}
+                      color={severityColor(spentPercentage)}>
+                      {spentPercentage}%
+                    </Text>
+                  </Group>
+                )}
+                <Text
+                  size="sm"
+                  align="center"
+                  color={defaultBudget ? theme.colors.gray[5] : "red"}
+                  weight={500}>
+                  {defaultBudget
+                    ? currencyFormat.format(defaultBudget)
+                    : "Budget not set."}
+                </Text>
+              </>
+            }
+            sections={getChartSections()}
+          />
+          <Group
+            direction="row"
+            spacing="sm"
+            position={isMobile ? "center" : "center"}>
+            {Object.entries(CATEGORIES).map(([name]) => (
+              <Badge color={CATEGORIES[name].color} variant="light" key={name}>
+                {name}: {getCategoryAmount(name)}
+              </Badge>
+            ))}
+          </Group>
+        </>
+      ) : (
+        <>
+          <Group direction="column" spacing={4} align="center" py={24}>
+            <Image src={emptyState} />
+            <Text color="dimmed" size="sm" align="center">
+              No Transactions this month.
             </Text>
-          </>
-        }
-        sections={getChartSections()}
-      />
-      <Group
-        direction="row"
-        spacing="sm"
-        position={isMobile ? "center" : "center"}>
-        {Object.entries(CATEGORIES).map(([name]) => (
-          <Badge color={CATEGORIES[name].color} variant="light" key={name}>
-            {name}: {getCategoryAmount(name)}
-          </Badge>
-        ))}
-      </Group>
+          </Group>
+        </>
+      )}
     </Group>
   );
 }

@@ -1,10 +1,11 @@
-import { Badge, Box, Divider, Group, Text } from "@mantine/core";
+import { Badge, Box, Divider, Group, Image, Text } from "@mantine/core";
 import { useParams } from "react-router-dom";
 import ExpensesList from "../../components/expensesList/ExpensesList";
 import LoaderOverlay from "../../components/LoaderOverlay";
 import { useErrorHandler } from "../../hooks/errorHandler";
 import { useReportDetails } from "../../queries/report.query";
 import { currencyFormat } from "../../utils/formatter.utils";
+import emptyState from "../../resources/illustrations/Clipboard.svg";
 
 function ReportExpenses() {
   const { id } = useParams();
@@ -54,12 +55,22 @@ function ReportExpenses() {
           <Group sx={{ height: "400px" }} direction="column" position="center">
             <LoaderOverlay />
           </Group>
-        ) : (
+        ) : reportDetails?.data?.response?.expenses?.length > 0 ? (
           <ExpensesList
             expenseList={reportDetails?.data?.response?.expenses || []}
             relatedQueries={[["report-details", id]]}
             disableExpenseActions={!reportDetails?.data?.response?.report.open}
           />
+        ) : (
+          <Group position="center" direction="column" py={24}>
+            {/* <ThemeIcon size={200} color="indigo" variant="light" radius="xl">
+            <ClipboardOff size={175} />
+          </ThemeIcon> */}
+            <Image src={emptyState} />
+            <Text color="dimmed" align="center">
+              No transactions added to this report
+            </Text>
+          </Group>
         )}
       </Box>
     </>

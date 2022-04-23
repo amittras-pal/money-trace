@@ -2,12 +2,13 @@ import {
   Box,
   createStyles,
   Group,
+  Image,
   Text,
   ThemeIcon,
-  useMantineTheme,
 } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowsDoubleNeSw, Home, Lock, Report } from "tabler-icons-react";
+import { ArrowsDoubleNeSw, Home, Report } from "tabler-icons-react";
+import shieldImage from "../resources/illustrations/Unauthorized.svg";
 import { isAuthenticated } from "../utils/app.utils";
 
 const menuButtons = [
@@ -52,16 +53,15 @@ const useNavigationStyles = createStyles((theme) => ({
 
 function Navigation({ setOpened }) {
   const { classes, cx } = useNavigationStyles();
-  const theme = useMantineTheme();
   const { pathname } = useLocation();
 
   if (!isAuthenticated()) {
     return (
       <Group direction="column" position="center" className={classes.locked}>
-        <Text size="lg" color={theme.colors.gray[5]}>
-          Please login to proceed.
+        <Image src={shieldImage} />
+        <Text size="sm" color="dimmed" align="center">
+          Please login to access navigation.
         </Text>
-        <Lock size={100} color={theme.colors.gray[5]} />
       </Group>
     );
   }
