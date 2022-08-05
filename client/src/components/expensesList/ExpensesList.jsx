@@ -1,4 +1,4 @@
-import { Box, Divider, Modal, Text } from "@mantine/core";
+import { Box, Divider, Modal, ScrollArea, Text } from "@mantine/core";
 import { useModals } from "@mantine/modals";
 import { useNotifications } from "@mantine/notifications";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import ExpenseForm from "../expenseForm/ExpenseForm";
 function ExpensesList({
   relatedQueries,
   expenseList,
+  height,
   disableExpenseActions = false,
 }) {
   const client = useQueryClient();
@@ -70,15 +71,17 @@ function ExpensesList({
 
   return (
     <>
-      {expenseList?.map((expense) => (
-        <ExpenseCard
-          data={expense}
-          key={expense._id}
-          onEdit={setSelectedItem}
-          onDelete={confirmDelete}
-          hideMenus={disableExpenseActions}
-        />
-      ))}
+      <ScrollArea style={{ height }} scrollbarSize={6}>
+        {expenseList?.map((expense) => (
+          <ExpenseCard
+            data={expense}
+            key={expense._id}
+            onEdit={setSelectedItem}
+            onDelete={confirmDelete}
+            hideMenus={disableExpenseActions}
+          />
+        ))}
+      </ScrollArea>
       <Modal
         opened={selectedItem}
         onClose={() => setSelectedItem(null)}

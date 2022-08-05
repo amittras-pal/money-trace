@@ -45,11 +45,22 @@ const getReportDetails = asyncHandler(async (req, res) => {
     const expenses = await Expense.find({ report: ObjectId(reportId) }).sort({
       expenseDate: -1,
     });
+    const summary = {};
+    let total = 0;
+    expenses.forEach((item) => {
+      if (summary[item.category]) {
+        summary[item.category] += item.amount;
+      } else {
+        summary[item.category] = item.amount;
+      }
+      total += item.amount;
+    });
     return res.json({
       message: "Report details retrieved successfully.",
-      response: { report, expenses },
+      response: { report, expenses, summary, total },
     });
   } catch (error) {
+    console.log(error);
     res.status(http.INTERNAL_SERVER_ERROR);
     throw new Error("Something went wrong.");
   }

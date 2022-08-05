@@ -8,7 +8,7 @@ import {
   ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import dayjs from "dayjs";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AlertTriangle, ArrowsDoubleNeSw } from "tabler-icons-react";
@@ -17,14 +17,12 @@ import { CATEGORIES } from "../../../constants/appConstants";
 import { BudgetContext } from "../../../context/budget.context";
 import { useErrorHandler } from "../../../hooks/errorHandler";
 import { useExpenseSummary } from "../../../queries/expense.query";
+import emptyState from "../../../resources/illustrations/Clipboard.svg";
 import { percentage, severityColor } from "../../../utils/app.utils";
 import { currencyFormat } from "../../../utils/formatter.utils";
-import emptyState from "../../../resources/illustrations/Clipboard.svg";
-import dayjs from "dayjs";
 
 function ExpenseSummary() {
   const theme = useMantineTheme();
-  const isMobile = useMediaQuery("(max-width: 755px)");
   const { onError } = useErrorHandler();
 
   const { data, isLoading } = useExpenseSummary(
@@ -99,12 +97,11 @@ function ExpenseSummary() {
       {data?.data?.response.total > 0 ? (
         <>
           <RingProgress
-            size={225}
+            size={160}
             thickness={16}
             label={
               <>
                 <Text
-                  size="xl"
                   weight={700}
                   align="center"
                   color={
@@ -150,10 +147,7 @@ function ExpenseSummary() {
             }
             sections={getChartSections()}
           />
-          <Group
-            direction="row"
-            spacing="sm"
-            position={isMobile ? "center" : "center"}>
+          <Group direction="row" spacing="sm" position="center">
             {Object.entries(CATEGORIES).map(([name]) => (
               <Badge color={CATEGORIES[name].color} variant="light" key={name}>
                 {name}: {getCategoryAmount(name)}
@@ -163,8 +157,8 @@ function ExpenseSummary() {
         </>
       ) : (
         <>
-          <Group direction="column" spacing={4} align="center" py={24}>
-            <Image src={emptyState} />
+          <Group direction="column" spacing={4} align="center" py="sm">
+            <Image src={emptyState} height={120} />
             <Text color="dimmed" size="sm" align="center">
               No Transactions this month.
             </Text>

@@ -20,6 +20,7 @@ function LastTwoDays() {
           </Group>
         ) : last2Days?.data?.response?.length > 0 ? (
           <ExpensesList
+            height="60vh"
             expenseList={last2Days?.data?.response || []}
             relatedQueries={[
               [

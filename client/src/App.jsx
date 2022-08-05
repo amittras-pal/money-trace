@@ -3,6 +3,7 @@ import {
   Burger,
   createStyles,
   Header,
+  Image,
   MediaQuery,
   Navbar,
   Text,
@@ -17,7 +18,7 @@ import Navigation from "./components/Navigation";
 import SignOut from "./components/SignOut";
 import { APP_TITLE } from "./constants/appConstants";
 import { BudgetContext } from "./context/budget.context";
-import { ReactComponent as Logo } from "./resources/icons/app-logo.svg";
+import logo from "./resources/icons/app-logo.svg";
 import RouterOutlet from "./router/RouterOutlet";
 import { isAuthenticated } from "./utils/app.utils";
 
@@ -76,7 +77,7 @@ function App() {
             />
           </MediaQuery>
           <ThemeIcon variant="outline" color="indigo" mr={8} size={36}>
-            <Logo />
+            <Image src={logo} />
           </ThemeIcon>
           <Text component={Link} to="/home" size="xl" weight="bold">
             {APP_TITLE}
