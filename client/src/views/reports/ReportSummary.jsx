@@ -30,7 +30,10 @@ function ReportSummary({ summary, total }) {
       />
       <Group direction="row" spacing="sm" position="center">
         {Object.entries(CATEGORIES).map(([name]) => (
-          <Badge color={CATEGORIES[name].color} variant="light" key={name}>
+          <Badge
+            color={CATEGORIES[name].color}
+            variant={summary[name] ? "filled" : "dot"}
+            key={name}>
             {name}: {currencyFormat.format(summary[name] ?? 0)}
           </Badge>
         ))}
