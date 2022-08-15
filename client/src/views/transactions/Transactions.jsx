@@ -1,9 +1,11 @@
-import { Badge, Group, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { Badge, Group, Text, ThemeIcon } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { Calendar, InfoCircle } from "tabler-icons-react";
+import { useSearchParams } from "react-router-dom";
+import { Calendar } from "tabler-icons-react";
 import DataTable from "../../components/dataTable/DataTable";
+import SelectionFilter from "../../components/dataTable/SelectionFilter";
 import LoaderOverlay from "../../components/LoaderOverlay";
 import { CATEGORIES } from "../../constants/appConstants";
 import { useErrorHandler } from "../../hooks/errorHandler";
@@ -18,6 +20,7 @@ import { currencyFormat } from "../../utils/formatter.utils";
 
 function Transactions() {
   const [timeFrame, setTimeFrame] = useState(new Date());
+  const [params] = useSearchParams();
 
   const { onError } = useErrorHandler();
 
@@ -38,32 +41,31 @@ function Transactions() {
       {
         Header: "Title",
         accessor: "title",
-        width: 10,
+        minWidth: 240,
+        disableFilters: true,
+        disableSortBy: true,
         Cell: ({ value = "", row }) => (
-          <Group noWrap spacing={8} sx={{ minWidth: "150px" }}>
-            {value.slice(0, 40)}
-            <Tooltip
-              label={row.original?.description}
-              disabled={!row.original.description}
-              placement="start"
-              position="bottom">
-              <ThemeIcon
-                variant="light"
-                radius="xl"
-                size="sm"
-                sx={{
-                  cursor: row.original.description ? "pointer" : "default",
-                }}
-                color={row.original.description ? "indogo" : "red"}>
-                <InfoCircle size={16} />
-              </ThemeIcon>
-            </Tooltip>
+          <Group
+            noWrap
+            spacing={4}
+            direction="column"
+            sx={{ minWidth: "150px" }}>
+            <Text>{value.slice(0, 40)}</Text>
+            {row.original.description && (
+              <Text size="xs" color="dimmed">
+                {row.original.description}
+              </Text>
+            )}
           </Group>
         ),
       },
       {
         Header: "Amount",
         accessor: "amount",
+        minWidth: 100,
+        width: 100,
+        maxWidth: 100,
+        disableFilters: true,
         Cell: ({ value }) => (
           <Text weight={500} size="sm" sx={{ minWidth: "150px" }}>
             {currencyFormat.format(value)}
@@ -73,6 +75,8 @@ function Transactions() {
       {
         Header: "Category",
         accessor: "category",
+        filter: "includes",
+        Filter: SelectionFilter,
         Cell: ({ value }) => (
           <Group sx={{ width: "150px" }}>
             <Badge variant="light" color={CATEGORIES[value].color}>
@@ -85,6 +89,7 @@ function Transactions() {
         Header: "Date",
         accessor: "expenseDate",
         columnId: "expenseDate",
+        disableFilters: true,
         Cell: ({ value }) => {
           return (
             <Group spacing="sm" noWrap sx={{ width: "150px" }}>
@@ -148,6 +153,11 @@ function Transactions() {
           data={tableData}
           tableHeight={"calc(100vh - 255px)"}
           sortBy={[{ id: "expenseDate", desc: true }]}
+          filters={
+            params?.get("category")
+              ? [{ id: "category", value: params?.get("category") }]
+              : []
+          }
           columns={columns}
         />
       )}

@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Box,
   Group,
   Image,
@@ -8,12 +9,31 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { usePagination, useSortBy, useTable } from "react-table";
-import { SortAscending2, SortDescending2 } from "tabler-icons-react";
+import { useMemo } from "react";
+import { useFilters, usePagination, useSortBy, useTable } from "react-table";
+import {
+  ArrowsSort,
+  SortAscending2,
+  SortDescending2,
+} from "tabler-icons-react";
 import emptyState from "../../resources/illustrations/Clipboard.svg";
+import DefaultColumnFilter from "./DefaultColumnFilter";
 
-function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
+function DataTable({
+  data = [],
+  columns = [],
+  tableHeight = "",
+  sortBy = [],
+  filters = [],
+}) {
   const { colors, shadows, radius, colorScheme } = useMantineTheme();
+  const defaultColumn = useMemo(
+    () => ({
+      Filter: DefaultColumnFilter,
+    }),
+    []
+  );
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -28,12 +48,15 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
     {
       columns,
       data,
+      defaultColumn,
       initialState: {
         pageIndex: 0,
         pageSize: 20,
         sortBy,
+        filters,
       },
     },
+    useFilters,
     useSortBy,
     usePagination
   );
@@ -55,45 +78,73 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
             </Text>
           </Group>
         ) : (
-          <ScrollArea style={{ height: tableHeight }}>
+          <ScrollArea style={{ height: tableHeight }} scrollbarSize={6}>
             <Table verticalSpacing="sm" highlightOnHover {...getTableProps()}>
               <Box component="thead">
-                {headerGroups.map((hGroup) => (
-                  <Box component="tr" {...hGroup.getHeaderGroupProps()}>
-                    {hGroup.headers.map((col) => (
-                      <Box
-                        component="th"
-                        sx={{
-                          position: "sticky",
-                          top: 0,
-                          zIndex: 10,
-                          backgroundColor: colors.gray[9],
-                          boxShadow: shadows.sm,
-                          cursor: "pointer",
-                        }}
-                        {...col.getHeaderProps(col.getSortByToggleProps())}>
-                        <Group position="apart" sx={{ alignItems: "center" }}>
-                          <Text
-                            color={colors.gray[colorScheme === "light" ? 7 : 5]}
-                            size="sm">
-                            {col.render("Header")}
-                          </Text>
-                          {col.isSorted ? (
-                            col.isSortedDesc ? (
-                              <SortDescending2
-                                size={20}
-                                color={colors.gray[5]}
-                              />
-                            ) : (
-                              <SortAscending2
-                                size={20}
-                                color={colors.gray[5]}
-                              />
-                            )
-                          ) : null}
-                        </Group>
-                      </Box>
-                    ))}
+                {headerGroups.map((hGroup, index) => (
+                  <Box
+                    component="tr"
+                    {...hGroup.getHeaderGroupProps()}
+                    key={index}>
+                    {hGroup.headers.map((col) => {
+                      return (
+                        <Box
+                          component="th"
+                          sx={{
+                            position: "sticky",
+                            top: 0,
+                            zIndex: 10,
+                            backgroundColor: colors.gray[9],
+                            boxShadow: shadows.sm,
+                            cursor: "pointer",
+                          }}
+                          {...col.getHeaderProps({
+                            style: {
+                              minWidth: col.minWidth,
+                              maxWidth: col.maxWidth,
+                              width: col.width,
+                            },
+                          })}>
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Text
+                              color={
+                                colors.gray[colorScheme === "light" ? 7 : 5]
+                              }
+                              size="sm"
+                              mr="auto">
+                              {col.render("Header")}
+                            </Text>
+                            {col.canFilter ? col.render("Filter") : null}
+                            {col.canSort && (
+                              <ActionIcon
+                                radius="xl"
+                                {...col.getHeaderProps(
+                                  col.getSortByToggleProps()
+                                )}>
+                                {col.isSorted ? (
+                                  col.isSortedDesc ? (
+                                    <SortDescending2
+                                      size={20}
+                                      color={colors.gray[5]}
+                                    />
+                                  ) : (
+                                    <SortAscending2
+                                      size={20}
+                                      color={colors.gray[5]}
+                                    />
+                                  )
+                                ) : (
+                                  <ArrowsSort
+                                    size={20}
+                                    color={colors.gray[5]}
+                                  />
+                                )}
+                              </ActionIcon>
+                            )}
+                          </Box>
+                        </Box>
+                      );
+                    })}
                   </Box>
                 ))}
               </Box>
@@ -103,17 +154,23 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
-                        <Box
+                        <td
                           component="td"
-                          sx={{
-                            maxWidth: "300px",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
-                          {...cell.getCellProps()}>
+                          // sx={{
+                          //   maxWidth: "300px",
+                          //   whiteSpace: "nowrap",
+                          //   overflow: "hidden",
+                          //   textOverflow: "ellipsis",
+                          // }}
+                          {...cell.getCellProps({
+                            style: {
+                              minWidth: cell.minWidth,
+                              maxWidth: cell.maxWidth,
+                              width: cell.width,
+                            },
+                          })}>
                           {cell.render("Cell")}
-                        </Box>
+                        </td>
                       ))}
                     </tr>
                   );

@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import dayjs from "dayjs";
 import React, { useCallback, useContext, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Plus } from "tabler-icons-react";
 import ExpenseForm from "../../components/expenseForm/ExpenseForm";
 import LoaderOverlay from "../../components/LoaderOverlay";
@@ -70,6 +70,15 @@ function Dashboard() {
     [data?.data?.response, recordedCategories]
   );
 
+  const navigate = useNavigate();
+  const navigateToFilteredList = useCallback(
+    (category) => {
+      if (recordedCategories.includes(category))
+        navigate(`/transactions?category=${category}`);
+    },
+    [recordedCategories, navigate]
+  );
+
   return (
     <>
       <Box
@@ -112,6 +121,7 @@ function Dashboard() {
                     variant={
                       recordedCategories.includes(name) ? "filled" : "dot"
                     }
+                    onClick={() => navigateToFilteredList(name)}
                     key={name}>
                     {name}: {getCategoryAmount(name)}
                   </Badge>

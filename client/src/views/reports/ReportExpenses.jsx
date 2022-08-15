@@ -6,9 +6,10 @@ import {
   Image,
   LoadingOverlay,
   SegmentedControl,
+  Select,
   Text,
 } from "@mantine/core";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import ExpensesList from "../../components/expensesList/ExpensesList";
 import { useErrorHandler } from "../../hooks/errorHandler";
@@ -21,6 +22,20 @@ function ReportExpenses() {
   const { id } = useParams();
   const { onError } = useErrorHandler();
   const { isLoading, data: reportDetails } = useReportDetails(id, { onError });
+
+  const [filter, setFilter] = useState("");
+
+  const filterOptions = useMemo(() => {
+    if (isLoading) return [];
+    return Object.entries(reportDetails?.data?.response.summary ?? {})?.map(
+      ([key]) => ({
+        label: key,
+        value: key,
+      })
+    );
+  }, [reportDetails?.data?.response, isLoading]);
+
+  console.log(filterOptions);
 
   const [view, setView] = useState("summary");
 
@@ -36,7 +51,7 @@ function ReportExpenses() {
     );
 
   return (
-    <Box>
+    <>
       <Group position="apart" align="flex-start" noWrap>
         <Box>
           <Text size="lg" weight={500} color="blue">
@@ -64,7 +79,10 @@ function ReportExpenses() {
             fullWidth
             mb="sm"
             value={view}
-            onChange={setView}
+            onChange={(e) => {
+              setView(e);
+              setFilter("");
+            }}
             data={[
               { label: "Summary", value: "summary" },
               { label: "List", value: "list" },
@@ -74,30 +92,45 @@ function ReportExpenses() {
             <ReportSummary
               summary={reportDetails?.data?.response?.summary}
               total={reportDetails?.data?.response?.total}
+              onBadgeClick={(badge) => {
+                setFilter(badge);
+                setView("list");
+              }}
             />
           ) : (
-            <ExpensesList
-              expenseList={reportDetails?.data?.response?.expenses || []}
-              height={"calc(100vh - 246px)"}
-              relatedQueries={[["report-details", id]]}
-              disableExpenseActions={
-                !reportDetails?.data?.response?.report.open
-              }
-            />
+            <>
+              <Select
+                data={filterOptions}
+                value={filter}
+                placeholder="Filter Category"
+                onChange={setFilter}
+                clearable
+                mb="sm"
+              />
+              <ExpensesList
+                expenseList={
+                  reportDetails?.data?.response?.expenses?.filter((item) =>
+                    filter ? item.category === filter : true
+                  ) || []
+                }
+                height={"calc(100vh - 288px)"}
+                relatedQueries={[["report-details", id]]}
+                disableExpenseActions={
+                  !reportDetails?.data?.response?.report.open
+                }
+              />
+            </>
           )}
         </>
       ) : (
         <Group position="center" direction="column" py={24}>
-          {/* <ThemeIcon size={200} color="indigo" variant="light" radius="xl">
-            <ClipboardOff size={175} />
-          </ThemeIcon> */}
           <Image src={emptyState} />
           <Text color="dimmed" align="center">
             No transactions added to this report
           </Text>
         </Group>
       )}
-    </Box>
+    </>
   );
 }
 

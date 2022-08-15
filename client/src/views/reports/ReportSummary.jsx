@@ -4,7 +4,7 @@ import { CATEGORIES } from "../../constants/appConstants";
 import { percentage } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
-function ReportSummary({ summary, total }) {
+function ReportSummary({ summary, total, onBadgeClick }) {
   return (
     <Group
       position="center"
@@ -33,8 +33,12 @@ function ReportSummary({ summary, total }) {
           <Badge
             color={CATEGORIES[name].color}
             variant={summary[name] ? "filled" : "dot"}
-            key={name}>
-            {name}: {currencyFormat.format(summary[name] ?? 0)}
+            key={name}
+            onClick={() => {
+              if (summary[name]) onBadgeClick(name);
+            }}>
+            {name}:{" "}
+            {summary[name] ? currencyFormat.format(summary[name]) : "---"}
           </Badge>
         ))}
       </Group>
