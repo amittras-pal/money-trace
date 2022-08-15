@@ -43,7 +43,7 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
       <Box
         p={12}
         sx={{
-          backgroundColor: colors.gray[colorScheme === "light" ? 0 : 8],
+          backgroundColor: colors.gray[9],
           borderRadius: radius.md,
           boxShadow: shadows.md,
         }}>
@@ -67,8 +67,7 @@ function DataTable({ data = [], columns = [], tableHeight = "", sortBy = [] }) {
                           position: "sticky",
                           top: 0,
                           zIndex: 10,
-                          backgroundColor:
-                            colors.gray[colorScheme === "light" ? 0 : 8],
+                          backgroundColor: colors.gray[9],
                           boxShadow: shadows.sm,
                           cursor: "pointer",
                         }}

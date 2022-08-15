@@ -35,13 +35,11 @@ function SignOut() {
 
   return (
     <ActionIcon
-      ml="auto"
-      size={32}
-      radius="xl"
       variant="filled"
-      color="indigo"
+      color="red"
+      radius="xl"
       onClick={initiateLogout}>
-      <Power size={24} />
+      <Power size={18} />
     </ActionIcon>
   );
 }

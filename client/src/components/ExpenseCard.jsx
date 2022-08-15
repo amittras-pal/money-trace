@@ -1,12 +1,4 @@
-import {
-  ActionIcon,
-  Badge,
-  Box,
-  Group,
-  Menu,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Badge, Box, Group, Menu, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import { DotsVertical, Edit, Trash } from "tabler-icons-react";
 import { CATEGORIES } from "../constants/appConstants";
@@ -35,7 +27,7 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
       sx={(theme) => ({
         alignItems: "flex-start",
         backgroundColor:
-          theme.colorScheme === "light" ? "#fff" : theme.colors.gray[8],
+          theme.colorScheme === "light" ? "#fff" : theme.colors.gray[9],
         marginBottom: theme.spacing.sm,
         borderRadius: theme.radius.md,
         boxShadow: theme.shadows.sm,
@@ -98,16 +90,6 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
             Delete
           </Menu.Item>
         </Menu>
-      )}
-      {!hideMenus && isOldReport() && (
-        <Tooltip
-          position="bottom"
-          placement="end"
-          label="Expense older than 2 days cannot be edited.">
-          <ActionIcon color="gray" variant="hover" disabled>
-            <DotsVertical size={16} />
-          </ActionIcon>
-        </Tooltip>
       )}
     </Group>
   );

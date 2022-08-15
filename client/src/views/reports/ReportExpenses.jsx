@@ -28,7 +28,7 @@ function ReportExpenses() {
     return (
       <Group
         position="center"
-        sx={(theme) => ({
+        sx={() => ({
           height: "500px",
         })}>
         <LoadingOverlay />
@@ -40,7 +40,7 @@ function ReportExpenses() {
       <Box>
         <Group position="apart" align="flex-start" noWrap>
           <Box>
-            <Text size="lg" weight={500} color="indigo">
+            <Text size="lg" weight={500} color="blue">
               {isLoading
                 ? "Loading..."
                 : reportDetails?.data?.response?.report.name}

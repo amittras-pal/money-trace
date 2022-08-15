@@ -27,7 +27,7 @@ ReactDOM.render(
           withNormalizeCSS
           withGlobalStyles
           theme={themeOverrides}>
-          <NotificationsProvider autoClose={5000}>
+          <NotificationsProvider autoClose={3000} position="top-center">
             <ModalsProvider>
               <App />
             </ModalsProvider>

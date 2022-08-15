@@ -74,7 +74,7 @@ const loginUser = asyncHandler(async (req, res) => {
           createdAt: user.createdAt,
         },
         token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-          expiresIn: "8h",
+          expiresIn: "48h",
         }),
       },
     });

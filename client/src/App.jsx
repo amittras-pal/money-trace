@@ -1,26 +1,23 @@
 import {
-  AppShell,
-  Burger,
+  Box,
+  Button,
   createStyles,
   Header,
   Image,
-  MediaQuery,
-  Navbar,
   Text,
   ThemeIcon,
   useMantineTheme,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { Suspense, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { ChartInfographic } from "tabler-icons-react";
 import BudgetMonitor from "./components/budgetMonitor/BudgetMonitor";
-import LoaderOverlay from "./components/LoaderOverlay";
-import Navigation from "./components/Navigation";
 import SignOut from "./components/SignOut";
 import { APP_TITLE } from "./constants/appConstants";
 import { BudgetContext } from "./context/budget.context";
 import logo from "./resources/icons/app-logo.svg";
 import RouterOutlet from "./router/RouterOutlet";
-import { isAuthenticated } from "./utils/app.utils";
 
 function App() {
   // Remove this piece of code before committing.
@@ -30,68 +27,63 @@ function App() {
 
   const theme = useMantineTheme();
   const { classes } = useAppStyles();
-  const [opened, setOpened] = useState(false);
   const [budget, setBudget] = useState(0);
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm}px)`);
 
   const { pathname } = useLocation();
   const isGuardedRoute = () => {
     return ["/home", "/transactions", "/reports"].includes(pathname);
   };
 
+  console.log(isMobile);
+
   return (
-    <AppShell
-      styles={{
-        main: {
-          backgroundColor:
-            theme.colorScheme === "light"
-              ? theme.colors.gray[2]
-              : theme.colors.gray[9],
-        },
-      }}
-      navbarOffsetBreakpoint="sm"
-      asideOffsetBreakpoint="sm"
-      fixed
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 200, lg: 300 }}>
-          <Navigation setOpened={setOpened} />
-        </Navbar>
-      }
-      header={
+    <>
+      <Box
+        spacing={0}
+        sx={() => ({
+          display: "flex",
+          height: "100vh",
+          width: "100vw",
+          flexDirection: "column",
+        })}>
         <Header height={60} p="md" className={classes.header}>
-          <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-            <Burger
-              opened={opened}
-              onClick={() => setOpened((o) => !o)}
-              size="sm"
-              color={
-                !isAuthenticated()
-                  ? theme.colors.indigo[4]
-                  : theme.colors.gray[0]
-              }
-              mr={8}
-              disabled={!isAuthenticated()}
-            />
-          </MediaQuery>
-          <ThemeIcon variant="outline" color="indigo" mr={8} size={36}>
+          <ThemeIcon color="gray" mr={8} size={28}>
             <Image src={logo} />
           </ThemeIcon>
-          <Text component={Link} to="/home" size="xl" weight="bold">
+          <Text component={Link} to="/home" size="lg" weight="bold" mr="auto">
             {APP_TITLE}
           </Text>
+          <Button
+            component={Link}
+            to="/reports"
+            size="xs"
+            mr="sm"
+            leftIcon={<ChartInfographic size={18} />}
+            color="indigo"
+            variant="light"
+            radius="xl">
+            Reports
+          </Button>
           <SignOut />
         </Header>
-      }>
-      <Suspense fallback={<LoaderOverlay />}>
-        <BudgetContext.Provider value={{ budget, setBudget }}>
-          {isGuardedRoute() && !budget && <BudgetMonitor />}
-          <RouterOutlet />
-        </BudgetContext.Provider>
-      </Suspense>
-    </AppShell>
+        {isMobile ? (
+          <Box p="sm" style={{ height: "100%", flexGrow: 1 }}>
+            <Suspense fallback={"Loading"}>
+              <BudgetContext.Provider value={{ budget, setBudget }}>
+                {isGuardedRoute() && !budget && <BudgetMonitor />}
+                <RouterOutlet />
+              </BudgetContext.Provider>
+            </Suspense>
+          </Box>
+        ) : (
+          <Box>
+            We don't support desktop view, this application is supposed to be
+            used on a mobile device.
+          </Box>
+        )}
+      </Box>
+    </>
   );
 }
 
@@ -99,13 +91,13 @@ const useAppStyles = createStyles((theme) => ({
   header: {
     backgroundColor:
       theme.colorScheme === "light"
-        ? theme.colors.indigo[6]
-        : theme.colors.indigo[9],
+        ? theme.colors.gray[6]
+        : theme.colors.gray[8],
     boxShadow: theme.shadows.lg,
     color: theme.colors.gray[0],
     display: "flex",
     alignItems: "center",
-    height: "100%",
+    width: "100%",
   },
 }));
 

@@ -60,9 +60,10 @@ function ExpensesList({
         </>
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
-      confirmProps: { leftIcon: <Trash />, size: "sm", color: "red" },
-      cancelProps: { leftIcon: <X />, size: "sm", color: "gray" },
+      confirmProps: { leftIcon: <Trash />, size: "xs", color: "red" },
+      cancelProps: { leftIcon: <X />, size: "xs", color: "gray" },
       withCloseButton: false,
+      closeOnCancel: true,
       onConfirm: () => {
         deleteExpense(item._id);
       },

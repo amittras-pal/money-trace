@@ -9,7 +9,7 @@ function ReportSummary({ summary, total }) {
     <Group
       position="center"
       sx={(theme) => ({
-        backgroundColor: theme.colors.gray[8],
+        backgroundColor: theme.colors.gray[9],
         borderRadius: theme.radius.md,
         paddingTop: theme.spacing.md,
         paddingBottom: theme.spacing.md,
