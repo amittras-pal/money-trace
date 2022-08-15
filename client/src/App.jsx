@@ -19,6 +19,7 @@ import { APP_TITLE } from "./constants/appConstants";
 import { BudgetContext } from "./context/budget.context";
 import logo from "./resources/icons/app-logo.svg";
 import RouterOutlet from "./router/RouterOutlet";
+import { isAuthenticated } from "./utils/app.utils";
 
 function App() {
   // Remove this piece of code before committing.
@@ -50,20 +51,27 @@ function App() {
           <ThemeIcon color="gray" mr={8} size={28}>
             <Image src={logo} />
           </ThemeIcon>
-          <Text component={Link} to="/home" size="lg" weight="bold" mr="auto">
+          <Text
+            component={isAuthenticated() ? Link : "p"}
+            to="/home"
+            size="lg"
+            weight="bold"
+            mr="auto">
             {APP_TITLE}
           </Text>
-          <Button
-            component={Link}
-            to="/reports"
-            size="xs"
-            mr="sm"
-            leftIcon={<ChartInfographic size={18} />}
-            color="indigo"
-            variant="light"
-            radius="xl">
-            Reports
-          </Button>
+          {isAuthenticated() && (
+            <Button
+              component={Link}
+              to="/reports"
+              size="xs"
+              mr="sm"
+              leftIcon={<ChartInfographic size={18} />}
+              color="indigo"
+              variant="light"
+              radius="xl">
+              Reports
+            </Button>
+          )}
           <SignOut />
         </Header>
         {isMobile ? (
