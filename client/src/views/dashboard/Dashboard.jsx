@@ -77,8 +77,9 @@ function Dashboard() {
           alignItems: "center",
           marginTop: theme.spacing.sm,
         })}>
-        {isLoading && <LoaderOverlay />}
-        {!isLoading && data?.data?.response.total > 0 ? (
+        {isLoading ? (
+          <LoaderOverlay />
+        ) : data?.data?.response.total > 0 ? (
           <>
             <RingProgress
               size={275}
@@ -200,6 +201,128 @@ function Dashboard() {
             </Group>
           </>
         )}
+        {/* {!isLoading && data?.data?.response.total > 0 ? (
+          <>
+            <RingProgress
+              size={275}
+              thickness={50}
+              sections={getChartSections()}
+            />
+            <Group
+              direction="row"
+              spacing="sm"
+              position="center"
+              grow
+              sx={{ width: "100%" }}>
+              <Group
+                direction="column"
+                spacing="sm"
+                sx={() => ({ flexShrink: 1 })}>
+                {Object.entries(CATEGORIES).map(([name]) => (
+                  <Badge
+                    color={CATEGORIES[name].color}
+                    variant="light"
+                    key={name}>
+                    {name}: {getCategoryAmount(name)}
+                  </Badge>
+                ))}
+              </Group>
+              <Group
+                direction="column"
+                spacing={2}
+                sx={() => ({
+                  justifyContent: "flex-start",
+                  alignItems: "flex-end",
+                  height: "100%",
+                  flexGrow: 1,
+                })}>
+                <Text size="sm" color="blue" weight="bold" mb="lg">
+                  Summary {dayjs().format("MMM, 'YY")}
+                </Text>
+                <Group spacing={4}>
+                  <Text size="sm" weight="bold">
+                    {currencyFormat.format(data?.data?.response.total)}
+                  </Text>
+                  <Text
+                    size="sm"
+                    weight="bold"
+                    color={
+                      defaultBudget
+                        ? spentPercentage >= 100
+                          ? "red"
+                          : theme.colors.gray[5]
+                        : theme.colors.gray[5]
+                    }>
+                    ({spentPercentage}%)
+                  </Text>
+                </Group>
+                <Group spacing={4}>
+                  <Text size="sm" color="orange">
+                    of
+                  </Text>
+                  <Text
+                    size="sm"
+                    align="center"
+                    color={defaultBudget ? theme.colors.gray[5] : "red"}
+                    weight={500}>
+                    {defaultBudget
+                      ? currencyFormat.format(defaultBudget)
+                      : "Budget not set."}
+                  </Text>
+                </Group>
+                <Button
+                  color="indigo"
+                  size="xs"
+                  variant="subtle"
+                  pr={0}
+                  component={Link}
+                  to="/transactions"
+                  rightIcon={<ArrowRight size={18} />}
+                  onClick={() => setOpen(true)}
+                  mt="auto">
+                  View All
+                </Button>
+                <Button
+                  color="indigo"
+                  size="xs"
+                  leftIcon={<Plus size={18} />}
+                  onClick={() => setOpen(true)}
+                  mt="auto">
+                  Add New
+                </Button>
+              </Group>
+            </Group>
+          </>
+        ) : (
+          <>
+            <Image src={emptyState} height={200} />
+            <Text size="sm" mt="md">
+              No transactions yet this month!
+            </Text>
+            <Group>
+              <Button
+                color="indigo"
+                size="xs"
+                leftIcon={<Plus size={18} />}
+                onClick={() => setOpen(true)}
+                mt="lg">
+                Add New
+              </Button>
+              <Button
+                color="indigo"
+                size="xs"
+                variant="subtle"
+                pr={0}
+                component={Link}
+                to="/transactions"
+                rightIcon={<ArrowRight size={18} />}
+                onClick={() => setOpen(true)}
+                mt="auto">
+                View Transactions
+              </Button>
+            </Group>
+          </>
+        )} */}
       </Box>
       <Last2Days />
       <Modal opened={open} onClose={closeModal} withCloseButton={false}>

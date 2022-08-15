@@ -11,8 +11,7 @@ function ReportSummary({ summary, total }) {
       sx={(theme) => ({
         backgroundColor: theme.colors.gray[9],
         borderRadius: theme.radius.md,
-        paddingTop: theme.spacing.md,
-        paddingBottom: theme.spacing.md,
+        padding: theme.spacing.md,
         boxShadow: theme.shadows.md,
         flexDirection: "column",
       })}>
@@ -24,7 +23,7 @@ function ReportSummary({ summary, total }) {
         size={255}
         thickness={16}
         label={
-          <Text size="xl" align="center">
+          <Text size="lg" weight="bold" align="center">
             {currencyFormat.format(total)}
           </Text>
         }

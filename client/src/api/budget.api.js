@@ -2,7 +2,6 @@ import endpoints from "../constants/apiEndpoints";
 import axios from "./config";
 
 export function addBudget(formData) {
-  console.log(formData);
   return axios.post(endpoints.BUDGET, formData);
 }
 

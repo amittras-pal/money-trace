@@ -13,6 +13,7 @@ import { Suspense, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChartInfographic } from "tabler-icons-react";
 import BudgetMonitor from "./components/budgetMonitor/BudgetMonitor";
+import LoaderOverlay from "./components/LoaderOverlay";
 import SignOut from "./components/SignOut";
 import { APP_TITLE } from "./constants/appConstants";
 import { BudgetContext } from "./context/budget.context";
@@ -34,8 +35,6 @@ function App() {
   const isGuardedRoute = () => {
     return ["/home", "/transactions", "/reports"].includes(pathname);
   };
-
-  console.log(isMobile);
 
   return (
     <>
@@ -69,7 +68,7 @@ function App() {
         </Header>
         {isMobile ? (
           <Box p="sm" style={{ height: "100%", flexGrow: 1 }}>
-            <Suspense fallback={"Loading"}>
+            <Suspense fallback={<LoaderOverlay />}>
               <BudgetContext.Provider value={{ budget, setBudget }}>
                 {isGuardedRoute() && !budget && <BudgetMonitor />}
                 <RouterOutlet />
