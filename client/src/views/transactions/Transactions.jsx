@@ -151,6 +151,7 @@ function Transactions() {
       ) : (
         <DataTable
           data={tableData}
+          columns={columns}
           tableHeight={"calc(100vh - 255px)"}
           sortBy={[{ id: "expenseDate", desc: true }]}
           filters={
@@ -158,7 +159,6 @@ function Transactions() {
               ? [{ id: "category", value: params?.get("category") }]
               : []
           }
-          columns={columns}
         />
       )}
     </>

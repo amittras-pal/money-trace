@@ -160,9 +160,6 @@ const editExpense = asyncHandler(async (req, res) => {
     throw new Error("Please provide all amndatory fields.");
   }
 
-  const targetExpense = await Expense.findById(_id);
-  // const targetReport = await Report.findById(targetExpense.report);
-
   const expensePayload = { title, description, amount, category };
   if (report) expensePayload.report = report;
   else expensePayload.report = null;

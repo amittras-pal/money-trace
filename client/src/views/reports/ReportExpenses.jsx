@@ -35,8 +35,6 @@ function ReportExpenses() {
     );
   }, [reportDetails?.data?.response, isLoading]);
 
-  console.log(filterOptions);
-
   const [view, setView] = useState("summary");
 
   if (isLoading)

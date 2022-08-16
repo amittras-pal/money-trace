@@ -37,9 +37,9 @@ function DataTable({
   const {
     getTableProps,
     getTableBodyProps,
+    prepareRow,
     headerGroups,
     rows,
-    prepareRow,
     page,
     pageCount,
     gotoPage,
@@ -60,6 +60,17 @@ function DataTable({
     useSortBy,
     usePagination
   );
+
+  const pageReport = useMemo(() => {
+    const start = pageIndex * pageSize + 1;
+    let end = 0;
+    if (rows.length <= pageSize) end = rows.length;
+    else if (rows.length > pageSize) {
+      if (pageSize * (pageIndex + 1) >= rows.length) end = rows.length;
+      else end = pageSize * (pageIndex + 1);
+    }
+    return { start, end };
+  }, [pageIndex, pageSize, rows.length]);
 
   return (
     <>
@@ -156,12 +167,6 @@ function DataTable({
                       {row.cells.map((cell) => (
                         <td
                           component="td"
-                          // sx={{
-                          //   maxWidth: "300px",
-                          //   whiteSpace: "nowrap",
-                          //   overflow: "hidden",
-                          //   textOverflow: "ellipsis",
-                          // }}
                           {...cell.getCellProps({
                             style: {
                               minWidth: cell.minWidth,
@@ -187,13 +192,11 @@ function DataTable({
               size="xs"
               color={colors.gray[colorScheme === "light" ? 7 : 5]}>
               <Text component="span" size="xs" weight={500}>
-                {pageIndex * pageSize + 1}
+                {pageReport.start}
               </Text>{" "}
               to{" "}
               <Text component="span" size="xs" weight={500}>
-                {(pageIndex + 1) * pageSize > data.length
-                  ? data.length
-                  : (pageIndex + 1) * pageSize}
+                {pageReport.end}
               </Text>{" "}
               of{" "}
               <Text component="span" size="xs" weight={500}>

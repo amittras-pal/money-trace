@@ -6,10 +6,8 @@ const authenticate = asyncHandler(async (req, res, next) => {
   let token;
   if (req.headers.authorization?.startsWith("Bearer")) {
     try {
-      // retrieve token from header and verify
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // add user id from token into request body
       req.userId = decoded.id;
       next();
     } catch (error) {

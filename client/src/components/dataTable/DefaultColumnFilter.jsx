@@ -9,7 +9,7 @@ function DefaultColumnFilter({
     <input
       value={filterValue || ""}
       onChange={(e) => {
-        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+        setFilter(e.target.value || undefined);
       }}
       placeholder={`Search ${count} records...`}
     />

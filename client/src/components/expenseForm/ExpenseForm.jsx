@@ -99,7 +99,6 @@ function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
     if (expenseForm.values.attachToReport && !reports?.data?.response) {
       getReports();
     }
-    // eslint-disable-next-line
   }, [expenseForm.values.attachToReport, getReports, reports]);
 
   const saveExpense = (values) => {

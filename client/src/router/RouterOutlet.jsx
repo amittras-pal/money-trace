@@ -6,7 +6,6 @@ import RouteGuard from "./RouteGuard";
 
 const Transactions = lazy(() => import("../views/transactions/Transactions"));
 const SignUp = lazy(() => import("../views/signUp/SignUp"));
-// const User = lazy(() => import("../views/user/User"));
 const Reports = lazy(() => import("../views/reports/Reports"));
 const ReportExpenses = lazy(() => import("../views/reports/ReportExpenses"));
 
@@ -30,14 +29,6 @@ function RouterOutlet() {
           </RouteGuard>
         }
       />
-      {/* <Route
-        path="/user"
-        element={
-          <RouteGuard>
-            <User />
-          </RouteGuard>
-        }
-      /> */}
       <Route
         path="/reports"
         element={
