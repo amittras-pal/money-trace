@@ -22,7 +22,7 @@ export const CATEGORIES = {
   },
   Personal: {
     icon: User,
-    color: "blue",
+    color: "grape",
     description: "Haircuts, cosmetics, other personal needs.",
   },
   Shopping: {
@@ -39,7 +39,7 @@ export const CATEGORIES = {
   },
   Utilities: {
     icon: Recharging,
-    color: "orange",
+    color: "cyan",
     description:
       "House rent, phone/internet bills, electricity, household items like toiletries etc.",
   },

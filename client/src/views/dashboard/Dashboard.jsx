@@ -20,7 +20,7 @@ import { BudgetContext } from "../../context/budget.context";
 import { useErrorHandler } from "../../hooks/errorHandler";
 import { useExpenseSummary } from "../../queries/expense.query";
 import emptyState from "../../resources/illustrations/Clipboard.svg";
-import { percentage } from "../../utils/app.utils";
+import { percentage, severityColor } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 import Last2Days from "./Last2Days";
 
@@ -49,7 +49,7 @@ function Dashboard() {
           item.value,
           spentPercentage >= 100 ? data?.data?.response.total : defaultBudget
         ),
-        color: theme.colors[CATEGORIES[item.name].color][5],
+        color: theme.colors[CATEGORIES[item.name].color][6],
       }));
     else return [{ value: 0, color: theme.colors.gray[3] }];
   };
@@ -146,13 +146,7 @@ function Dashboard() {
                   <Text
                     size="sm"
                     weight="bold"
-                    color={
-                      defaultBudget
-                        ? spentPercentage >= 100
-                          ? "red"
-                          : theme.colors.gray[5]
-                        : theme.colors.gray[5]
-                    }>
+                    color={severityColor(spentPercentage)}>
                     ({spentPercentage}%)
                   </Text>
                 </Group>

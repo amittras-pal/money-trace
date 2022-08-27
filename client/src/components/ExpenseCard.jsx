@@ -1,4 +1,12 @@
-import { ActionIcon, Badge, Box, Group, Menu, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Box,
+  Group,
+  Menu,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
 import dayjs from "dayjs";
 import { DotsVertical, Edit, Trash } from "tabler-icons-react";
 import { CATEGORIES } from "../constants/appConstants";
@@ -16,6 +24,8 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
     const isOld = dayjs(data.expenseDate).isBefore(dayjs().subtract(2, "day"));
     return isOld;
   };
+
+  const Icon = CATEGORIES[data.category].icon;
 
   return (
     <Group
@@ -63,8 +73,19 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
           </Text>
           <Badge
             color={CATEGORIES[data.category].color}
-            variant="filled"
-            size="sm"
+            pl={0}
+            leftSection={
+              <ThemeIcon
+                color={CATEGORIES[data.category].color}
+                size={18}
+                variant="filled"
+                radius="lg"
+                mt={8}>
+                <Icon />
+              </ThemeIcon>
+            }
+            variant="light"
+            size="md"
             mr={8}>
             {data.category}
           </Badge>

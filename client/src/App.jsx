@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   createStyles,
+  Group,
   Header,
   Image,
   Text,
@@ -20,6 +21,7 @@ import { BudgetContext } from "./context/budget.context";
 import logo from "./resources/icons/app-logo.svg";
 import RouterOutlet from "./router/RouterOutlet";
 import { isAuthenticated } from "./utils/app.utils";
+import MobileOnly from "./resources/illustrations/MobileOnly.svg";
 
 function App() {
   // Remove this piece of code before committing.
@@ -84,10 +86,9 @@ function App() {
             </Suspense>
           </Box>
         ) : (
-          <Box>
-            We don't support desktop view, this application is supposed to be
-            used on a mobile device.
-          </Box>
+          <Group position="center">
+            <Image src={MobileOnly} height={600} />
+          </Group>
         )}
       </Box>
     </>
