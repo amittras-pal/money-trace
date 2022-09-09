@@ -1,5 +1,5 @@
 {
-  "name": "expense-tracker-client",
+  "name": "money-trace-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -28,7 +28,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false && react-scripts build",
+    "winBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
