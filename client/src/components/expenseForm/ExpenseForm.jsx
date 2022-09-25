@@ -67,7 +67,7 @@ function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
     initialValues: {
       title: data?.title || "",
       description: data?.description || "",
-      amount: data?.amount || 0,
+      amount: Math.abs(data?.amount || 0),
       category: data?.category || "",
       attachToReport: data?.report ? true : false,
       report: data?.report || "",
@@ -102,9 +102,13 @@ function ExpenseForm({ onCancel, onComplete, data = null, relatedQueries }) {
   }, [expenseForm.values.attachToReport, getReports, reports]);
 
   const saveExpense = (values) => {
+    if (values.category === "Refund") {
+      values.amount = -Math.abs(values.amount);
+    }
     if (!values.attachToReport) {
       values.report = "";
     }
+
     if (!data) {
       addExpense(values);
     } else {
