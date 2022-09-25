@@ -60,14 +60,26 @@ function Transactions() {
         ),
       },
       {
-        Header: "Amount",
+        Header: (data) => {
+          const total = useMemo(
+            () => data.rows.reduce((sum, row) => sum + row.values.amount, 0),
+            [data.rows]
+          );
+          return data.state.filters.length === 0
+            ? "Amount"
+            : `Amount (${currencyFormat.format(Math.abs(total))})`;
+        },
         accessor: "amount",
-        minWidth: 100,
-        width: 100,
-        maxWidth: 100,
+        minWidth: 200,
+        width: 200,
+        maxWidth: 200,
         disableFilters: true,
         Cell: ({ value }) => (
-          <Text weight={500} size="sm" sx={{ minWidth: "150px" }}>
+          <Text
+            weight={500}
+            size="sm"
+            sx={{ minWidth: "150px" }}
+            color={value > 0 ? "red" : "green"}>
             {currencyFormat.format(value)}
           </Text>
         ),
@@ -135,7 +147,7 @@ function Transactions() {
         mb={12}
       />
       <Text weight={500} size="xs" mb={12}>
-        Spent{" "}
+        Overall Spent{" "}
         <Text component="span" size="xs" color={severityColor(perc)}>
           {currencyFormat.format(amount)}
         </Text>{" "}

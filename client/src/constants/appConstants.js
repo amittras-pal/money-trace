@@ -5,6 +5,7 @@ import {
   ShoppingCart,
   Stethoscope,
   User,
+  ReceiptRefund,
 } from "tabler-icons-react";
 
 export const APP_TITLE = "Money Trace";
@@ -24,6 +25,12 @@ export const CATEGORIES = {
     icon: User,
     color: "grape",
     description: "Haircuts, cosmetics, other personal needs.",
+  },
+  Refund: {
+    icon: ReceiptRefund,
+    color: "pink",
+    description:
+      "Refunds for any expense made in any other cartegories, saved as a negative value.",
   },
   Shopping: {
     icon: ShoppingCart,
