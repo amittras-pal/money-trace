@@ -8,6 +8,7 @@ import { useErrorHandler } from "../../hooks/errorHandler";
 import { useDeleteExpense } from "../../queries/expense.query";
 import ExpenseCard from "../ExpenseCard";
 import ExpenseForm from "../expenseForm/ExpenseForm";
+import RevertExpense from "../RevertExpense/RevertExpense";
 
 function ExpensesList({
   relatedQueries,
@@ -17,6 +18,7 @@ function ExpensesList({
 }) {
   const client = useQueryClient();
   const [selectedItem, setSelectedItem] = useState(null);
+  const [revertItem, setRevertItem] = useState(null);
   const { openConfirmModal, closeModal } = useModals();
   const { showNotification } = useNotifications();
 
@@ -24,9 +26,7 @@ function ExpensesList({
 
   const { mutate: deleteExpense } = useDeleteExpense({
     onSuccess: ({ data }) => {
-      for (const query of relatedQueries) {
-        client.invalidateQueries(query);
-      }
+      for (const query of relatedQueries) client.invalidateQueries(query);
       closeModal();
       showNotification({
         title: data.message,
@@ -72,13 +72,14 @@ function ExpensesList({
 
   return (
     <>
-      <ScrollArea style={{ height }} scrollbarSize={6}>
+      <ScrollArea style={{ height }} scrollbarSize={6} type="scroll">
         {expenseList?.map((expense) => (
           <ExpenseCard
             data={expense}
             key={expense._id}
             onEdit={setSelectedItem}
             onDelete={confirmDelete}
+            onRevert={setRevertItem}
             hideMenus={disableExpenseActions}
           />
         ))}
@@ -94,6 +95,11 @@ function ExpensesList({
           relatedQueries={relatedQueries}
         />
       </Modal>
+      <RevertExpense
+        data={revertItem}
+        closeModal={() => setRevertItem(null)}
+        relatedQueries={relatedQueries}
+      />
     </>
   );
 }

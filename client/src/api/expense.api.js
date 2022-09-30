@@ -27,7 +27,7 @@ export function deleteExpense(expenseId) {
   });
 }
 
-export function revertExpense(expenseId, revertMsg) {
+export function revertExpense({ expenseId, revertMsg }) {
   return axios.patch(
     endpoints.EXPENSE_ALL_ACTIONS,
     { revertMsg },

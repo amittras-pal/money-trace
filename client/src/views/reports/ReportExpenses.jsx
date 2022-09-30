@@ -27,11 +27,14 @@ function ReportExpenses() {
 
   const filterOptions = useMemo(() => {
     if (isLoading) return [];
-    return Object.entries(reportDetails?.data?.response.summary ?? {})?.map(
-      ([key]) => ({
-        label: key,
-        value: key,
-      })
+    return reportDetails?.data?.response.expenses.reduce(
+      (collected, current) => {
+        console.log(collected);
+        if (!collected.find((item) => item.value === current.category))
+          collected.push({ label: current.category, value: current.category });
+        return collected;
+      },
+      []
     );
   }, [reportDetails?.data?.response, isLoading]);
 
