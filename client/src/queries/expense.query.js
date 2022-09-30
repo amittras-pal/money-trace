@@ -4,14 +4,15 @@ import {
   deleteExpense,
   editExpense,
   getExpenseBreakdown,
-  getExpenseByCategories,
   getLast2DaysExpense,
+  getMonthSummary,
+  revertExpense,
 } from "../api/expense.api";
 
 export function useExpenseSummary(month, year, options) {
   return useQuery(
     ["expense-summary", month, year],
-    () => getExpenseByCategories(month, year),
+    () => getMonthSummary(month, year),
     options
   );
 }
@@ -38,4 +39,8 @@ export function useEditExpense(options) {
 
 export function useDeleteExpense(options) {
   return useMutation(deleteExpense, options);
+}
+
+export function useRevertExpense(options) {
+  return useMutation(revertExpense, options);
 }
