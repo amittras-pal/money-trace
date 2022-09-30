@@ -166,13 +166,8 @@ function DataTable({
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
                         <td
-                          component="td"
                           {...cell.getCellProps({
-                            style: {
-                              minWidth: cell.minWidth,
-                              maxWidth: cell.maxWidth,
-                              width: cell.width,
-                            },
+                            style: { ...cell.column.style },
                           })}>
                           {cell.render("Cell")}
                         </td>

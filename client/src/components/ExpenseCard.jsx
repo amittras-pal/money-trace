@@ -8,11 +8,12 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import { DotsVertical, Edit, Trash } from "tabler-icons-react";
+import { useMemo } from "react";
+import { ArrowBackUp, DotsVertical, Edit, Trash } from "tabler-icons-react";
 import { CATEGORIES } from "../constants/appConstants";
 import { currencyFormat } from "../utils/formatter.utils";
 
-function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
+function ExpenseCard({ data, onEdit, onDelete, onRevert, hideMenus = false }) {
   const getDayString = (dateString) => {
     if (dayjs(dateString).isSame(dayjs(), "date")) return "Today";
     else if (dayjs(dateString).isSame(dayjs().subtract(1, "day"), "date"))
@@ -20,10 +21,9 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
     else return dayjs(dateString).format("MMM DD, 'YY");
   };
 
-  const isOldReport = () => {
-    const isOld = dayjs(data.expenseDate).isBefore(dayjs().subtract(2, "day"));
-    return isOld;
-  };
+  const isReportOld = useMemo(() => {
+    return dayjs(data.expenseDate).isBefore(dayjs().subtract(2, "day"));
+  }, [data.expenseDate]);
 
   const Icon = CATEGORIES[data.category].icon;
 
@@ -55,13 +55,23 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
         },
       })}>
       <Box ml={8}>
-        <Text weight={500} lineClamp={1}>
+        <Text weight={500} lineClamp={2}>
+          {data.reverted && (
+            <ThemeIcon
+              mr="xs"
+              color="red"
+              size={18}
+              variant="filled"
+              radius="lg">
+              <ArrowBackUp size={14} />
+            </ThemeIcon>
+          )}
           {data.title}
         </Text>
         <Text size="sm" color="dimmed">
           {data.description}
         </Text>
-        <Group spacing={0}>
+        <Group spacing={0} sx={{ alignItems: "center" }}>
           <Text
             weight={500}
             lineClamp={1}
@@ -94,22 +104,34 @@ function ExpenseCard({ data, onEdit, onDelete, hideMenus = false }) {
           </Badge>
         </Group>
       </Box>
-      {!hideMenus && !isOldReport() && (
+      {!hideMenus && !data.reverted && (
         <Menu
           control={
             <ActionIcon variant="hover" color="gray" radius="xl" mt={4}>
               <DotsVertical size={16} />
             </ActionIcon>
           }>
-          <Menu.Item icon={<Edit size={14} />} onClick={() => onEdit(data)}>
-            Edit
-          </Menu.Item>
-          <Menu.Item
-            color="red"
-            icon={<Trash size={14} />}
-            onClick={() => onDelete(data)}>
-            Delete
-          </Menu.Item>
+          {!isReportOld && (
+            <Menu.Item icon={<Edit size={18} />} onClick={() => onEdit(data)}>
+              Edit
+            </Menu.Item>
+          )}
+          {!isReportOld && (
+            <Menu.Item
+              color="red"
+              icon={<Trash size={18} />}
+              onClick={() => onDelete(data)}>
+              Delete
+            </Menu.Item>
+          )}
+          {isReportOld && (
+            <Menu.Item
+              color="red"
+              icon={<ArrowBackUp size={18} />}
+              onClick={() => onRevert(data)}>
+              Revert
+            </Menu.Item>
+          )}
         </Menu>
       )}
     </Group>
