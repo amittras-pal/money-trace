@@ -89,7 +89,10 @@ function DataTable({
             </Text>
           </Group>
         ) : (
-          <ScrollArea style={{ height: tableHeight }} scrollbarSize={6}>
+          <ScrollArea
+            style={{ height: tableHeight }}
+            scrollbarSize={6}
+            type="scroll">
             <Table verticalSpacing="sm" highlightOnHover {...getTableProps()}>
               <Box component="thead">
                 {headerGroups.map((hGroup, index) => (
@@ -166,13 +169,8 @@ function DataTable({
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
                         <td
-                          component="td"
                           {...cell.getCellProps({
-                            style: {
-                              minWidth: cell.minWidth,
-                              maxWidth: cell.maxWidth,
-                              width: cell.width,
-                            },
+                            style: { ...cell.column.style },
                           })}>
                           {cell.render("Cell")}
                         </td>

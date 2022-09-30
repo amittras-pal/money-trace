@@ -199,8 +199,7 @@ const revertExpense = asyncHandler(async (req, res) => {
   try {
     const expense = await Expense.findById(expenseId);
     expense.reverted = true;
-    expense.title = `Reverted ${expense.title}`;
-    expense.description = `[REVERTED ${revertMsg}] ${expense.description}`;
+    expense.description = `[${revertMsg}] ${expense.description}`;
     await expense.save();
     res.json({ message: "Expense reverted successfully." });
   } catch (error) {

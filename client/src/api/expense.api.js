@@ -1,8 +1,8 @@
 import endpoints from "../constants/apiEndpoints";
 import axios from "./config";
 
-export function getExpenseByCategories(month, year) {
-  return axios.get(endpoints.EXPENSE_BY_CATEGORY, { params: { month, year } });
+export function getMonthSummary(month, year) {
+  return axios.get(endpoints.MONTH_SUMMARY, { params: { month, year } });
 }
 
 export function getExpenseBreakdown(month, year) {
@@ -14,15 +14,23 @@ export function getLast2DaysExpense() {
 }
 
 export function addExpense(formData) {
-  return axios.post(endpoints.EXPENSE_ADD_EDIT_DELETE, formData);
+  return axios.post(endpoints.EXPENSE_ALL_ACTIONS, formData);
 }
 
 export function editExpense(formData) {
-  return axios.put(endpoints.EXPENSE_ADD_EDIT_DELETE, formData);
+  return axios.put(endpoints.EXPENSE_ALL_ACTIONS, formData);
 }
 
 export function deleteExpense(expenseId) {
-  return axios.delete(endpoints.EXPENSE_ADD_EDIT_DELETE, {
+  return axios.delete(endpoints.EXPENSE_ALL_ACTIONS, {
     params: { expenseId },
   });
+}
+
+export function revertExpense({ expenseId, revertMsg }) {
+  return axios.patch(
+    endpoints.EXPENSE_ALL_ACTIONS,
+    { revertMsg },
+    { params: { expenseId } }
+  );
 }

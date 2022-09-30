@@ -1,12 +1,13 @@
-import { Badge, Group, Text, ThemeIcon } from "@mantine/core";
+import { ActionIcon, Badge, Group, Menu, Text, ThemeIcon } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Calendar } from "tabler-icons-react";
+import { ArrowBackUp, Calendar, Dots } from "tabler-icons-react";
 import DataTable from "../../components/dataTable/DataTable";
 import SelectionFilter from "../../components/dataTable/SelectionFilter";
 import LoaderOverlay from "../../components/LoaderOverlay";
+import RevertExpense from "../../components/RevertExpense/RevertExpense";
 import { CATEGORIES } from "../../constants/appConstants";
 import { useErrorHandler } from "../../hooks/errorHandler";
 import { useBudget } from "../../queries/budget.query";
@@ -20,6 +21,7 @@ import { currencyFormat } from "../../utils/formatter.utils";
 
 function Transactions() {
   const [timeFrame, setTimeFrame] = useState(new Date());
+  const [revertExpense, setRevertExpense] = useState(null);
   const [params] = useSearchParams();
 
   const { onError } = useErrorHandler();
@@ -41,7 +43,7 @@ function Transactions() {
       {
         Header: "Title",
         accessor: "title",
-        minWidth: 240,
+        style: { minWidth: 230 },
         disableFilters: true,
         disableSortBy: true,
         Cell: ({ value = "", row }) => (
@@ -60,14 +62,29 @@ function Transactions() {
         ),
       },
       {
-        Header: "Amount",
+        Header: (data) => {
+          const total = useMemo(
+            () =>
+              data.rows.reduce(
+                (sum, row) =>
+                  sum + (row.original.reverted ? 0 : row.values.amount),
+                0
+              ),
+            [data.rows]
+          );
+          return data.state.filters.length === 0
+            ? "Amount"
+            : `Amount (${currencyFormat.format(Math.abs(total))})`;
+        },
         accessor: "amount",
-        minWidth: 100,
-        width: 100,
-        maxWidth: 100,
+        style: { minWidth: 200, width: 200, maxWidth: 200 },
         disableFilters: true,
-        Cell: ({ value }) => (
-          <Text weight={500} size="sm" sx={{ minWidth: "150px" }}>
+        Cell: ({ value, row }) => (
+          <Text
+            weight={500}
+            size="sm"
+            sx={{ minWidth: "150px" }}
+            color={row.original.reverted ? "blue" : "red"}>
             {currencyFormat.format(value)}
           </Text>
         ),
@@ -100,6 +117,44 @@ function Transactions() {
                 {dayjs(value.split("T")[0]).format("MMMM DD")}
               </Text>
             </Group>
+          );
+        },
+      },
+      {
+        Header: "",
+        accessor: "_id",
+        disableFilters: true,
+        disableSortBy: true,
+        style: {
+          minWidth: 30,
+          width: 30,
+          maxWidth: 30,
+          padding: 0,
+        },
+        Cell: ({ row }) => {
+          const isReportOld = useMemo(() => {
+            return dayjs(row.original.expenseDate).isBefore(
+              dayjs().subtract(2, "day")
+            );
+          }, [row.original.expenseDate]);
+          return (
+            <>
+              {isReportOld && !row.original.reverted && (
+                <Menu
+                  control={
+                    <ActionIcon variant="hover" color="gray" radius="xl">
+                      <Dots size={16} />
+                    </ActionIcon>
+                  }>
+                  <Menu.Item
+                    color="red"
+                    icon={<ArrowBackUp size={18} />}
+                    onClick={() => setRevertExpense(row.original)}>
+                    Revert
+                  </Menu.Item>
+                </Menu>
+              )}
+            </>
           );
         },
       },
@@ -161,6 +216,17 @@ function Transactions() {
           }
         />
       )}
+      <RevertExpense
+        data={revertExpense}
+        closeModal={() => setRevertExpense(null)}
+        relatedQueries={[
+          [
+            "expense-breakdown",
+            new Date().getMonth() + 1,
+            new Date().getFullYear(),
+          ],
+        ]}
+      />
     </>
   );
 }
