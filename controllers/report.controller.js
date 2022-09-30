@@ -49,11 +49,11 @@ const getReportDetails = asyncHandler(async (req, res) => {
     let total = 0;
     expenses.forEach((item) => {
       if (summary[item.category]) {
-        summary[item.category] += item.amount;
+        summary[item.category] += item.reverted ? 0 : item.amount;
       } else {
-        summary[item.category] = item.amount;
+        if (!item.reverted) summary[item.category] = item.amount;
       }
-      total += item.amount;
+      total += item.reverted ? 0 : item.amount;
     });
     return res.json({
       message: "Report details retrieved successfully.",

@@ -9,13 +9,13 @@ const ObjectId = require("mongoose").Types.ObjectId;
  * @method GET /api/expenses/categories?month=<Number[1:12]>&?year=<Number>
  * @access private
  */
-const getExpensesByCategory = asyncHandler(async (req, res) => {
+const getMonthSummary = asyncHandler(async (req, res) => {
   const {
     userId,
     query: { month, year },
   } = req;
   const expenses = await Expense.aggregate([
-    { $match: { user: ObjectId(userId), report: null } },
+    { $match: { user: ObjectId(userId), report: null, reverted: false } },
     {
       $addFields: {
         month: { $month: "$expenseDate" },
@@ -184,11 +184,37 @@ const deleteExpense = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * @description revert expense / mark as refunded.
+ * This will cause the expense to be in record but will not be considered in total for the budget.
+ * @method PATCH
+ * @access private
+ */
+const revertExpense = asyncHandler(async (req, res) => {
+  const {
+    query: { expenseId },
+    body: { revertMsg },
+  } = req;
+
+  try {
+    const expense = await Expense.findById(expenseId);
+    expense.reverted = true;
+    expense.title = `Reverted ${expense.title}`;
+    expense.description = `[REVERTED ${revertMsg}] ${expense.description}`;
+    await expense.save();
+    res.json({ message: "Expense reverted successfully." });
+  } catch (error) {
+    res.status(http.INTERNAL_SERVER_ERROR);
+    throw new Error(error);
+  }
+});
+
 module.exports = {
-  getExpensesByCategory,
+  getMonthSummary,
   getAllExpenses,
   getLastTwoDays,
   addExpense,
   editExpense,
   deleteExpense,
+  revertExpense,
 };

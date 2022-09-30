@@ -35,6 +35,11 @@ const expenseSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    reverted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: false }
 );
