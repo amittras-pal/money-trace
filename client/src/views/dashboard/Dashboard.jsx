@@ -44,19 +44,13 @@ function Dashboard() {
   const spentPercentage = percentage(data?.data?.response.total, defaultBudget);
   const getChartSections = () => {
     if (defaultBudget)
-      return data?.data?.response?.categories
-        .filter((item) => item.name !== "Refund")
-        .map((item) => {
-          return {
-            value: percentage(
-              Math.abs(item.value),
-              spentPercentage >= 100
-                ? data?.data?.response.total
-                : defaultBudget
-            ),
-            color: theme.colors[CATEGORIES[item.name].color][6],
-          };
-        });
+      return data?.data?.response?.categories.map((item) => ({
+        value: percentage(
+          item.value,
+          spentPercentage >= 100 ? data?.data?.response.total : defaultBudget
+        ),
+        color: theme.colors[CATEGORIES[item.name].color][6],
+      }));
     else return [{ value: 0, color: theme.colors.gray[3] }];
   };
 
@@ -93,21 +87,19 @@ function Dashboard() {
           padding: theme.spacing.md,
           borderRadius: theme.radius.md,
           boxShadow: theme.shadows.lg,
-          height: "90%",
+          height: "85%",
           display: "flex",
           flexDirection: "column",
           justifyContent: `${
             data?.data?.response.total > 0 ? "space-between" : "center"
           }`,
           alignItems: "center",
+          marginTop: theme.spacing.sm,
         })}>
         {isLoading ? (
           <LoaderOverlay />
         ) : data?.data?.response.total > 0 ? (
           <>
-            <Text align="center" size="xs" color="dimmed">
-              Refunds are not shown in the chart.
-            </Text>
             <RingProgress
               size={275}
               thickness={50}
@@ -121,7 +113,7 @@ function Dashboard() {
               sx={{ width: "100%" }}>
               <Group
                 direction="column"
-                spacing="xs"
+                spacing="sm"
                 sx={() => ({ flexShrink: 1 })}>
                 {Object.entries(CATEGORIES).map(([name]) => (
                   <Badge
@@ -189,7 +181,7 @@ function Dashboard() {
                   size="xs"
                   leftIcon={<Plus size={18} />}
                   onClick={() => setOpen(true)}
-                  mt="sm">
+                  mt="auto">
                   Add New
                 </Button>
               </Group>
