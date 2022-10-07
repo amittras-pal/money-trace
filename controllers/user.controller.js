@@ -67,12 +67,13 @@ const loginUser = asyncHandler(async (req, res) => {
     res.json({
       message: `Login Successful! Welcome ${user.name}`,
       response: {
-        userDetails: {
-          _id: user.id,
-          name: user.name,
-          email: user.email,
-          createdAt: user.createdAt,
-        },
+        // TODO: Remove user info from the login response.
+        // userDetails: {
+        //   _id: user.id,
+        //   name: user.name,
+        //   email: user.email,
+        //   createdAt: user.createdAt,
+        // },
         token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
           expiresIn: "48h",
         }),

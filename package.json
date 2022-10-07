@@ -15,7 +15,8 @@
   "license": "ISC",
   "nodemonConfig": {
     "ignore": [
-      "client/*"
+      "client/*",
+      "frontend/*"
     ]
   },
   "dependencies": {
