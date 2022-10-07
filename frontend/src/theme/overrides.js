@@ -1,0 +1,60 @@
+/** @type {import("@mantine/core").ModalProps} */
+const modalOverRides = {
+  centered: true,
+  overlayBlur: 5,
+  overflow: "inside",
+  transition: "scale",
+};
+
+/** @type {import("@mantine/core").DrawerProps} */
+const drawerOverrides = {
+  overlayBlur: 5,
+};
+
+/** @type {import("@mantine/core").ButtonProps} */
+const buttonOverRides = {
+  size: "sm",
+};
+
+/** @type {import("@mantine/core").TextProps} */
+const textOverRides = {
+  color: "#F1F3F5",
+};
+
+/** @type {import("@mantine/core").TextInputProps} */
+const textInputOverRides = {
+  size: "sm",
+  mb: "sm",
+};
+
+/** @type {import("@mantine/core").PasswordInputProps} */
+const passwordInputOverRides = {
+  size: "sm",
+  mb: "sm",
+  toggleTabIndex: 0,
+};
+
+/** @type {import("@mantine/core").ScrollAreaProps} */
+const scrollAreaOverRides = {
+  type: "scroll",
+  scrollbarSize: 4,
+  scrollHideDelay: 1500,
+};
+
+/** @type {import("@mantine/core").MantineThemeOverride} */
+export const mantineOverrides = {
+  colorScheme: "dark",
+  primaryColor: "indigo",
+  activeStyles: {
+    transform: "scale(0.95)",
+  },
+  components: {
+    Modal: { defaultProps: modalOverRides },
+    Drawer: { defaultProps: drawerOverrides },
+    Button: { defaultProps: buttonOverRides },
+    TextInput: { defaultProps: textInputOverRides },
+    PasswordInput: { defaultProps: passwordInputOverRides },
+    ScrollArea: { defaultProps: scrollAreaOverRides },
+    Text: { defaultProps: textOverRides },
+  },
+};
