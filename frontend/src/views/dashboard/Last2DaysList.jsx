@@ -11,7 +11,13 @@ import CenteredLoader from "../../components/centeredLoader/CenteredLoader";
 import ExpenseItem from "../../components/expenseItem/ExpenseItem";
 import noTransactions from "../../resources/NoTransactions.svg";
 
-export default function Last2DaysList({ data, loading, inDrawer }) {
+export default function Last2DaysList({
+  data,
+  loading,
+  inDrawer,
+  onEditExpense,
+  onDeleteExpense,
+}) {
   const { colors } = useMantineTheme();
   if (loading) return <CenteredLoader />;
 
@@ -26,7 +32,12 @@ export default function Last2DaysList({ data, loading, inDrawer }) {
       {data?.length > 0 ? (
         <ScrollArea style={{ height: "calc(100% - 50px)" }}>
           {data?.map((item) => (
-            <ExpenseItem key={item._id} data={item} />
+            <ExpenseItem
+              key={item._id}
+              data={item}
+              onEdit={onEditExpense}
+              onDelete={onDeleteExpense}
+            />
           ))}
         </ScrollArea>
       ) : (

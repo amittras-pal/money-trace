@@ -22,7 +22,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { APP_TITLE, APP_VERSION } from "../../constants/app.constants";
+import VersionDisplay from "../../components/versionDisplay/VersionDisplay";
+import { APP_TITLE } from "../../constants/app.constants";
 import { useErrorHandler } from "../../hooks/errorHandler";
 import { useLogin } from "../../services/auth.service";
 
@@ -132,17 +133,7 @@ function Login() {
           </Text>
         </Group>
       </Container>
-      <Text
-        sx={(theme) => ({
-          position: "fixed",
-          bottom: theme.spacing.sm,
-          width: `calc(100% - ${2 * theme.spacing.md}px)`,
-        })}
-        align="center"
-        size="xs"
-        color="dimmed">
-        {APP_VERSION}
-      </Text>
+      <VersionDisplay />
     </>
   );
 }

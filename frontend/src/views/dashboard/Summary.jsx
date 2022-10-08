@@ -21,10 +21,8 @@ import { percentage, severityColor } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
 // TODO: Add Empty State.
-export default function Summary() {
+export default function Summary({ onAddNew }) {
   const { onError } = useErrorHandler();
-  // TODO: Remove if this feels unnecessary.
-  // const [activeSection, setActiveSection] = useState("");
   const { breakpoints, colors } = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${breakpoints.md}px)`);
 
@@ -42,7 +40,7 @@ export default function Summary() {
     { onError, enabled: !!budget }
   );
 
-  // TODO: if budget exceeds, return only one section of 'red'
+  // TODO: if budget exceeds, remove the available budget section.
   const sections = useMemo(() => {
     const expenseCats = summary?.data?.response?.categories ?? [];
     const chartSections = [
@@ -98,7 +96,6 @@ export default function Summary() {
               endAngle={450}
               paddingAngle={3}
               autoReverse
-              // onMouseEnter={(e) => setActiveSection(e.name)}
               dataKey="value">
               {sections.map((section) => (
                 <Cell
@@ -112,19 +109,17 @@ export default function Summary() {
               ))}
             </Pie>
             {/* TODO: Customize this tooltip. */}
-            <Tooltip />
+            <Tooltip
+              content={<ChartTooltip />}
+              wrapperStyle={{ outline: "none" }}
+            />
           </PieChart>
         </ResponsiveContainer>
       </Box>
-      <Box
-        sx={(theme) => ({
-          width: "100%",
-          marginTop: "auto",
-          marginBottom: theme.spacing.md,
-        })}>
+      <Box sx={{ width: "100%", marginTop: "auto" }}>
         <Group spacing="sm" position="center" grow sx={{ width: "100%" }}>
           <Group
-            spacing="sm"
+            spacing="xs"
             sx={() => ({
               flexShrink: 1,
               flexDirection: "column",
@@ -134,12 +129,6 @@ export default function Summary() {
               <Badge
                 color={CATEGORIES[name].color}
                 variant={recordedCategories.includes(name) ? "filled" : "dot"}
-                // TODO: Remove if it seems unnecessary.
-                // variant={(() => {
-                //   if (!recordedCategories.includes(name)) return "dot";
-                //   if (activeSection === name) return "filled";
-                //   return "light";
-                // })()}
                 // TODO: Navigate to transactions with filter
                 // onClick={() => navigateToFilteredTransactions(name)}
                 key={name}>
@@ -184,8 +173,7 @@ export default function Summary() {
               color="indigo"
               size="xs"
               leftIcon={<IconPlus size={18} />}
-              // TODO: Add Create Expense.
-              // onClick={() => setOpen(true)}
+              onClick={onAddNew}
               mt="auto">
               Add New
             </Button>
@@ -194,4 +182,25 @@ export default function Summary() {
       </Box>
     </>
   );
+}
+
+function ChartTooltip({ active, payload }) {
+  if (active && payload && payload?.length) {
+    return (
+      <Box
+        sx={(theme) => ({
+          backgroundColor: theme.colors.dark[6],
+          padding: theme.spacing.xs,
+          borderRadius: theme.radius.sm,
+          boxShadow: theme.shadows.md,
+          border: `1px solid ${payload[0].payload.color}`,
+        })}>
+        <Text size="xs" color="dimmed">
+          {payload[0].name}
+        </Text>
+        <Text>{currencyFormat.format(payload[0].value)}</Text>
+      </Box>
+    );
+  }
+  return null;
 }

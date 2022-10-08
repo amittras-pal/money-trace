@@ -15,7 +15,7 @@ export default function AppNavigation({ opened, setOpened }) {
       pt="md"
       hiddenBreakpoint="sm"
       hidden={!opened}
-      width={{ sm: 200, lg: 300 }}>
+      width={{ sm: 240, lg: 360 }}>
       <Navbar.Section grow>
         <Navigation onChange={() => setOpened(false)} />
       </Navbar.Section>

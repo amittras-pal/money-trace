@@ -53,3 +53,8 @@ export const CATEGORIES = {
       "House rent, phone/internet bills, electricity, household items like toiletries etc.",
   },
 };
+
+export const DASHBOARD_QUERIES = [
+  ["expense-summary", new Date().getMonth() + 1, new Date().getFullYear()],
+  "last-two-days",
+];

@@ -26,13 +26,19 @@ const textOverRides = {
 /** @type {import("@mantine/core").TextInputProps} */
 const textInputOverRides = {
   size: "sm",
-  mb: "sm",
+  mb: "xs",
+};
+
+/** @type {import("@mantine/core").TextareaProps} */
+const textAreaOverRides = {
+  size: "sm",
+  mb: "xs",
 };
 
 /** @type {import("@mantine/core").PasswordInputProps} */
 const passwordInputOverRides = {
   size: "sm",
-  mb: "sm",
+  mb: "xs",
   toggleTabIndex: 0,
 };
 
@@ -58,5 +64,6 @@ export const mantineOverrides = {
     PasswordInput: { defaultProps: passwordInputOverRides },
     ScrollArea: { defaultProps: scrollAreaOverRides },
     Text: { defaultProps: textOverRides },
+    TextArea: { defaultProps: textAreaOverRides },
   },
 };
