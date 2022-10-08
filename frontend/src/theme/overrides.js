@@ -39,7 +39,7 @@ const passwordInputOverRides = {
 /** @type {import("@mantine/core").ScrollAreaProps} */
 const scrollAreaOverRides = {
   type: "scroll",
-  scrollbarSize: 4,
+  scrollbarSize: 6,
   scrollHideDelay: 1500,
 };
 
