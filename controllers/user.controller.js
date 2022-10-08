@@ -91,7 +91,7 @@ const loginUser = asyncHandler(async (req, res) => {
  * @access private
  */
 const getUserDetails = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.userId);
+  const user = await User.findById(req.userId, "-password -__v");
   if (user) {
     res.json({ message: "User details retrieved", response: user });
   }
