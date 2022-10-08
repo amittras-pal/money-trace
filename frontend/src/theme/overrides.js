@@ -2,8 +2,10 @@
 const modalOverRides = {
   centered: true,
   overlayBlur: 5,
+  overlayColor: "#212529AA",
   overflow: "inside",
-  transition: "scale",
+  transition: "pop",
+  transitionDuration: 300,
 };
 
 /** @type {import("@mantine/core").DrawerProps} */

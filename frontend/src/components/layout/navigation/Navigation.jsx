@@ -1,40 +1,10 @@
 import { Group, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
-import {
-  IconArrowsDoubleSwNe,
-  IconChevronRight,
-  IconDashboard,
-  IconReport,
-} from "@tabler/icons";
+import { IconChevronRight } from "@tabler/icons";
 import React, { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { NAV_ROUTES } from "../../../constants/app.constants";
 
-// TODO: Export this from the constants.
-const data = [
-  {
-    icon: <IconDashboard size={16} />,
-    label: "Dashboard",
-    path: "/",
-    exactMatch: true,
-  },
-  {
-    icon: <IconArrowsDoubleSwNe size={16} />,
-    label: "Transactions List",
-    path: "/transactions",
-    exactMatch: true,
-  },
-  {
-    icon: <IconReport size={16} />,
-    label: "Planned Reports",
-    path: "/planned-reports",
-    exactMatch: false,
-  },
-  // {
-  //   icon: <IconArrowAutofitLeft size={16} />,
-  //   label: "Databases",
-  // },
-];
-
-function MainLink({ icon, label, path, exactMatch, onChange }) {
+function NavLink({ icon, label, path, exactMatch, onChange }) {
   const { pathname } = useLocation();
   const matching = useMemo(() => {
     return exactMatch ? pathname === path : pathname.includes(path);
@@ -72,8 +42,11 @@ function MainLink({ icon, label, path, exactMatch, onChange }) {
 }
 
 export default function Navigation({ onChange }) {
-  const links = data.map((link) => (
-    <MainLink {...link} key={link.label} onChange={onChange} />
-  ));
-  return <>{links}</>;
+  return (
+    <>
+      {NAV_ROUTES.map((link) => (
+        <NavLink {...link} key={link.label} onChange={onChange} />
+      ))}
+    </>
+  );
 }
