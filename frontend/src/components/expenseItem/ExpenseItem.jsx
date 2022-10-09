@@ -7,6 +7,8 @@ import {
   Menu,
   Text,
   ThemeIcon,
+  Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconArrowBackUp,
@@ -30,13 +32,14 @@ export default function ExpenseItem({
   flatten = false,
 }) {
   const { classes } = useCardStyle({ category: data?.category, flatten });
+  const { colors } = useMantineTheme();
 
   const itemActions = useMemo(() => {
-    if (hideMenus) return null;
+    if (hideMenus || data?.reverted) return null;
+
     const isReportOld = dayjs(data.expenseDate).isBefore(
       dayjs().subtract(2, "day")
     );
-
     if (isReportOld)
       return [
         {
@@ -65,16 +68,25 @@ export default function ExpenseItem({
   return (
     <Box className={classes.card}>
       <Box sx={{ flexGrow: 1 }}>
-        <Text weight={500} lineClamp={2}>
+        <Text
+          weight={500}
+          lineClamp={2}
+          strikethrough={data.reverted}
+          color={data?.reverted ? "dimmed" : colors.gray[1]}>
           {data.reverted && (
-            <ThemeIcon
-              mr="xs"
-              color="red"
-              size={18}
-              variant="filled"
-              radius="lg">
-              <IconArrowBackUp size={14} />
-            </ThemeIcon>
+            <Tooltip
+              position="bottom-start"
+              label="This item has been reverted."
+              color="red">
+              <ThemeIcon
+                mr="xs"
+                color="red"
+                size={18}
+                variant="filled"
+                radius="lg">
+                <IconArrowBackUp size={14} />
+              </ThemeIcon>
+            </Tooltip>
           )}
           {data.title}
         </Text>

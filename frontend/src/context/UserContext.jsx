@@ -17,6 +17,9 @@ export function UserProvider({ children }) {
   const [userData, setUserData] = useState(null);
   const { onError } = useErrorHandler();
 
+  //TODO: Add system wide block if the bd=udget is not set for the current month.
+  //TODO: Add Changelog view if user has a changelog not viewed.
+
   useEffect(() => {
     const listener = () => {
       setLoggedIn(localStorage.getItem("token") ? true : false);

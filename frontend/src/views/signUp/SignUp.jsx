@@ -29,7 +29,6 @@ import { useSignUp } from "../../services/auth.service";
 
 function SignUp() {
   const navigate = useNavigate();
-  // const { onError } = useErrorHandler();
   const { breakpoints } = useMantineTheme();
   const isSmallScreen = useMediaQuery(`(max-width: ${breakpoints.md}px)`);
 

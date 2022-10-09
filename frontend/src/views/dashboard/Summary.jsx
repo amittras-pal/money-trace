@@ -4,15 +4,18 @@ import {
   Button,
   Group,
   Text,
+  ThemeIcon,
   useMantineTheme,
+  Tooltip as MTooltip,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { IconArrowRight, IconPlus } from "@tabler/icons";
+import { IconAlertOctagon, IconArrowRight, IconPlus } from "@tabler/icons";
 import dayjs from "dayjs";
 import React, { useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import CenteredLoader from "../../components/centeredLoader/CenteredLoader";
+import ChartTooltip from "../../components/charts/ChartTooltip";
 import { CATEGORIES } from "../../constants/app.constants";
 import { useErrorHandler } from "../../hooks/errorHandler";
 import { useBudget } from "../../services/budget.service";
@@ -40,22 +43,23 @@ export default function Summary({ onAddNew }) {
     { onError, enabled: !!budget }
   );
 
-  // TODO: if budget exceeds, remove the available budget section.
   const sections = useMemo(() => {
     const expenseCats = summary?.data?.response?.categories ?? [];
-    const chartSections = [
-      {
-        name: "Available Budget",
-        value: budget?.data?.response?.amount - summary?.data?.response?.total,
-        color: colors.dark[6],
-      },
-    ];
+    const chartSections = [];
     if (expenseCats?.length > 0)
       expenseCats.forEach((category) => {
         chartSections.push({
           ...category,
+          // TODO: Store only the color name; this would make grabbing color for tooltip border easier.
           color: colors[CATEGORIES[category.name].color][5],
         });
+      });
+
+    if (budget?.data?.response?.amount > summary?.data?.response?.total)
+      chartSections.push({
+        name: "Available Budget",
+        value: budget?.data?.response?.amount - summary?.data?.response?.total,
+        color: colors.dark[6],
       });
     return chartSections;
   }, [colors, summary, budget]);
@@ -86,7 +90,7 @@ export default function Summary({ onAddNew }) {
 
   return (
     <>
-      <Box sx={{ width: "100%", height: "60%" }}>
+      <Box sx={{ width: "100%", height: "60%", position: "relative" }}>
         <ResponsiveContainer>
           <PieChart>
             <Pie
@@ -108,18 +112,42 @@ export default function Summary({ onAddNew }) {
                 />
               ))}
             </Pie>
-            {/* TODO: Customize this tooltip. */}
             <Tooltip
               content={<ChartTooltip />}
               wrapperStyle={{ outline: "none" }}
             />
           </PieChart>
         </ResponsiveContainer>
+        {budget?.data?.response?.amount <= summary?.data?.response?.total && (
+          <MTooltip
+            label="Budget Exceeded"
+            withArrow
+            color="red"
+            position="left"
+            opened={true}>
+            <ThemeIcon
+              color="red"
+              size={35}
+              radius="xl"
+              sx={{
+                position: "absolute",
+                top: isMobile ? -10 : 0,
+                right: isMobile ? -10 : 0,
+              }}>
+              <IconAlertOctagon size={20} />
+            </ThemeIcon>
+          </MTooltip>
+        )}
       </Box>
       <Box sx={{ width: "100%", marginTop: "auto" }}>
-        <Group spacing="sm" position="center" grow sx={{ width: "100%" }}>
+        <Group
+          spacing="sm"
+          position="center"
+          align="flex-end"
+          grow
+          sx={{ width: "100%" }}>
           <Group
-            spacing="xs"
+            spacing={4}
             sx={() => ({
               flexShrink: 1,
               flexDirection: "column",
@@ -127,6 +155,7 @@ export default function Summary({ onAddNew }) {
             })}>
             {Object.entries(CATEGORIES).map(([name]) => (
               <Badge
+                size="sm"
                 color={CATEGORIES[name].color}
                 variant={recordedCategories.includes(name) ? "filled" : "dot"}
                 // TODO: Navigate to transactions with filter
@@ -144,7 +173,7 @@ export default function Summary({ onAddNew }) {
               alignItems: "flex-end",
               height: "100%",
             })}>
-            <Text size="md" color={colors.indigo[4]} weight="bold" mb="lg">
+            <Text size="sm" color={colors.indigo[4]} weight="bold" mb={4}>
               Summary {dayjs().format("MMM, 'YY")}
             </Text>
             <Text size="sm" weight="bold" align="end">
@@ -165,8 +194,7 @@ export default function Summary({ onAddNew }) {
               pr={0}
               component={Link}
               to="/transactions"
-              rightIcon={<IconArrowRight size={18} />}
-              mt="auto">
+              rightIcon={<IconArrowRight size={18} />}>
               View All
             </Button>
             <Button
@@ -182,27 +210,4 @@ export default function Summary({ onAddNew }) {
       </Box>
     </>
   );
-}
-
-function ChartTooltip({ active, payload }) {
-  if (active && payload && payload?.length) {
-    return (
-      <Box
-        sx={(theme) => ({
-          backgroundColor: theme.colors.dark[6],
-          padding: theme.spacing.xs,
-          borderRadius: theme.radius.sm,
-          boxShadow: theme.shadows.md,
-          // TODO: Make the border of the tooltip standout
-          // The Available budget one doesn't have a border, it seems.
-          border: `1px solid ${payload[0].payload.color}`,
-        })}>
-        <Text size="xs" color="dimmed">
-          {payload[0].name}
-        </Text>
-        <Text>{currencyFormat.format(payload[0].value)}</Text>
-      </Box>
-    );
-  }
-  return null;
 }
