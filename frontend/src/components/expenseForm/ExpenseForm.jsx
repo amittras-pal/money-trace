@@ -20,7 +20,7 @@ import {
   useCreateExpense,
   useEditExpense,
 } from "../../services/expense.service";
-import { useReports } from "../../services/report.query";
+import { useReports } from "../../services/report.service";
 import { CategorySelectItem, ReportSelectItem } from "./SelectItem";
 
 export default function ExpenseForm({
@@ -111,12 +111,9 @@ export default function ExpenseForm({
   });
 
   const saveExpense = (values) => {
-    if (!values.attachToReport) {
-      values.report = "";
-    }
-    if (!data) {
-      addExpense(values);
-    } else {
+    if (!values.attachToReport) values.report = "";
+    if (!data) addExpense(values);
+    else {
       values._id = data._id;
       editExpense(values);
     }

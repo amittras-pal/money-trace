@@ -3,56 +3,48 @@ import {
   Badge,
   Box,
   createStyles,
-  Group,
+  Divider,
   Menu,
   Text,
-  ThemeIcon,
 } from "@mantine/core";
 import {
-  IconArrowBackUp,
   IconDotsVertical,
   IconEdit,
+  IconSquareForbid2,
   IconTrash,
 } from "@tabler/icons";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
-import { CATEGORIES } from "../../constants/app.constants";
-import { getDayString } from "../../utils/app.utils";
-import { currencyFormat } from "../../utils/formatter.utils";
+import { Link } from "react-router-dom";
 
-// TODO: 'onRevert' to be used by the planned expense sesction.
-export default function ExpenseItem({
+export default function PlanCard({
   data,
-  onRevert,
   onEdit,
+  onClose,
   onDelete,
-  hideMenus = false,
   flatten = false,
+  hideMenus = false,
 }) {
-  const { classes } = useCardStyle({ category: data?.category, flatten });
+  const { classes } = useCardStyle({ flatten, open: data?.open });
 
-  const itemActions = useMemo(() => {
+  const cardActions = useMemo(() => {
     if (hideMenus) return null;
-    const isReportOld = dayjs(data.expenseDate).isBefore(
-      dayjs().subtract(2, "day")
-    );
-
-    if (isReportOld)
+    if (data?.open)
       return [
         {
+          icon: <IconEdit size={18} />,
+          label: "Edit Plan Details",
+          onClick: () => onEdit(data),
+        },
+        {
+          icon: <IconSquareForbid2 size={18} />,
+          label: "Close Expense Plan",
+          onClick: () => onClose(data),
           color: "red",
-          icon: <IconArrowBackUp size={18} />,
-          label: "Revert",
-          onClick: () => onRevert(data),
         },
       ];
     else
       return [
-        {
-          icon: <IconEdit size={18} />,
-          label: "Edit",
-          onClick: () => onEdit(data),
-        },
         {
           icon: <IconTrash size={18} />,
           label: "Delete",
@@ -60,53 +52,45 @@ export default function ExpenseItem({
           color: "red",
         },
       ];
-  }, [data, hideMenus, onDelete, onEdit, onRevert]);
+  }, [data, hideMenus, onClose, onDelete, onEdit]);
 
   return (
     <Box className={classes.card}>
-      <Box sx={{ flexGrow: 1 }}>
-        <Text weight={500} lineClamp={2}>
-          {data.reverted && (
-            <ThemeIcon
-              mr="xs"
-              color="red"
-              size={18}
-              variant="filled"
-              radius="lg">
-              <IconArrowBackUp size={14} />
-            </ThemeIcon>
-          )}
-          {data.title}
+      <Box sx={{ flexGrow: 1 }} mr={6}>
+        <Text
+          weight={500}
+          lineClamp={2}
+          component={hideMenus ? "span" : Link}
+          to={`/planned-reports/${data._id}`}>
+          {data.name}
         </Text>
         <Text size="sm" color="dimmed">
           {data.description}
         </Text>
-        <Group spacing={0} sx={{ alignItems: "center" }}>
-          <Text weight={500} lineClamp={1} size="lg" mt={6} mr={12}>
-            {currencyFormat.format(data.amount)}
-          </Text>
+        <Divider my="sm" />
+        <Text size="sm" color="dimmed">
+          Created: {dayjs(data.createdAt).format("DD MMM, 'YY")}
           <Badge
-            color={CATEGORIES[data.category].color}
+            ml="md"
+            component="span"
             variant="light"
             size="sm"
-            mr={8}>
-            {data.category}
+            color={data?.open ? "indigo" : "red"}>
+            {data?.open ? "Open" : "Closed"}
           </Badge>
-          <Badge color="gray" variant="light" size="sm">
-            {getDayString(data.expenseDate)}
-          </Badge>
-        </Group>
+        </Text>
       </Box>
-      {itemActions && (
-        <Menu transition="scale-y">
+      {cardActions && (
+        <Menu transition="scale-y" shadow="lg" position="left-start">
           <Menu.Target>
             <ActionIcon variant="light" color="gray" radius="xl" mt={4}>
               <IconDotsVertical size={16} />
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            {itemActions.map((action) => (
+            {cardActions.map((action) => (
               <Menu.Item
+                sx={{ whiteSpace: "nowrap" }}
                 color={action.color}
                 key={action.label}
                 icon={action.icon}
@@ -121,7 +105,7 @@ export default function ExpenseItem({
   );
 }
 
-const useCardStyle = createStyles((theme, { category, flatten }) => ({
+const useCardStyle = createStyles((theme, { flatten, open }) => ({
   card: {
     borderRadius: theme.radius.sm,
     backgroundColor: flatten ? "transparent" : theme.colors.dark[6],
@@ -132,9 +116,6 @@ const useCardStyle = createStyles((theme, { category, flatten }) => ({
     paddingLeft: flatten ? theme.spacing.md : theme.spacing.lg,
     display: "flex",
     position: "relative",
-    "&:not(:last-child)": {
-      marginBottom: theme.spacing.sm,
-    },
     "&:before": {
       content: "''",
       height: flatten ? "80%" : "90%",
@@ -144,7 +125,7 @@ const useCardStyle = createStyles((theme, { category, flatten }) => ({
       top: "50%",
       left: flatten ? 0 : 7,
       transform: "translateY(-50%)",
-      backgroundColor: theme.colors[CATEGORIES[category].color][5],
+      backgroundColor: theme.colors[open ? "indigo" : "red"][5],
     },
   },
 }));

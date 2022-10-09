@@ -2,8 +2,8 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "../../views/dashboard/Dashboard";
 import Login from "../../views/login/Login";
-import Detail from "../../views/plannedReports/Detail";
-import List from "../../views/plannedReports/List";
+import PlanDetails from "../../views/plannedReports/PlanDetails";
+import PlansList from "../../views/plannedReports/PlansList";
 import SignUp from "../../views/signUp/SignUp";
 import TransactionsList from "../../views/transactionsList/TransactionsList";
 import User from "../../views/user/User";
@@ -32,7 +32,7 @@ function RouterOutlet() {
         path="/planned-reports"
         element={
           <AuthGuard>
-            <List />
+            <PlansList />
           </AuthGuard>
         }
       />
@@ -40,7 +40,7 @@ function RouterOutlet() {
         path="/planned-reports/:id"
         element={
           <AuthGuard>
-            <Detail />
+            <PlanDetails />
           </AuthGuard>
         }
       />

@@ -1,16 +1,19 @@
 /** @type {import("@mantine/core").ModalProps} */
 const modalOverRides = {
   centered: true,
-  overlayBlur: 5,
+  overlayBlur: 10,
   overlayColor: "#212529AA",
   overflow: "inside",
   transition: "pop",
   transitionDuration: 300,
+  zIndex: 1050,
 };
 
 /** @type {import("@mantine/core").DrawerProps} */
 const drawerOverrides = {
-  overlayBlur: 5,
+  overlayBlur: 10,
+  overlayColor: "#212529AA",
+  zIndex: 1000,
 };
 
 /** @type {import("@mantine/core").ButtonProps} */
@@ -27,12 +30,14 @@ const textOverRides = {
 const textInputOverRides = {
   size: "sm",
   mb: "xs",
+  inputWrapperOrder: ["label", "error", "input", "description"],
 };
 
 /** @type {import("@mantine/core").TextareaProps} */
 const textAreaOverRides = {
   size: "sm",
   mb: "xs",
+  inputWrapperOrder: ["label", "error", "input", "description"],
 };
 
 /** @type {import("@mantine/core").PasswordInputProps} */

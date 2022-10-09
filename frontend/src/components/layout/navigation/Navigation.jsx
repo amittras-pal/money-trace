@@ -23,9 +23,12 @@ function NavLink({ icon, label, path, exactMatch, onChange }) {
         marginBottom: theme.spacing.sm,
         color:
           theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
-        backgroundColor: matching ? theme.colors.dark[6] : "transparent",
+        backgroundColor: matching ? theme.colors.dark[5] : "transparent",
+        boxShadow: matching ? theme.shadows.md : "none",
         "&:hover": {
-          backgroundColor: theme.colors.dark[6],
+          backgroundColor: matching
+            ? theme.colors.dark[5]
+            : theme.colors.dark[8],
         },
       })}>
       <Group>

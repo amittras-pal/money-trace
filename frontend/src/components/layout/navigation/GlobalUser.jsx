@@ -30,8 +30,13 @@ export default function GlobalUser({ setOpened }) {
         </>
       ),
       labels: { confirm: "Sign Out", cancel: "Stay Logged In" },
-      confirmProps: { leftIcon: <IconLogout />, size: "sm", color: "red" },
-      cancelProps: { leftIcon: <IconX />, size: "sm", color: "gray" },
+      confirmProps: {
+        leftIcon: <IconLogout />,
+        size: "sm",
+        color: "red",
+        m: 4,
+      },
+      cancelProps: { leftIcon: <IconX />, size: "sm", color: "gray", m: 4 },
       withCloseButton: false,
       closeOnCancel: true,
       onConfirm: () => {

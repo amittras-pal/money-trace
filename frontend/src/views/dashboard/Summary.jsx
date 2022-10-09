@@ -193,6 +193,8 @@ function ChartTooltip({ active, payload }) {
           padding: theme.spacing.xs,
           borderRadius: theme.radius.sm,
           boxShadow: theme.shadows.md,
+          // TODO: Make the border of the tooltip standout
+          // The Available budget one doesn't have a border, it seems.
           border: `1px solid ${payload[0].payload.color}`,
         })}>
         <Text size="xs" color="dimmed">

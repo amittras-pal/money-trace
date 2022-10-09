@@ -1,7 +1,7 @@
 import { Text } from "@mantine/core";
 import React from "react";
 
-function TransactionsList() {
+function TransactionsList({ data, onComplete, onCancel }) {
   return <Text>TransactionsList</Text>;
 }
 

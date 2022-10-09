@@ -74,16 +74,16 @@ function Dashboard() {
     openConfirmModal({
       title: "Delete Expense",
       children: (
-        <Box m={4}>
+        <>
           <Text weight={500} mb="sm">
             Are you sure you want to delete this expense?
           </Text>
           <ExpenseItem data={item} flatten hideMenus />
-        </Box>
+        </>
       ),
       labels: { confirm: "Delete", cancel: "Don't delete" },
-      confirmProps: { color: "red" },
-      cancelProps: { variant: "subtle", color: "gray" },
+      confirmProps: { color: "red", m: 4 },
+      cancelProps: { variant: "subtle", color: "gray", m: 4 },
       withCloseButton: false,
       closeOnCancel: true,
       onConfirm: () => deleteExpense(item._id),
@@ -145,7 +145,6 @@ function Dashboard() {
       )}
       <Modal
         opened={openForm}
-        // TODO: Make this a conditional title
         title={`${selectedItem ? "Edit" : "Add New"} Expense`}
         onClose={closeModal}
         size="xl"
