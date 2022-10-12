@@ -103,18 +103,13 @@ const getUserDetails = asyncHandler(async (req, res) => {
  * @access private
  */
 const updateUserDetails = asyncHandler(async (req, res) => {
-  const {
-    userId,
-    body: { update },
-  } = req;
-
-  const updated = await User.findByIdAndUpdate(userId, update, {
+  const { userId, body } = req;
+  const updated = await User.findByIdAndUpdate(userId, body, {
     new: true,
   });
-  const { name, email, defaultBudget, _id } = updated;
   return res.json({
     message: "Updated successfully",
-    response: { name, email, defaultBudget, _id },
+    response: updated,
   });
 });
 

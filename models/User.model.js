@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema(
       unique: [true, "Email is already taken"],
     },
     password: { type: String, required: [true, "Please enter a password."] },
+    hasUnseenChangelog: { type: Boolean, required: true, default: false },
   },
   { timestamps: true }
 );
