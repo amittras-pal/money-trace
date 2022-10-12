@@ -16,3 +16,7 @@ export function getUserDetails() {
 export function updateUser(formData) {
   return axios.put(endpoints.UPDATE_USER, formData);
 }
+
+export function changePassword(formData) {
+  return axios.put(endpoints.CHANGE_PASSWORD, formData);
+}
