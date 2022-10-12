@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Group,
   Loader,
   Modal,
@@ -9,12 +8,11 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import { useQueryClient } from "react-query";
-import { APP_VERSION } from "../../constants/app.constants";
 import { useAuth } from "../../context/UserContext";
 import { useUpdateUser } from "../../services/auth.service";
 import { useChangelog } from "../../services/changelog.service";
-import ReactMarkdown from "react-markdown";
 
 export default function ChangeLog() {
   const { viewChangelog, loadingRequisites, loggedIn } = useAuth();
@@ -43,20 +41,13 @@ export default function ChangeLog() {
       withCloseButton={false}
       closeOnClickOutside={false}
       closeOnEscape={false}
-      size="lg"
-      title={`What's New in ${APP_VERSION}`}>
+      size="lg">
       {loadingChangelog ? (
         <Group position="center" py="lg">
           <Loader size={40} />
         </Group>
       ) : (
-        <>
-          <Text color="orange" weight="bold" align="center" size="sm">
-            Scroll to bottom to close.
-          </Text>
-          <Divider color="indigo" variant="dashed" my="md" />
-          <Text component={ReactMarkdown}>{data?.data?.response?.content}</Text>
-        </>
+        <Text component={ReactMarkdown}>{data?.data?.response?.content}</Text>
       )}
       <Group position="right" mt="md">
         <Button

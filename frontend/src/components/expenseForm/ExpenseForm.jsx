@@ -88,9 +88,9 @@ export default function ExpenseForm({
           .string()
           .max(40, "Title should be 40 characters or less.")
           .required("Expense title is required."),
-        // description: yup
-        //   .string()
-        //   .max(260, "Description should be 260 characters or less."),
+        description: yup
+          .string()
+          .max(260, "Description should be 260 characters or less."),
         category: yup.string().required("Category is required"),
         amount: yup
           .number("Invalid amount value.")
@@ -113,8 +113,6 @@ export default function ExpenseForm({
   });
 
   const saveExpense = (values) => {
-    console.log(values);
-    return;
     if (!values.attachToReport) values.report = "";
     if (!data) addExpense(values);
     else {
