@@ -4,6 +4,7 @@ import AppHeader from "./components/layout/header/AppHeader";
 import AppNavigation from "./components/layout/navigation/AppNavigation";
 import RouterOutlet from "./components/router/RouterOutlet";
 import { UserProvider } from "./context/UserContext";
+import ChangeLog from "./views/changeLog/ChangeLog";
 
 export default function App() {
   const { colors, colorScheme } = useMantineTheme();
@@ -23,6 +24,7 @@ export default function App() {
         navbar={<AppNavigation opened={drawerOpen} setOpened={setDrawerOpen} />}
         header={<AppHeader opened={drawerOpen} setOpened={setDrawerOpen} />}>
         <RouterOutlet />
+        <ChangeLog />
       </AppShell>
     </UserProvider>
   );

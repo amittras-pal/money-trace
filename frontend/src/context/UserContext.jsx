@@ -9,6 +9,8 @@ const UserContext = createContext({
   userData: {},
   cMBudget: 0,
   loadingRequisites: false,
+  viewChangelog: false,
+  setViewChangelog: () => null,
 });
 
 export function useAuth() {
@@ -18,6 +20,7 @@ export function useAuth() {
 export function UserProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [viewChangelog, setViewChangelog] = useState(false);
   const { onError } = useErrorHandler();
 
   //TODO: Add Changelog view if user has a changelog not viewed.
@@ -34,6 +37,7 @@ export function UserProvider({ children }) {
   const { isLoading: loadingUserData } = useUserData({
     onSuccess: (res) => {
       setUserData(res?.data?.response);
+      setViewChangelog(res?.data?.response?.hasUnseenChangelog);
     },
     onError,
     enabled: loggedIn,
@@ -59,6 +63,8 @@ export function UserProvider({ children }) {
         userData,
         loadingRequisites: loadingUserData || loadingBudget,
         cMBudget: budget?.data?.response?.amount,
+        viewChangelog,
+        setViewChangelog,
       }}>
       {children}
     </UserContext.Provider>

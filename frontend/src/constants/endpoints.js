@@ -11,6 +11,7 @@ const endpoints = {
   REPORTS: "/api/reports",
   REPORT_DETAILS: "/api/reports/details",
   BUDGET: "/api/budget",
+  CHANGELOG: "/api/changelog",
 };
 
 export default endpoints;
