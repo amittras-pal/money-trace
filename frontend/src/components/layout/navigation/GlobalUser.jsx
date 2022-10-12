@@ -18,7 +18,7 @@ export default function GlobalUser({ setOpened }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { userData, loadingUserData } = useAuth();
+  const { userData, loadingRequisites } = useAuth();
 
   const confirmLogout = () => {
     openConfirmModal({
@@ -48,8 +48,6 @@ export default function GlobalUser({ setOpened }) {
     });
   };
 
-  if (loadingUserData) return <Loader size="sm" />;
-
   return (
     <Box
       px="sm"
@@ -58,32 +56,38 @@ export default function GlobalUser({ setOpened }) {
         borderTop: `1px solid ${theme.colors.dark[4]}`,
       }}>
       <Group>
-        <Box sx={{ flex: 1 }}>
-          <Text size="sm" weight={500}>
-            {userData?.name}
-          </Text>
-          <Text color="dimmed" size="xs">
-            {userData?.email}
-          </Text>
-        </Box>
+        {loadingRequisites ? (
+          <Loader size="sm" />
+        ) : (
+          <>
+            <Box sx={{ flex: 1 }}>
+              <Text size="sm" weight={500}>
+                {userData?.name}
+              </Text>
+              <Text color="dimmed" size="xs">
+                {userData?.email}
+              </Text>
+            </Box>
 
-        <Tooltip position="top" label="User Settings">
-          <ActionIcon
-            color="indigo"
-            size="lg"
-            radius="xl"
-            variant={pathname === "/me" ? "filled" : "light"}
-            component={Link}
-            onClick={() => setOpened(false)}
-            to="/me">
-            <IconAdjustments size={16} />
-          </ActionIcon>
-        </Tooltip>
-        <Tooltip position="top" label="Sign Out" onClick={confirmLogout}>
-          <ActionIcon color="red" size="lg" radius="xl" variant="light">
-            <IconPower size={16} />
-          </ActionIcon>
-        </Tooltip>
+            <Tooltip position="top" label="User Settings">
+              <ActionIcon
+                color="indigo"
+                size="lg"
+                radius="xl"
+                variant={pathname === "/me" ? "filled" : "light"}
+                component={Link}
+                onClick={() => setOpened(false)}
+                to="/me">
+                <IconAdjustments size={16} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip position="top" label="Sign Out" onClick={confirmLogout}>
+              <ActionIcon color="red" size="lg" radius="xl" variant="light">
+                <IconPower size={16} />
+              </ActionIcon>
+            </Tooltip>
+          </>
+        )}
       </Group>
     </Box>
   );

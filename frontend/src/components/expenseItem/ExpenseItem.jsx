@@ -22,7 +22,6 @@ import { CATEGORIES } from "../../constants/app.constants";
 import { getDayString } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
-// TODO: 'onRevert' to be used by the planned expense sesction.
 export default function ExpenseItem({
   data,
   onRevert,

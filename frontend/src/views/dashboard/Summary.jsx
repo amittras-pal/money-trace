@@ -5,8 +5,8 @@ import {
   Group,
   Text,
   ThemeIcon,
-  useMantineTheme,
   Tooltip as MTooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconAlertOctagon, IconArrowRight, IconPlus } from "@tabler/icons";
@@ -17,8 +17,8 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import CenteredLoader from "../../components/centeredLoader/CenteredLoader";
 import ChartTooltip from "../../components/charts/ChartTooltip";
 import { CATEGORIES } from "../../constants/app.constants";
+import { useAuth } from "../../context/UserContext";
 import { useErrorHandler } from "../../hooks/errorHandler";
-import { useBudget } from "../../services/budget.service";
 import { useExpenseSummary } from "../../services/expense.service";
 import { percentage, severityColor } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
@@ -28,19 +28,12 @@ export default function Summary({ onAddNew }) {
   const { onError } = useErrorHandler();
   const { breakpoints, colors } = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${breakpoints.md}px)`);
-
-  // TODO: Add error hanler if budget is not set.
-  // Open the create budget popup.
-  const { isLoading: loadingBudget, data: budget } = useBudget(
-    new Date().getMonth() + 1,
-    new Date().getFullYear(),
-    { refetchOnWindowFocus: false, onError }
-  );
+  const { cMBudget } = useAuth();
 
   const { data: summary, isLoading: loadingSummary } = useExpenseSummary(
-    new Date().getMonth() + 1,
-    new Date().getFullYear(),
-    { onError, enabled: !!budget }
+    dayjs().month() + 1,
+    dayjs().year(),
+    { onError, enabled: !!cMBudget }
   );
 
   const sections = useMemo(() => {
@@ -55,14 +48,14 @@ export default function Summary({ onAddNew }) {
         });
       });
 
-    if (budget?.data?.response?.amount > summary?.data?.response?.total)
+    if (cMBudget > summary?.data?.response?.total)
       chartSections.push({
         name: "Available Budget",
-        value: budget?.data?.response?.amount - summary?.data?.response?.total,
+        value: cMBudget - summary?.data?.response?.total,
         color: colors.dark[6],
       });
     return chartSections;
-  }, [colors, summary, budget]);
+  }, [colors, summary, cMBudget]);
 
   const recordedCategories = useMemo(() => {
     return summary?.data?.response.categories?.map?.((item) => item.name) ?? [];
@@ -70,9 +63,9 @@ export default function Summary({ onAddNew }) {
 
   const percentageSpent = useMemo(() => {
     const spent = summary?.data?.response?.total ?? 0;
-    const setBudget = budget?.data?.response?.amount ?? 0;
+    const setBudget = cMBudget ?? 0;
     return percentage(spent, setBudget);
-  }, [budget, summary]);
+  }, [cMBudget, summary]);
 
   const getCategoryAmount = useCallback(
     (category) => {
@@ -86,7 +79,7 @@ export default function Summary({ onAddNew }) {
     [summary, recordedCategories]
   );
 
-  if (loadingBudget || loadingSummary) return <CenteredLoader />;
+  if (!cMBudget || loadingSummary) return <CenteredLoader />;
 
   return (
     <>
@@ -118,7 +111,7 @@ export default function Summary({ onAddNew }) {
             />
           </PieChart>
         </ResponsiveContainer>
-        {budget?.data?.response?.amount <= summary?.data?.response?.total && (
+        {cMBudget <= summary?.data?.response?.total && (
           <MTooltip
             label="Budget Exceeded"
             withArrow
@@ -185,7 +178,7 @@ export default function Summary({ onAddNew }) {
                 color={colors[severityColor(percentageSpent)][5]}>
                 {percentageSpent}%
               </Text>{" "}
-              of {currencyFormat.format(budget?.data?.response?.amount ?? 0)}
+              of {currencyFormat.format(cMBudget ?? 0)}
             </Text>
             <Button
               color="indigo"

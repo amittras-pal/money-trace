@@ -1,4 +1,5 @@
 import { IconArrowsDoubleSwNe, IconDashboard, IconReport } from "@tabler/icons";
+import dayjs from "dayjs";
 
 export const APP_TITLE = "Money Trace";
 export const APP_VERSION = "v2.0.0";
@@ -55,7 +56,7 @@ export const CATEGORIES = {
 };
 
 export const DASHBOARD_QUERIES = [
-  ["expense-summary", new Date().getMonth() + 1, new Date().getFullYear()],
+  ["expense-summary", dayjs().month() + 1, dayjs().year()],
   "last-two-days",
 ];
 

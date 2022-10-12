@@ -1,11 +1,14 @@
+import dayjs from "dayjs";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useErrorHandler } from "../hooks/errorHandler";
 import { useUserData } from "../services/auth.service";
+import { useBudget } from "../services/budget.service";
 
 const UserContext = createContext({
   loggedIn: false,
   userData: {},
-  loadingUserData: false,
+  cMBudget: 0,
+  loadingRequisites: false,
 });
 
 export function useAuth() {
@@ -17,7 +20,6 @@ export function UserProvider({ children }) {
   const [userData, setUserData] = useState(null);
   const { onError } = useErrorHandler();
 
-  //TODO: Add system wide block if the bd=udget is not set for the current month.
   //TODO: Add Changelog view if user has a changelog not viewed.
 
   useEffect(() => {
@@ -39,8 +41,25 @@ export function UserProvider({ children }) {
     refetchOnWindowFocus: false,
   });
 
+  const { isLoading: loadingBudget, data: budget } = useBudget(
+    dayjs().month() + 1,
+    dayjs().year(),
+    {
+      onError,
+      enabled: loggedIn,
+      staleTime: 3600,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   return (
-    <UserContext.Provider value={{ loggedIn, userData, loadingUserData }}>
+    <UserContext.Provider
+      value={{
+        loggedIn,
+        userData,
+        loadingRequisites: loadingUserData || loadingBudget,
+        cMBudget: budget?.data?.response?.amount,
+      }}>
       {children}
     </UserContext.Provider>
   );

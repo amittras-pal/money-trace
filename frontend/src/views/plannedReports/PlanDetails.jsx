@@ -19,7 +19,6 @@ import ListView from "./components/ListView";
 import SummaryView from "./components/SummaryView";
 
 export default function PlanDetails() {
-  //TODO: Implement Expense card operations here.
   //TODO: Add Actions to close or delete this expense plan here.
 
   const { id } = useParams();

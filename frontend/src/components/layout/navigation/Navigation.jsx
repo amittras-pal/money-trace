@@ -3,6 +3,7 @@ import { IconChevronRight } from "@tabler/icons";
 import React, { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { NAV_ROUTES } from "../../../constants/app.constants";
+import { useAuth } from "../../../context/UserContext";
 
 function NavLink({ icon, label, path, exactMatch, onChange }) {
   const { pathname } = useLocation();
@@ -45,6 +46,8 @@ function NavLink({ icon, label, path, exactMatch, onChange }) {
 }
 
 export default function Navigation({ onChange }) {
+  const { loadingRequisites, cMBudget } = useAuth();
+  if (loadingRequisites || !cMBudget) return null;
   return (
     <>
       {NAV_ROUTES.map((link) => (

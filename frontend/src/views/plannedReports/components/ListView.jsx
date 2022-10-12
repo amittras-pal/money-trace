@@ -115,7 +115,6 @@ export default function ListView({ data }) {
           backgroundColor: theme.colors.dark[7],
           border: `1px solid ${theme.colors.dark[5]}`,
         })}>
-        {/* TODO: Make this select item dynamically sized, it looks too small on a desktop. */}
         <Select
           size="xs"
           mb="sm"

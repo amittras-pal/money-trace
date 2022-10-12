@@ -77,7 +77,7 @@ function BudgetMonitor() {
       closeOnClickOutside={false}
       closeOnEscape={false}>
       <Text size="lg">
-        Your Budget for {dayjs().format("MMMM, YYYY")} is not set.
+        Budget is not set for {dayjs().format("MMMM, YYYY")}.
       </Text>
       <Text color="dimmed">
         Please set a budget for this month to continue further.
@@ -99,6 +99,8 @@ function BudgetMonitor() {
           color="indigo"
           size="sm"
           type="submit"
+          mr={4}
+          mb={4}
           leftIcon={<DeviceFloppy />}
           loading={savingBudget}>
           Save
