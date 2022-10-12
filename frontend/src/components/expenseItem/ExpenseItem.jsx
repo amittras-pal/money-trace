@@ -45,7 +45,7 @@ export default function ExpenseItem({
         {
           color: "red",
           icon: <IconArrowBackUp size={18} />,
-          label: "Revert",
+          label: "Revert Expense",
           onClick: () => onRevert(data),
         },
       ];
@@ -53,12 +53,12 @@ export default function ExpenseItem({
       return [
         {
           icon: <IconEdit size={18} />,
-          label: "Edit",
+          label: "Edit Expense",
           onClick: () => onEdit(data),
         },
         {
           icon: <IconTrash size={18} />,
-          label: "Delete",
+          label: "Delete Expense",
           onClick: () => onDelete(data),
           color: "red",
         },
@@ -119,6 +119,7 @@ export default function ExpenseItem({
           <Menu.Dropdown>
             {itemActions.map((action) => (
               <Menu.Item
+                sx={{ whiteSpace: "nowrap" }}
                 color={action.color}
                 key={action.label}
                 icon={action.icon}

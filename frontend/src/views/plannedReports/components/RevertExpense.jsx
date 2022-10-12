@@ -46,6 +46,8 @@ export default function RevertExpense({ data, closeModal, relatedQueries }) {
   });
 
   const revertForm = useForm({
+    mode: "onChange",
+    shouldFocusError: true,
     defaultValues: {
       revertMsg: "",
     },
@@ -63,10 +65,15 @@ export default function RevertExpense({ data, closeModal, relatedQueries }) {
     revert({ expenseId: data._id, revertMsg: values.revertMsg });
   };
 
+  const cancelRevert = () => {
+    revertForm.reset();
+    closeModal();
+  };
+
   return (
     <Modal
       opened={data}
-      onClose={closeModal}
+      onClose={cancelRevert}
       withCloseButton={false}
       title="Revert Expense">
       <SimpleGrid
@@ -88,6 +95,7 @@ export default function RevertExpense({ data, closeModal, relatedQueries }) {
           autoFocus
           placeholder="Add a Revert Message"
           {...revertForm.register("revertMsg")}
+          error={revertForm?.formState.errors?.revertMsg?.message}
         />
         <Text size="sm" color="red" mb="md">
           This will freeze the expense for any further action. It will not be
@@ -102,7 +110,7 @@ export default function RevertExpense({ data, closeModal, relatedQueries }) {
             size="sm"
             variant="subtle"
             color="gray"
-            onClick={closeModal}>
+            onClick={cancelRevert}>
             Cancel
           </Button>
           <Button

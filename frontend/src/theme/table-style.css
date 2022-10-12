@@ -1,0 +1,43 @@
+.InovuaReactDataGrid--theme-default-dark.mt-grid {
+  background: var(--mantine-color-dark-7);
+  border-color: var(--mantine-color-dark-5);
+  box-shadow: var(--mantine-shadow-md);
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+}
+
+.InovuaReactDataGrid--theme-default-dark.mt-grid .InovuaReactDataGrid__header {
+  background: var(--mantine-color-dark-7);
+  border-color: var(--mantine-color-dark-5);
+}
+
+.InovuaReactDataGrid--theme-default-dark.mt-grid
+  .InovuaReactDataGrid__column-header__filter-wrapper {
+  background: var(--mantine-color-dark-7);
+}
+
+.inovua-react-toolkit-combo-box.inovua-react-toolkit-combo-box--theme-default-dark {
+  background: var(--mantine-color-dark-7);
+  border: 1px solid var(--mantine-color-dark-5);
+}
+
+.InovuaReactDataGrid--theme-default-dark.mt-grid
+  .InovuaReactDataGrid__row--no-zebra {
+  background: var(--mantine-color-dark-7);
+}
+
+.InovuaReactDataGrid--theme-default-dark.mt-grid.InovuaReactDataGrid--show-hover-rows
+  .InovuaReactDataGrid__row--no-zebra:not(.InovuaReactDataGrid__row--scrolling):not(.InovuaReactDataGrid__row--empty)
+  .InovuaReactDataGrid__row-hover-target:hover {
+  background: var(--mantine-color-dark-6);
+}
+
+.InovuaReactDataGrid--theme-default-dark.mt-grid
+  .InovuaReactDataGrid__cell--show-border-bottom {
+  border-color: var(--mantine-color-dark-5);
+}
+
+.inovua-react-toolkit-combo-box__list--theme-default-dark
+  .inovua-react-toolkit-combo-box__list__virtual-list {
+  background: var(--mantine-color-dark-6);
+}

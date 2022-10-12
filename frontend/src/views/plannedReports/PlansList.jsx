@@ -201,7 +201,7 @@ export default function PlansList() {
             position: "fixed",
             bottom: "1rem",
             right: "1rem",
-            zIndex: 1000,
+            zIndex: 0,
           }}>
           <IconPlus size={24} />
         </ActionIcon>

@@ -9,6 +9,7 @@ export function useErrorHandler() {
   const onError = (err, func) => {
     if (err.response.status === 401 && pathname !== "/login") {
       localStorage.clear();
+      window.dispatchEvent(new Event("storage"));
       showNotification({
         title: "Session Expired or Invalid Session",
         message: "Please login again to continue.",

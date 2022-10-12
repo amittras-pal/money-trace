@@ -170,7 +170,7 @@ const useDashboardStyles = createStyles((theme, { isMobile }) => {
       border: `1px solid ${theme.colors.dark[5]}`,
       display: "flex",
       flexDirection: "column",
-      height: isMobile ? "calc(100vh - 212px)" : "calc(100vh - 122px)",
+      height: isMobile ? "calc(100vh - 191px)" : "calc(100vh - 122px)",
     },
     tile: {
       padding: theme.spacing.md,
@@ -178,7 +178,7 @@ const useDashboardStyles = createStyles((theme, { isMobile }) => {
       borderRadius: theme.radius.md,
       backgroundColor: theme.colors.dark[7],
       border: `1px solid ${theme.colors.dark[5]}`,
-      height: isMobile ? "calc(100vh - 212px)" : "calc(100vh - 122px)",
+      height: "calc(100vh - 122px)",
     },
     miniTile: {
       padding: theme.spacing.md,
@@ -186,7 +186,7 @@ const useDashboardStyles = createStyles((theme, { isMobile }) => {
       borderRadius: theme.radius.md,
       backgroundColor: theme.colors.dark[7],
       border: `1px solid ${theme.colors.dark[5]}`,
-      height: "40px",
+      height: "20px",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",

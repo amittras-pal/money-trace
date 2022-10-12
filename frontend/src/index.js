@@ -15,7 +15,10 @@ root.render(
   <React.StrictMode>
     <Router>
       <QueryClientProvider client={client}>
-        <MantineProvider withNormalizeCSS theme={mantineOverrides}>
+        <MantineProvider
+          withNormalizeCSS
+          withCSSVariables
+          theme={mantineOverrides}>
           <NotificationsProvider autoClose={2500} position="top-center">
             <ModalsProvider>
               <App />

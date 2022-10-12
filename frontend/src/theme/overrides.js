@@ -30,14 +30,14 @@ const textOverRides = {
 const textInputOverRides = {
   size: "sm",
   mb: "xs",
-  inputWrapperOrder: ["label", "error", "input", "description"],
+  inputWrapperOrder: ["label", "input", "error", "description"],
 };
 
 /** @type {import("@mantine/core").TextareaProps} */
 const textAreaOverRides = {
   size: "sm",
   mb: "xs",
-  inputWrapperOrder: ["label", "error", "input", "description"],
+  inputWrapperOrder: ["label", "input", "error", "description"],
 };
 
 /** @type {import("@mantine/core").PasswordInputProps} */
@@ -52,6 +52,11 @@ const scrollAreaOverRides = {
   type: "scroll",
   scrollbarSize: 6,
   scrollHideDelay: 1500,
+};
+
+/** @type {import("@mantine/core").TooltipProps} */
+const tooltipOverrides = {
+  events: { hover: true, touch: true },
 };
 
 /** @type {import("@mantine/core").MantineThemeOverride} */
@@ -70,5 +75,6 @@ export const mantineOverrides = {
     ScrollArea: { defaultProps: scrollAreaOverRides },
     Text: { defaultProps: textOverRides },
     TextArea: { defaultProps: textAreaOverRides },
+    Tooltip: { defaultProps: tooltipOverrides },
   },
 };

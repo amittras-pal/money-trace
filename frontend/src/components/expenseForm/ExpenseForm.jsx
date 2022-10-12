@@ -5,6 +5,7 @@ import {
   Divider,
   Select,
   SimpleGrid,
+  Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
@@ -92,7 +93,8 @@ export default function ExpenseForm({
           .max(260, "Description should be 260 characters or less."),
         category: yup.string().required("Category is required"),
         amount: yup
-          .number()
+          .number("Invalid amount value.")
+          .typeError("Invalid input value")
           .min(1, "Amount is required.")
           .required("Amount is required."),
         attachToReport: yup.boolean(),
@@ -141,6 +143,9 @@ export default function ExpenseForm({
         {...register("description")}
         error={errors.description?.message}
       />
+      <Text color="dimmed" size={12} mt={-8} align="end">
+        {watch("description").length} / 260
+      </Text>
       <TextInput
         type="number"
         label="Amount"

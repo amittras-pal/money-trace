@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "~11.10.4",
     "@hookform/resolvers": "~2.9.8",
+    "@inovua/reactdatagrid-community": "^5.2.2",
     "@mantine/core": "~5.5.4",
     "@mantine/dates": "~5.5.4",
     "@mantine/dropzone": "~5.5.4",
