@@ -1,16 +1,21 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "../../context/UserContext";
 import Dashboard from "../../views/dashboard/Dashboard";
 import Login from "../../views/login/Login";
 import NewBudget from "../../views/newBudget/NewBudget";
-import PlanDetails from "../../views/plannedReports/PlanDetails";
-import PlansList from "../../views/plannedReports/PlansList";
-import SignUp from "../../views/signUp/SignUp";
-import TransactionsList from "../../views/transactionsList/TransactionsList";
-import User from "../../views/user/User";
 import CenteredLoader from "../centeredLoader/CenteredLoader";
 import { AuthGuard, GuestGuard } from "./RouteGuard";
+
+const TransactionsList = lazy(() =>
+  import("../../views/transactionsList/TransactionsList")
+);
+const User = lazy(() => import("../../views/user/User"));
+const SignUp = lazy(() => import("../../views/signUp/SignUp"));
+const PlansList = lazy(() => import("../../views/plannedReports/PlansList"));
+const PlanDetails = lazy(() =>
+  import("../../views/plannedReports/PlanDetails")
+);
 
 function RouterOutlet() {
   const { loadingRequisites, cMBudget, loggedIn } = useAuth();
