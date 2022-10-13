@@ -19,8 +19,6 @@ import ListView from "./components/ListView";
 import SummaryView from "./components/SummaryView";
 
 export default function PlanDetails() {
-  //TODO: Add Actions to close or delete this expense plan here.
-
   const { id } = useParams();
   const { onError } = useErrorHandler();
   const { isLoading, data: reportDetails } = useReportDetails(id, { onError });

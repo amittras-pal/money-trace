@@ -173,10 +173,7 @@ export default function PlansList() {
               </SimpleGrid>
             </ScrollArea>
           ) : (
-            <Group
-              sx={(theme) => ({ flexDirection: "column" })}
-              align="center"
-              mt={64}>
+            <Group sx={{ flexDirection: "column" }} align="center" mt={64}>
               <Image src={noReports} width={isMobile ? 240 : 480} />
               <Text color="dimmed" size="sm" align="center">
                 You do not have any {showAllPlans ? "" : "open"} expense plans.

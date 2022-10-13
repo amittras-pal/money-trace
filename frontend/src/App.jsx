@@ -7,7 +7,7 @@ import { UserProvider } from "./context/UserContext";
 import ChangeLog from "./views/changeLog/ChangeLog";
 
 export default function App() {
-  const { colors, colorScheme } = useMantineTheme();
+  const { colors } = useMantineTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -15,12 +15,7 @@ export default function App() {
       <AppShell
         navbarOffsetBreakpoint="sm"
         asideOffsetBreakpoint="sm"
-        styles={{
-          main: {
-            background:
-              colorScheme === "dark" ? colors.dark[8] : colors.gray[0],
-          },
-        }}
+        styles={{ main: { background: colors.dark[8] } }}
         navbar={<AppNavigation opened={drawerOpen} setOpened={setDrawerOpen} />}
         header={<AppHeader opened={drawerOpen} setOpened={setDrawerOpen} />}>
         <RouterOutlet />

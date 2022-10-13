@@ -104,7 +104,7 @@ function TransactionsList() {
         header: "Date",
         defaultFlex: 1,
         minWidth: 120,
-        type: "date",
+        type: "string",
         render: ({ value }) => dayjs(value).format("DD MMM, 'YY"),
       },
       {
@@ -176,7 +176,7 @@ function TransactionsList() {
             dataSource={tableData}
             idProperty="_id"
             // sorting
-            defaultSortInfo={{ name: "expenseDate", dir: -1 }}
+            defaultSortInfo={{ name: "expenseDate", type: "string", dir: -1 }}
             // filtering
             filterable={true}
             enableFiltering={true}

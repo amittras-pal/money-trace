@@ -76,12 +76,10 @@ export default function ChangePassword() {
   const confirmPasswordChange = (values) => {
     openConfirmModal({
       children: (
-        <>
-          <Text weight="bold">
-            Once you change the password, you will be logged out and you need to
-            login again with your new password.
-          </Text>
-        </>
+        <Text weight="bold">
+          Once you change the password, you will be logged out and you need to
+          login again with your new password.
+        </Text>
       ),
       title: "Confirm Password Change",
       labels: { confirm: "Change Password", cancel: "Cancel" },

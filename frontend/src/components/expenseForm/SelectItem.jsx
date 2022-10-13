@@ -49,12 +49,12 @@ export const ReportSelectItem = forwardRef(
         ref={ref}
         spacing={0}
         p={6}
-        sx={(theme) => ({
+        sx={{
           marginBottom: 4,
           position: "relative",
           flexDirection: "column",
           alignItems: "flex-start",
-        })}>
+        }}>
         <Text size="sm" weight={500}>
           {name}
         </Text>

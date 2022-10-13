@@ -1,11 +1,4 @@
-import {
-  Accordion,
-  Box,
-  Button,
-  Group,
-  Text,
-  useMantineTheme,
-} from "@mantine/core";
+import { Accordion, Button, Group, Text, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import dayjs from "dayjs";
 import React from "react";
@@ -32,18 +25,16 @@ export default function User() {
       <Text size="sm" color="dimmed">
         Member Since: {dayjs(userData.createdAt).format("DD MMM, 'YY")}
       </Text>
-      <Box mt="lg">
-        <Accordion defaultValue="" variant="separated">
-          <Accordion.Item value="passwordUpdate">
-            <Accordion.Control>
-              <Text weight="bold">Change Password</Text>
-            </Accordion.Control>
-            <Accordion.Panel>
-              <ChangePassword />
-            </Accordion.Panel>
-          </Accordion.Item>
-        </Accordion>
-      </Box>
+      <Accordion defaultValue="" variant="separated" mt="lg">
+        <Accordion.Item value="passwordUpdate">
+          <Accordion.Control>
+            <Text weight="bold">Change Password</Text>
+          </Accordion.Control>
+          <Accordion.Panel>
+            <ChangePassword />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
       <Group mt="xl" position="right">
         <Button variant="subtle" onClick={() => setViewChangelog(true)}>
           Latest features in {APP_VERSION}

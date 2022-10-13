@@ -33,7 +33,7 @@ export default function ChangeLog() {
   const client = useQueryClient();
   const { mutate: markChangelogVIewed, isLoading: updatingChangelogState } =
     useUpdateUser({
-      onSuccess: (res) => {
+      onSuccess: (_) => {
         client.invalidateQueries("user-details");
       },
       onError,
