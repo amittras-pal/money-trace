@@ -11,7 +11,7 @@ const reportSchema = mongoose.Schema(
     description: {
       type: String,
       required: [true, "Report description is required."],
-      maxlength: 260,
+      maxlength: 180,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

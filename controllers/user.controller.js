@@ -67,6 +67,7 @@ const loginUser = asyncHandler(async (req, res) => {
     res.json({
       message: `Login Successful! Welcome ${user.name}`,
       response: {
+        // TODO: Remove user info from the login response.
         userDetails: {
           _id: user.id,
           name: user.name,
@@ -90,7 +91,7 @@ const loginUser = asyncHandler(async (req, res) => {
  * @access private
  */
 const getUserDetails = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.userId);
+  const user = await User.findById(req.userId, "-password -__v");
   if (user) {
     res.json({ message: "User details retrieved", response: user });
   }
@@ -102,18 +103,13 @@ const getUserDetails = asyncHandler(async (req, res) => {
  * @access private
  */
 const updateUserDetails = asyncHandler(async (req, res) => {
-  const {
-    userId,
-    body: { update },
-  } = req;
-
-  const updated = await User.findByIdAndUpdate(userId, update, {
+  const { userId, body } = req;
+  const updated = await User.findByIdAndUpdate(userId, body, {
     new: true,
   });
-  const { name, email, defaultBudget, _id } = updated;
   return res.json({
     message: "Updated successfully",
-    response: { name, email, defaultBudget, _id },
+    response: updated,
   });
 });
 
