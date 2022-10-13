@@ -23,6 +23,15 @@ export function MenuColumn({ data, onRevert }) {
   ) : null;
 }
 
+export function AmountColumnHeader({ appliedFilter, data = [] }) {
+  const total = appliedFilter.value
+    ? `(${currencyFormat.format(
+        data.reduce((value, curr) => (value += curr.amount), 0)
+      )})`
+    : "";
+  return "Amount " + total;
+}
+
 export function AmountColumn({ data, value }) {
   return (
     <Text

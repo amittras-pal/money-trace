@@ -1,4 +1,5 @@
 import ReactDataGrid from "@inovua/reactdatagrid-community";
+import filter from "@inovua/reactdatagrid-community/filter";
 import "@inovua/reactdatagrid-community/index.css";
 import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
 import "@inovua/reactdatagrid-community/theme/default-dark.css";
@@ -22,6 +23,7 @@ import { currencyFormat } from "../../utils/formatter.utils";
 import RevertExpense from "../plannedReports/components/RevertExpense";
 import {
   AmountColumn,
+  AmountColumnHeader,
   CategoryColumn,
   MenuColumn,
   TitleColumn,
@@ -32,6 +34,13 @@ function TransactionsList() {
   const { userData } = useAuth();
   const [frame, setFrame] = useState(dayjs().format("YYYY-MM-DD"));
   const [revertExpense, setRevertExpense] = useState(null);
+  const [appliedFilter, setAppliedFilter] = useState({
+    name: "category",
+    operator: "inlist",
+    type: "select",
+    value: null,
+  });
+
   const { breakpoints } = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${breakpoints.md}px)`);
 
@@ -52,14 +61,11 @@ function TransactionsList() {
     { onError }
   );
 
-  const defaultFilterValue = [
-    {
-      name: "category",
-      operator: "inlist",
-      type: "select",
-      value: null,
-    },
-  ];
+  const tableData = useMemo(() => {
+    const originalSource = expenseList?.data?.response ?? [];
+    if (!appliedFilter.value) return originalSource;
+    else return filter(originalSource, [appliedFilter]);
+  }, [appliedFilter, expenseList?.data?.response]);
 
   const columns = useMemo(
     () => [
@@ -68,6 +74,7 @@ function TransactionsList() {
         header: "Title",
         defaultFlex: 1,
         minWidth: 200,
+        type: "string",
         render: TitleColumn,
       },
       {
@@ -75,6 +82,7 @@ function TransactionsList() {
         header: "Category",
         defaultFlex: 1,
         minWidth: 140,
+        type: "string",
         render: CategoryColumn,
         filterEditor: SelectFilter,
         filterEditorProps: {
@@ -85,9 +93,10 @@ function TransactionsList() {
       },
       {
         name: "amount",
-        header: "Amount",
+        header: (props) => AmountColumnHeader({ ...props, appliedFilter }),
         minWidth: 100,
         defaultFlex: 1,
+        type: "number",
         render: AmountColumn,
       },
       {
@@ -95,6 +104,7 @@ function TransactionsList() {
         header: "Date",
         defaultFlex: 1,
         minWidth: 120,
+        type: "date",
         render: ({ value }) => dayjs(value).format("DD MMM, 'YY"),
       },
       {
@@ -107,7 +117,7 @@ function TransactionsList() {
           MenuColumn({ data, onRevert: (e) => setRevertExpense(e) }),
       },
     ],
-    []
+    [appliedFilter]
   );
 
   const spentValueAndPerc = () => {
@@ -146,27 +156,33 @@ function TransactionsList() {
             </Text>{" "}
           </Text>
           <ReactDataGrid
+            // render
+            style={{ minHeight: "calc(100% - 80px)", minWidth: "100%" }}
             className="mt-grid"
             theme="default-dark"
             showZebraRows={false}
             showCellBorders="horizontal"
-            style={{ minHeight: "calc(100% - 80px)", minWidth: "100%" }}
-            idProperty="_id"
-            columns={columns}
-            dataSource={[...expenseList?.data?.response] ?? []}
-            columnUserSelect={true}
-            columnHeaderUserSelect={false}
-            showColumnMenuTool={false}
-            renderPaginationToolbar={false}
-            resizable={false}
-            rowHeight={null}
             minRowHeight={45}
             headerHeight={45}
-            enableFiltering={true}
-            defaultFilterValue={defaultFilterValue}
-            enableColumnFilterContextMenu={false}
+            resizable={false}
+            rowHeight={null}
+            showColumnMenuTool={false}
             activateRowOnFocus={false}
-            defaultSortInfo={[{ name: "expenseDate", dir: -1 }]}
+            columnUserSelect={true}
+            columnHeaderUserSelect={false}
+            renderPaginationToolbar={false}
+            // data
+            columns={columns}
+            dataSource={tableData}
+            idProperty="_id"
+            // sorting
+            defaultSortInfo={{ name: "expenseDate", dir: -1 }}
+            // filtering
+            filterable={true}
+            enableFiltering={true}
+            filterValue={[appliedFilter]}
+            enableColumnFilterContextMenu={false}
+            onFilterValueChange={([v]) => setAppliedFilter(v)}
           />
           <RevertExpense
             data={revertExpense}
