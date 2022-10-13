@@ -23,9 +23,9 @@ app.use("/api/budget", require("./routes/budget.routes"));
 app.use("/api/changelog", require("./routes/changelog.routes"));
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  app.use(express.static("frontend/build"));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
 }
 
