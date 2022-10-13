@@ -17,3 +17,24 @@ export const getDayString = (dateString) => {
     return "Yesterday";
   else return dayjs(dateString).format("MMM DD, 'YY");
 };
+
+export const getMonthsList = (fromDate) => {
+  const origin = dayjs(fromDate);
+  const current = dayjs();
+  const items = [];
+  for (let i = 0; i <= current.diff(origin, "month"); i++) {
+    const manipulated = origin.add(i, "month");
+    items.push({
+      label: manipulated.format("MMM, YYYY"),
+      value: manipulated.format("YYYY-MM-DD"),
+    });
+  }
+  items.push({
+    label: current.format("MMM, YYYY"),
+    value: current.format("YYYY-MM-DD"),
+  });
+  return items.reduce((list, curr) => {
+    if (!list.find((d) => d.value === curr.value)) list.push(curr);
+    return list;
+  }, []);
+};

@@ -2,7 +2,8 @@ import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import SelectFilter from "@inovua/reactdatagrid-community/SelectFilter";
 import "@inovua/reactdatagrid-community/theme/default-dark.css";
-import { Select, SimpleGrid, Text } from "@mantine/core";
+import { Select, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import dayjs from "dayjs";
 import React, { useMemo, useState } from "react";
 import CenteredLoader from "../../components/centeredLoader/CenteredLoader";
@@ -12,7 +13,11 @@ import { useErrorHandler } from "../../hooks/errorHandler";
 import { useBudget } from "../../services/budget.service";
 import { useExpenseBreakdown } from "../../services/expense.service";
 import "../../theme/table-style.css";
-import { percentage, severityColor } from "../../utils/app.utils";
+import {
+  getMonthsList,
+  percentage,
+  severityColor,
+} from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 import RevertExpense from "../plannedReports/components/RevertExpense";
 import {
@@ -25,49 +30,26 @@ import {
 function TransactionsList() {
   const { onError } = useErrorHandler();
   const { userData } = useAuth();
-  const [timeFrame, setTimeFrame] = useState({
-    month: dayjs().month(),
-    year: dayjs().year(),
-  });
+  const [frame, setFrame] = useState(dayjs().format("YYYY-MM-DD"));
   const [revertExpense, setRevertExpense] = useState(null);
+  const { breakpoints } = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${breakpoints.md}px)`);
+
+  const monthOptions = useMemo(
+    () => getMonthsList(userData?.createdAt),
+    [userData?.createdAt]
+  );
   // const [params] = useSearchParams();
 
-  const timeFrameOptions = useMemo(() => {
-    if (!userData) return { months: [], years: [] };
-
-    const currentYear = dayjs().year();
-    const registrationYear = dayjs(userData?.createdAt).year();
-    const numOfYears = currentYear - registrationYear;
-
-    let years = [];
-    for (let i = numOfYears; i >= 0; i--) {
-      years.push({ label: currentYear - i, value: currentYear - i });
-    }
-
-    const months = MONTHS.map((month) => {
-      let disableMonth = false;
-      if (timeFrame.year === dayjs(userData.createdAt).year()) {
-        if (
-          month.value < dayjs(userData?.createdAt).month() ||
-          month.value > dayjs().month()
-        )
-          disableMonth = true;
-      }
-      return { ...month, disabled: disableMonth };
-    });
-
-    return { years, months };
-  }, [userData, timeFrame]);
-
   const { data: budget, isLoading: loadingBudgets } = useBudget(
-    timeFrame.month + 1,
-    timeFrame.year,
+    dayjs(frame).month() + 1,
+    dayjs(frame).year(),
     { onError }
   );
 
   const { data: expenseList, isLoading: loadingExpenses } = useExpenseBreakdown(
-    timeFrame.month + 1,
-    timeFrame.year,
+    dayjs(frame).month() + 1,
+    dayjs(frame).year(),
     { onError }
   );
 
@@ -141,18 +123,11 @@ function TransactionsList() {
 
   return (
     <>
-      <SimpleGrid cols={2}>
+      <SimpleGrid cols={isMobile ? 1 : 3}>
         <Select
-          data={timeFrameOptions.months}
-          value={timeFrame.month}
-          size="sm"
-          mb="sm"
-          onChange={(month) => setTimeFrame((frame) => ({ ...frame, month }))}
-        />
-        <Select
-          data={timeFrameOptions.years}
-          value={timeFrame.year}
-          onChange={(year) => setTimeFrame((frame) => ({ ...frame, year }))}
+          data={monthOptions}
+          onChange={setFrame}
+          value={frame}
           size="sm"
           mb="sm"
         />
@@ -198,7 +173,11 @@ function TransactionsList() {
             data={revertExpense}
             closeModal={() => setRevertExpense(null)}
             relatedQueries={[
-              ["expense-breakdown", timeFrame.month + 1, timeFrame.year],
+              [
+                "expense-breakdown",
+                dayjs(frame).month() + 1,
+                dayjs(frame).year(),
+              ],
             ]}
           />
         </>
