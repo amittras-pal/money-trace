@@ -13,12 +13,14 @@ import React from "react";
 import { useAuth } from "../../../context/UserContext";
 import { openConfirmModal } from "@mantine/modals";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
 
 export default function GlobalUser({ setOpened }) {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { userData, loadingRequisites } = useAuth();
+  const client = useQueryClient();
 
   const confirmLogout = () => {
     openConfirmModal({
@@ -41,6 +43,7 @@ export default function GlobalUser({ setOpened }) {
       closeOnCancel: true,
       onConfirm: () => {
         localStorage.clear();
+        client.clear();
         window.dispatchEvent(new Event("storage"));
         setOpened(false);
         navigate("/login");

@@ -26,7 +26,7 @@ import {
   useEditReport,
   useReports,
 } from "../../services/report.service";
-import NewForm from "./components/NewForm";
+import PlanForm from "./components/PlanForm";
 import PlanCard from "./components/PlanCard";
 
 export default function PlansList() {
@@ -212,7 +212,7 @@ export default function PlansList() {
         withCloseButton={false}
         title="Create New Expense Plan"
         closeOnClickOutside={false}>
-        <NewForm
+        <PlanForm
           data={selectedItem}
           onComplete={closeFormModal}
           onCancel={closeFormModal}

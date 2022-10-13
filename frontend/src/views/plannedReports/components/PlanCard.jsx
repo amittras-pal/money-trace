@@ -61,7 +61,7 @@ export default function PlanCard({
           weight={500}
           lineClamp={2}
           component={hideMenus ? "span" : Link}
-          to={`/planned-reports/${data._id}`}>
+          to={`/expense-plans/${data._id}`}>
           {data.name}
         </Text>
         <Text size="sm" color="dimmed">

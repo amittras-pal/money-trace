@@ -60,7 +60,6 @@ export default function PlanDetails() {
         {reportDetails?.data?.response?.expenses?.length > 0 ? (
           <>
             {isMobile ? (
-              // Mobile View
               <>
                 <SegmentedControl
                   size="sm"
@@ -83,7 +82,6 @@ export default function PlanDetails() {
                 </SimpleGrid>
               </>
             ) : (
-              // PC View
               <SimpleGrid cols={2} sx={{ flexGrow: 1 }}>
                 <SummaryView data={reportDetails?.data?.response} />
                 <ListView data={reportDetails?.data?.response} />

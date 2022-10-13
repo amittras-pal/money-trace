@@ -19,7 +19,6 @@ import { useDeleteExpense } from "../../../services/expense.service";
 import RevertExpense from "./RevertExpense";
 
 export default function ListView({ data }) {
-  console.log(data);
   const ref = useRef();
   const [scrollAreaHeight, setScrollAreaHeight] = useState(0);
   const [filter, setFilter] = useState("");

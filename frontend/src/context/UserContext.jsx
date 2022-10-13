@@ -23,8 +23,6 @@ export function UserProvider({ children }) {
   const [viewChangelog, setViewChangelog] = useState(false);
   const { onError } = useErrorHandler();
 
-  //TODO: Add Changelog view if user has a changelog not viewed.
-
   useEffect(() => {
     const listener = () => {
       setLoggedIn(localStorage.getItem("token") ? true : false);

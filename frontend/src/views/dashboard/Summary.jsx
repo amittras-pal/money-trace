@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Group,
+  Image,
   Text,
   ThemeIcon,
   Tooltip as MTooltip,
@@ -19,11 +20,11 @@ import ChartTooltip from "../../components/charts/ChartTooltip";
 import { CATEGORIES } from "../../constants/app.constants";
 import { useAuth } from "../../context/UserContext";
 import { useErrorHandler } from "../../hooks/errorHandler";
+import emptyState from "../../resources/Clipboard.svg";
 import { useExpenseSummary } from "../../services/expense.service";
 import { percentage, severityColor } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
 
-// TODO: Add Empty State.
 export default function Summary({ onAddNew }) {
   const { onError } = useErrorHandler();
   const { breakpoints, colors } = useMantineTheme();
@@ -80,6 +81,43 @@ export default function Summary({ onAddNew }) {
   );
 
   if (!cMBudget || loadingSummary) return <CenteredLoader />;
+
+  if (summary?.data?.response.total <= 0)
+    return (
+      <Group
+        cols={1}
+        sx={{
+          height: "100%",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}>
+        <Image src={emptyState} />
+        <Text size="sm" mt="md" align="center">
+          No transactions yet this month!
+        </Text>
+        <Group position="center">
+          <Button
+            color="indigo"
+            size="xs"
+            leftIcon={<IconPlus size={18} />}
+            onClick={onAddNew}
+            mt="lg">
+            Add New
+          </Button>
+          <Button
+            color="indigo"
+            size="xs"
+            variant="subtle"
+            pr={0}
+            component={Link}
+            to="/transactions"
+            rightIcon={<IconArrowRight size={18} />}
+            mt="auto">
+            View Transactions
+          </Button>
+        </Group>
+      </Group>
+    );
 
   return (
     <>

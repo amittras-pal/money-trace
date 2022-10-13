@@ -21,7 +21,7 @@ import {
   useEditReport,
 } from "../../../services/report.service";
 
-export default function NewForm({ onComplete, onCancel, data }) {
+export default function PlanForm({ onComplete, onCancel, data }) {
   const { breakpoints } = useMantineTheme();
   const isSmallScreen = useMediaQuery(`(max-width: ${breakpoints.md}px)`);
 

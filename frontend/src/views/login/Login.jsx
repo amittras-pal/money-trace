@@ -67,7 +67,6 @@ function Login() {
       setTimeout(() => navigate("/"), 150);
     },
     onError: (err) => {
-      console.log(err.response.data.message);
       onError(err, () =>
         showNotification({
           title: "Login Failed",

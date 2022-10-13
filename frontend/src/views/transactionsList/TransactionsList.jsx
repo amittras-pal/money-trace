@@ -7,7 +7,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import dayjs from "dayjs";
 import React, { useMemo, useState } from "react";
 import CenteredLoader from "../../components/centeredLoader/CenteredLoader";
-import { CATEGORIES, MONTHS } from "../../constants/app.constants";
+import { CATEGORIES } from "../../constants/app.constants";
 import { useAuth } from "../../context/UserContext";
 import { useErrorHandler } from "../../hooks/errorHandler";
 import { useBudget } from "../../services/budget.service";
@@ -39,7 +39,6 @@ function TransactionsList() {
     () => getMonthsList(userData?.createdAt),
     [userData?.createdAt]
   );
-  // const [params] = useSearchParams();
 
   const { data: budget, isLoading: loadingBudgets } = useBudget(
     dayjs(frame).month() + 1,

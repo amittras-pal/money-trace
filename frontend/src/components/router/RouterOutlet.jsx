@@ -37,7 +37,7 @@ function RouterOutlet() {
         }
       />
       <Route
-        path="/planned-reports"
+        path="/expense-plans"
         element={
           <AuthGuard>
             <PlansList />
@@ -45,7 +45,7 @@ function RouterOutlet() {
         }
       />
       <Route
-        path="/planned-reports/:id"
+        path="/expense-plans/:id"
         element={
           <AuthGuard>
             <PlanDetails />

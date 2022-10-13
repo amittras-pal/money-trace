@@ -19,7 +19,7 @@ export const NAV_ROUTES = [
   {
     icon: <IconReport size={16} />,
     label: "Expense Plans",
-    path: "/planned-reports",
+    path: "/expense-plans",
     exactMatch: false,
   },
 ];
