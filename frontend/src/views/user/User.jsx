@@ -21,9 +21,10 @@ import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons";
 import { openConfirmModal } from "@mantine/modals";
 import CenteredLoader from "../../components/centeredLoader/CenteredLoader";
+import { APP_VERSION } from "../../constants/app.constants";
 
 export default function User() {
-  const { userData } = useAuth();
+  const { userData, setViewChangelog } = useAuth();
   const { breakpoints } = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${breakpoints.md}px)`);
   const navigate = useNavigate();
@@ -173,14 +174,11 @@ export default function User() {
           </Accordion.Item>
         </Accordion>
       </Box>
-      <Text
-        mt={40}
-        size={isMobile ? 20 : 36}
-        weight={700}
-        variant="gradient"
-        gradient={{ from: "orange", to: "blue", deg: 0 }}>
-        More control over user account is arriving soon, in version 3.0.
-      </Text>
+      <Group mt="xl">
+        <Button variant="subtle" onClick={() => setViewChangelog(true)}>
+          Latest features in {APP_VERSION}
+        </Button>
+      </Group>
     </>
   );
 }

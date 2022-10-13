@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons";
-import React from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
 import * as yup from "yup";
@@ -18,6 +18,11 @@ import { useErrorHandler } from "../../../hooks/errorHandler";
 import { useRevertExpense } from "../../../services/expense.service";
 
 export default function RevertExpense({ data, closeModal, relatedQueries }) {
+  const availableMsgLength = useMemo(
+    () => 256 - (data?.description?.length ?? 0),
+    [data?.description?.length]
+  );
+
   const { onError } = useErrorHandler();
   const handleError = (err) => {
     onError(err, () => {
@@ -55,7 +60,10 @@ export default function RevertExpense({ data, closeModal, relatedQueries }) {
       yup.object().shape({
         revertMsg: yup
           .string()
-          .max(40, "Message should be 40 characters or less.")
+          .max(
+            availableMsgLength,
+            `Message should be ${availableMsgLength} characters or less.`
+          )
           .required("Revert Message is required."),
       })
     ),
@@ -95,6 +103,10 @@ export default function RevertExpense({ data, closeModal, relatedQueries }) {
           autoFocus
           placeholder="Add a Revert Message"
           {...revertForm.register("revertMsg")}
+          descriptionProps={{ align: "right", mt: 4 }}
+          description={`${
+            revertForm.watch("revertMsg").length
+          }/${availableMsgLength}`}
           error={revertForm?.formState.errors?.revertMsg?.message}
         />
         <Text size="sm" color="red" mb="md">

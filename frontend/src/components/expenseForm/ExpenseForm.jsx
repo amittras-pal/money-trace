@@ -1,8 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Box,
   Button,
   Checkbox,
   Divider,
+  ScrollArea,
   Select,
   SimpleGrid,
   Text,
@@ -122,91 +124,93 @@ export default function ExpenseForm({
   };
 
   return (
-    <SimpleGrid
+    <Box
       cols={1}
       spacing="sm"
       component="form"
       noValidate
       m={4}
       onSubmit={handleSubmit(saveExpense)}>
-      <Divider color="indigo" mb="sm" variant="dashed" />
-      <TextInput
-        label="Title"
-        required
-        autoFocus
-        {...register("title")}
-        error={errors.title?.message}
-      />
-      <Textarea
-        label="Description"
-        rows={4}
-        {...register("description")}
-        error={errors.description?.message}
-      />
-      <Text color="dimmed" size={12} mt={-8} align="end">
-        {watch("description").length} / 260
-      </Text>
-      <TextInput
-        type="number"
-        label="Amount"
-        inputMode="numeric"
-        required
-        icon={<IconCurrencyRupee size={18} />}
-        {...register("amount")}
-        error={errors.amount?.message}
-      />
-      <Select
-        required
-        transition="fade"
-        itemComponent={CategorySelectItem}
-        data={Object.keys(CATEGORIES)}
-        label="Category"
-        placeholder="Select Category"
-        mb={12}
-        error={errors.category?.message}
-        value={watch("category")}
-        onChange={(e) => {
-          setValue("category", e, {
-            shouldDirty: true,
-            shouldTouch: true,
-            shouldValidate: true,
-          });
-        }}
-      />
-      <Checkbox
-        mb="sm"
-        color="indigo"
-        label="Add to planned expense."
-        {...register("attachToReport")}
-      />
-      {watch("attachToReport") && (
-        <Select
-          mb={12}
-          label="Report"
-          transition="pop"
-          disabled={isLoading}
-          nothingFound="You do not have any open reports."
-          placeholder={isLoading ? "Loading Reports" : "Select Report"}
-          itemComponent={ReportSelectItem}
-          error={errors.report?.message}
+      <ScrollArea style={{ height: "60vh", margin: "8px 0px" }}>
+        <Divider color="indigo" mb="sm" variant="dashed" />
+        <TextInput
+          label="Title"
           required
-          data={
-            reports?.data?.response?.map((item) => ({
-              ...item,
-              value: item._id,
-              label: item.name,
-            })) || []
-          }
-          value={watch("report")}
+          autoFocus
+          {...register("title")}
+          error={errors.title?.message}
+        />
+        <Textarea
+          label="Description"
+          rows={4}
+          {...register("description")}
+          error={errors.description?.message}
+        />
+        <Text color="dimmed" size={12} mt={0} align="end">
+          {watch("description").length} / 260
+        </Text>
+        <TextInput
+          type="number"
+          label="Amount"
+          inputMode="numeric"
+          required
+          icon={<IconCurrencyRupee size={18} />}
+          {...register("amount")}
+          error={errors.amount?.message}
+        />
+        <Select
+          required
+          transition="fade"
+          itemComponent={CategorySelectItem}
+          data={Object.keys(CATEGORIES)}
+          label="Category"
+          placeholder="Select Category"
+          mb={12}
+          error={errors.category?.message}
+          value={watch("category")}
           onChange={(e) => {
-            setValue("report", e, {
+            setValue("category", e, {
               shouldDirty: true,
               shouldTouch: true,
               shouldValidate: true,
             });
           }}
         />
-      )}
+        <Checkbox
+          mb="sm"
+          color="indigo"
+          label="Add to planned expense."
+          {...register("attachToReport")}
+        />
+        {watch("attachToReport") && (
+          <Select
+            mb={12}
+            label="Report"
+            transition="pop"
+            disabled={isLoading}
+            nothingFound="You do not have any open reports."
+            placeholder={isLoading ? "Loading Reports" : "Select Report"}
+            itemComponent={ReportSelectItem}
+            error={errors.report?.message}
+            required
+            data={
+              reports?.data?.response?.map((item) => ({
+                ...item,
+                value: item._id,
+                label: item.name,
+              })) || []
+            }
+            value={watch("report")}
+            onChange={(e) => {
+              setValue("report", e, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+            }}
+          />
+        )}
+      </ScrollArea>
       <SimpleGrid cols={2}>
         <Button
           type="button"
@@ -219,6 +223,6 @@ export default function ExpenseForm({
           Save
         </Button>
       </SimpleGrid>
-    </SimpleGrid>
+    </Box>
   );
 }
