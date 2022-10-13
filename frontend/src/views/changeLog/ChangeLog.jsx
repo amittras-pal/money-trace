@@ -45,8 +45,9 @@ export default function ChangeLog() {
   });
 
   const handleViewChangelog = () => {
-    if (userData.hasUnseenChangelog) setViewChangelog(false);
-    else markChangelogVIewed({ hasUnseenChangelog: false });
+    if (userData.hasUnseenChangelog)
+      markChangelogVIewed({ hasUnseenChangelog: false });
+    else setViewChangelog(false);
   };
 
   return (
