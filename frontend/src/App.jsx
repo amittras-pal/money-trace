@@ -1,5 +1,6 @@
 import { AppShell, useMantineTheme } from "@mantine/core";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import CenteredLoader from "./components/centeredLoader/CenteredLoader";
 import AppHeader from "./components/layout/header/AppHeader";
 import AppNavigation from "./components/layout/navigation/AppNavigation";
 import RouterOutlet from "./components/router/RouterOutlet";
@@ -18,8 +19,10 @@ export default function App() {
         styles={{ main: { background: colors.dark[8] } }}
         navbar={<AppNavigation opened={drawerOpen} setOpened={setDrawerOpen} />}
         header={<AppHeader opened={drawerOpen} setOpened={setDrawerOpen} />}>
-        <RouterOutlet />
-        <ChangeLog />
+        <Suspense fallback={<CenteredLoader />}>
+          <RouterOutlet />
+          <ChangeLog />
+        </Suspense>
       </AppShell>
     </UserProvider>
   );
