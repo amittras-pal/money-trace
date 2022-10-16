@@ -13,9 +13,9 @@ import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
 import * as yup from "yup";
-import ExpenseItem from "../../../components/expenseItem/ExpenseItem";
-import { useErrorHandler } from "../../../hooks/errorHandler";
-import { useRevertExpense } from "../../../services/expense.service";
+import ExpenseItem from "../expenseItem/ExpenseItem";
+import { useErrorHandler } from "../../hooks/errorHandler";
+import { useRevertExpense } from "../../services/expense.service";
 
 export default function RevertExpense({ data, closeModal, relatedQueries }) {
   const availableMsgLength = useMemo(

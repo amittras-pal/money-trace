@@ -16,7 +16,7 @@ import ExpenseForm from "../../../components/expenseForm/ExpenseForm";
 import ExpenseItem from "../../../components/expenseItem/ExpenseItem";
 import { useErrorHandler } from "../../../hooks/errorHandler";
 import { useDeleteExpense } from "../../../services/expense.service";
-import RevertExpense from "./RevertExpense";
+import RevertExpense from "../../../components/revertExpense/RevertExpense";
 
 export default function ListView({ data }) {
   const ref = useRef();

@@ -12,9 +12,9 @@ const TransactionsList = lazy(() =>
 );
 const User = lazy(() => import("../../views/user/User"));
 const SignUp = lazy(() => import("../../views/signUp/SignUp"));
-const PlansList = lazy(() => import("../../views/plannedReports/PlansList"));
+const PlansList = lazy(() => import("../../views/plannedExpenses/PlansList"));
 const PlanDetails = lazy(() =>
-  import("../../views/plannedReports/PlanDetails")
+  import("../../views/plannedExpenses/PlanDetails")
 );
 
 function RouterOutlet() {

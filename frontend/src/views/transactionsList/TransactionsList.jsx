@@ -20,7 +20,7 @@ import {
   severityColor,
 } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
-import RevertExpense from "../plannedReports/components/RevertExpense";
+import RevertExpense from "../../components/revertExpense/RevertExpense";
 import {
   AmountColumn,
   AmountColumnHeader,
