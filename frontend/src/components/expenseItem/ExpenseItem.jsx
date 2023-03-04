@@ -71,36 +71,40 @@ export default function ExpenseItem({
           weight={500}
           lineClamp={2}
           strikethrough={data.reverted}
-          color={data?.reverted ? "dimmed" : colors.gray[1]}>
+          color={data?.reverted ? "dimmed" : colors.gray[1]}
+        >
           {data.reverted && (
             <Tooltip
               position="bottom-start"
               label="This item has been reverted."
-              color="red">
+              color="red"
+            >
               <ThemeIcon
                 mr="xs"
                 color="red"
                 size={18}
                 variant="filled"
-                radius="lg">
+                radius="lg"
+              >
                 <IconArrowBackUp size={14} />
               </ThemeIcon>
             </Tooltip>
           )}
           {data.title}
         </Text>
-        <Text size="sm" color="dimmed">
+        <Text size="sm" color="dimmed" className={classes.description}>
           {data.description}
         </Text>
-        <Group spacing={0} sx={{ alignItems: "center" }}>
-          <Text weight={500} lineClamp={1} size="lg" mt={6} mr={12}>
+        <Group spacing={0} mt={8} sx={{ alignItems: "center" }}>
+          <Text weight={500} lineClamp={1} size="lg" mr={12}>
             {currencyFormat.format(data.amount)}
           </Text>
           <Badge
             color={CATEGORIES[data.category].color}
             variant="light"
             size="sm"
-            mr={8}>
+            mr={8}
+          >
             {data.category}
           </Badge>
           <Badge color="gray" variant="light" size="sm">
@@ -122,7 +126,8 @@ export default function ExpenseItem({
                 color={action.color}
                 key={action.label}
                 icon={action.icon}
-                onClick={action.onClick}>
+                onClick={action.onClick}
+              >
                 {action.label}
               </Menu.Item>
             ))}
@@ -158,5 +163,8 @@ const useCardStyle = createStyles((theme, { category, flatten }) => ({
       transform: "translateY(-50%)",
       backgroundColor: theme.colors[CATEGORIES[category].color][5],
     },
+  },
+  description: {
+    whiteSpace: "pre-wrap",
   },
 }));
