@@ -2,6 +2,7 @@ import { ActionIcon, Badge, Box, Text, Tooltip } from "@mantine/core";
 import { IconArrowBackUp } from "@tabler/icons";
 import dayjs from "dayjs";
 import { useMemo } from "react";
+import ExpenseDescription from "../../components/expenseDescription/ExpenseDescription";
 import { CATEGORIES } from "../../constants/app.constants";
 import { currencyFormat } from "../../utils/formatter.utils";
 
@@ -16,7 +17,8 @@ export function MenuColumn({ data, onRevert }) {
         color="red"
         radius="xl"
         size="sm"
-        onClick={() => onRevert(data)}>
+        onClick={() => onRevert(data)}
+      >
         <IconArrowBackUp size={16} />
       </ActionIcon>
     </Tooltip>
@@ -37,7 +39,8 @@ export function AmountColumn({ data, value }) {
     <Text
       color={data.reverted ? "dimmed" : "red"}
       weight={500}
-      strikethrough={data.reverted}>
+      strikethrough={data.reverted}
+    >
       {currencyFormat.format(value)}
     </Text>
   );
@@ -59,16 +62,18 @@ export function TitleColumn({ data }) {
         color={data.reverted ? "dimmed" : "#F1F3F5"}
         sx={{ width: "100%", whiteSpace: "break-spaces" }}
         my={0}
-        lineClamp={2}>
+        lineClamp={2}
+      >
         {data.title}
       </Text>
-      <Text
+      <ExpenseDescription
         color="dimmed"
         my={0}
         size="xs"
-        sx={{ width: "100%", whiteSpace: "break-spaces" }}>
+        sx={{ width: "100%", whiteSpace: "break-spaces" }}
+      >
         {data.description}
-      </Text>
+      </ExpenseDescription>
     </Box>
   );
 }

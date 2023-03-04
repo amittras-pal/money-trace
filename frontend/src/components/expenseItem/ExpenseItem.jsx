@@ -21,6 +21,7 @@ import React, { useMemo } from "react";
 import { CATEGORIES } from "../../constants/app.constants";
 import { getDayString } from "../../utils/app.utils";
 import { currencyFormat } from "../../utils/formatter.utils";
+import ExpenseDescription from "../expenseDescription/ExpenseDescription";
 
 export default function ExpenseItem({
   data,
@@ -92,9 +93,13 @@ export default function ExpenseItem({
           )}
           {data.title}
         </Text>
-        <Text size="sm" color="dimmed" className={classes.description}>
+        <ExpenseDescription
+          size="sm"
+          color="dimmed"
+          className={classes.description}
+        >
           {data.description}
-        </Text>
+        </ExpenseDescription>
         <Group spacing={0} mt={8} sx={{ alignItems: "center" }}>
           <Text weight={500} lineClamp={1} size="lg" mr={12}>
             {currencyFormat.format(data.amount)}

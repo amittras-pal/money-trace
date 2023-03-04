@@ -130,7 +130,8 @@ export default function ExpenseForm({
       component="form"
       noValidate
       m={4}
-      onSubmit={handleSubmit(saveExpense)}>
+      onSubmit={handleSubmit(saveExpense)}
+    >
       <ScrollArea style={{ height: "60vh", margin: "8px 0px" }}>
         <Divider color="indigo" mb="sm" variant="dashed" />
         <TextInput
@@ -142,7 +143,9 @@ export default function ExpenseForm({
         />
         <Textarea
           label="Description"
-          rows={4}
+          autosize
+          minRows={8}
+          maxRows={10}
           {...register("description")}
           error={errors.description?.message}
         />
@@ -216,7 +219,8 @@ export default function ExpenseForm({
           type="button"
           variant="outline"
           disabled={addingExpense || editingingExpense}
-          onClick={onCancel}>
+          onClick={onCancel}
+        >
           Cancel
         </Button>
         <Button type="submit" loading={addingExpense || editingingExpense}>
