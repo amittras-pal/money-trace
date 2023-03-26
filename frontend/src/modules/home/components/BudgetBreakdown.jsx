@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Group, Text } from "@mantine/core";
 import { IconArrowRight, IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
 import { useCurrentUser } from "../../../context/user";
@@ -10,13 +10,18 @@ import { useSummary } from "../services";
 import { useBudgetBreakdownStyles } from "../styles";
 
 export default function BudgetBreakdown({ setShowForm }) {
-  const { budget } = useCurrentUser();
+  const { classes } = useBudgetBreakdownStyles();
+  const { budget, userData } = useCurrentUser();
+
   // Handle Loading
-  const { data: summary } = useSummary({
+  const { data: summary, refetch } = useSummary({
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   });
-  const { classes } = useBudgetBreakdownStyles();
+
+  useEffect(() => {
+    if (userData) refetch();
+  }, [refetch, userData]);
 
   if (!budget)
     return (
@@ -47,13 +52,11 @@ export default function BudgetBreakdown({ setShowForm }) {
           Add New
         </Button>
         <Button
-          color="blue"
           size="xs"
-          variant="outline"
+          variant="light"
           rightIcon={<IconArrowRight size={18} />}
           component={Link}
           to="/expenses"
-          disabled
         >
           View All
         </Button>

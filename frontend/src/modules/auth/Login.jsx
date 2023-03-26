@@ -17,6 +17,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
+import { useCurrentUser } from "../../context/user";
 import PublicGuard from "../guards/PublicGuard";
 import { useLoginUser } from "./services";
 import { useAuthStyles } from "./styles";
@@ -24,6 +25,7 @@ import { loginSchema } from "./utils";
 
 export default function Login() {
   const { classes } = useAuthStyles();
+  const { setUserData } = useCurrentUser();
   const navigate = useNavigate();
   const [target, setTarget] = useState("/");
   useDocumentTitle(`${APP_TITLE} | Login`);
@@ -45,6 +47,7 @@ export default function Login() {
   const { mutate: login, isLoading: loggingIn } = useLoginUser({
     onSuccess: (res) => {
       localStorage.setItem("authToken", res.data?.response?.token);
+      setUserData(res.data?.response.user);
       notifications.show({
         title: res.data?.message,
         message: `Welcome, ${res.data?.response?.user.userName}`,
@@ -103,7 +106,7 @@ export default function Login() {
               <Chip variant="filled" value="/">
                 Home
               </Chip>
-              <Chip variant="filled" value="/expenses" disabled>
+              <Chip variant="filled" value="/expenses">
                 Transactions
               </Chip>
               <Chip variant="filled" value="/plans" disabled>
