@@ -1,0 +1,53 @@
+{
+  "material-icon-theme.activeIconPack": "react_redux",
+  "editor.suggestSelection": "first",
+  "editor.fontFamily": "\"Fira Code\"",
+  "editor.fontLigatures": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.linkedEditing": true,
+  "editor.codeLens": true,
+  "emmet.excludeLanguages": ["markdown"],
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "window.newWindowDimensions": "maximized",
+  "files.autoSave": "onFocusChange",
+  "workbench.colorTheme": "One Dark Pro Darker",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.productIconTheme": "icons-carbon",
+  "workbench.startupEditor": "none",
+  "diffEditor.codeLens": true,
+  "gitlens.hovers.currentLine.over": "line",
+  "gitlens.defaultDateFormat": null,
+  "eslint.alwaysShowStatus": true,
+  "eslint.debug": true,
+  "eslint.lintTask.enable": true,
+  "git.confirmSync": true,
+  "background.windowBackgrounds": [
+    "c:/Users/palam/Downloads/john-towner-JgOeRuGD_Y4-unsplash.jpg",
+    "c:/Users/palam/Downloads/cover.jpg"
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "editor.formatOnSave": true,
+  "editor.minimap.renderCharacters": false,
+  "editor.suggest.preview": true,
+  "editor.suggest.showColors": false,
+  "files.insertFinalNewline": true,
+  "workbench.preferredDarkColorTheme": "Monokai",
+  "explorer.compactFolders": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.importModuleSpecifier": "relative"
+}
