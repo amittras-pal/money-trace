@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "../config/axios";
 import { ENDPOINTS } from "../constants/endpoints";
+import { useErrorHandler } from "../hooks/useErrorHandler";
 import { getAuthToken } from "../utils";
 
 function getUserData() {
@@ -32,6 +33,7 @@ export default function UserProvider({ children }) {
   const [userData, setUserData] = useState(null);
   const [budget, setBudget] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const { onError } = useErrorHandler();
 
   useEffect(() => {
     const listener = () => {
@@ -46,6 +48,7 @@ export default function UserProvider({ children }) {
   // eslint-disable-next-line no-unused-vars
   const { isLoading: loadingUser } = useUserData({
     onSuccess: (res) => setUserData(res.data?.response),
+    onError,
     enabled: loggedIn,
     staleTime: 20 * 60 * 1000,
     refetchOnWindowFocus: false,

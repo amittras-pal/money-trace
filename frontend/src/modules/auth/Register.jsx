@@ -10,11 +10,12 @@ import {
 } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck } from "@tabler/icons-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
 import PublicGuard from "../guards/PublicGuard";
 import { useRegisterUser } from "./services";
 import { useAuthStyles } from "./styles";
@@ -24,6 +25,7 @@ export default function Register() {
   const { classes } = useAuthStyles();
   const navigate = useNavigate();
   useDocumentTitle(`${APP_TITLE} | Register`);
+  const { onError } = useErrorHandler();
 
   const {
     register,
@@ -50,13 +52,7 @@ export default function Register() {
       });
       navigate("/login");
     },
-    onError: (err) => {
-      notifications.show({
-        message: err.response?.data?.message,
-        color: "red",
-        icon: <IconX />,
-      });
-    },
+    onError,
   });
 
   return (

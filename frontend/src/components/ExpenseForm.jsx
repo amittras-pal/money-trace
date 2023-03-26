@@ -18,11 +18,13 @@ import dayjs from "dayjs";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { getCategories } from "../constants/categories";
+import { useErrorHandler } from "../hooks/useErrorHandler";
 import { useCreateExpense, useEditExpense } from "../modules/home/services";
 import { expenseSchema } from "../modules/home/utils";
 
 export default function ExpenseForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();
+  const { onError } = useErrorHandler();
   const client = useQueryClient();
 
   const handleClose = () => {
@@ -73,16 +75,12 @@ export default function ExpenseForm({ data, onComplete }) {
 
   const { mutate: createExpense, isLoading: creating } = useCreateExpense({
     onSuccess: handleSuccess,
-    onError: (err) => {
-      console.log(err);
-    },
+    onError,
   });
 
   const { mutate: editExpense, isLoading: editing } = useEditExpense({
     onSuccess: handleSuccess,
-    onError: (err) => {
-      console.log(err);
-    },
+    onError,
   });
 
   const handleSave = (values) => {
@@ -94,7 +92,6 @@ export default function ExpenseForm({ data, onComplete }) {
   };
 
   return (
-    // <Modal centered opened={open} withCloseButton={false} onClose={handleClose}>
     <Box
       component="form"
       onReset={handleClose}
@@ -160,6 +157,5 @@ export default function ExpenseForm({ data, onComplete }) {
         </Button>
       </Group>
     </Box>
-    // </Modal>
   );
 }

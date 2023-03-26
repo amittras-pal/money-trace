@@ -4,13 +4,6 @@ const theme = {
   primaryColor: "orange",
   defaultRadius: "sm",
   activeStyles: { transform: "scale(0.95)" },
-  // breakpoints: {
-  //   xs: "12em",
-  //   sm: "36em",
-  //   md: "64em",
-  //   lg: "74em",
-  //   xl: "90em",
-  // },
   components: {
     TextInput: {
       defaultProps: {
@@ -58,6 +51,11 @@ const theme = {
     Divider: {
       defaultProps: {
         variant: "dashed",
+      },
+    },
+    ScrollArea: {
+      defaultProps: {
+        scrollbarSize: 6,
       },
     },
   },

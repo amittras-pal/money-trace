@@ -7,9 +7,11 @@ import { useBudget, useCreateBudget } from "./services";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useCurrentUser } from "../../context/user";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
 
 export default function BudgetMonitor() {
   const { budget, setBudget } = useCurrentUser();
+  const { onError } = useErrorHandler();
   const { isError, isLoading, refetch } = useBudget(
     {
       month: dayjs().month(),
@@ -19,6 +21,7 @@ export default function BudgetMonitor() {
       retry: 1,
       refetchOnWindowFocus: false,
       enabled: Boolean(!budget && getAuthToken()),
+      onError,
       onSuccess: (res) => {
         setBudget(res.data?.response?.amount);
       },

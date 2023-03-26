@@ -1,22 +1,26 @@
 import {
   Box,
   Divider,
-  Grid,
   Group,
   Pagination,
   ScrollArea,
+  SimpleGrid,
 } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
 import React, { useRef, useState } from "react";
 import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
 import { APP_TITLE } from "../../constants/app";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useMediaMatch } from "../../hooks/useMediaMatch";
 import FilterAndSort from "./components/FilterAndSort";
 import List from "./components/List";
 import { useExpenseList } from "./services";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
+  const { onError } = useErrorHandler();
+  const isMobile = useMediaMatch();
   const [payload, setPayload] = useState({
     filter: {
       startDate: dayjs().startOf("month").toDate(),
@@ -35,6 +39,7 @@ export default function Expenses() {
   const ref = useRef();
   const { isLoading, data } = useExpenseList(payload, {
     refetchOnWondowFocus: false,
+    onError,
   });
 
   return (
@@ -62,18 +67,14 @@ export default function Expenses() {
         />
         <Divider my="sm" sx={{ width: "100%" }} />
         <Box sx={{ flexGrow: 1, width: "100%" }} ref={ref}>
-          <ScrollArea
-            h={ref.current?.clientHeight ?? 0}
-            w={ref.current?.clientWidth ?? 0}
-            scrollbarSize={6}
-          >
-            <Grid gutter={8} mx={0}>
+          <ScrollArea h={ref.current?.clientHeight ?? 0} scrollbarSize={6}>
+            <SimpleGrid cols={isMobile ? 1 : 3} spacing="xs">
               {isLoading ? (
                 <ExpenseListSkeleton />
               ) : (
                 <List data={data?.data?.response?.data} />
               )}
-            </Grid>
+            </SimpleGrid>
           </ScrollArea>
         </Box>
       </Group>

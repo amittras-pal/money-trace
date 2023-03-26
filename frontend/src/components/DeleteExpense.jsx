@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Divider,
-  Grid,
   Group,
   Text,
   useMantineTheme,
@@ -11,6 +10,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
+import { useErrorHandler } from "../hooks/useErrorHandler";
 import { useDeleteExpense } from "../modules/home/services";
 import ExpenseCard from "./ExpenseCard";
 
@@ -18,6 +18,7 @@ export default function DeleteExpense({ data, onComplete }) {
   console.log(data);
   const { primaryColor } = useMantineTheme();
   const client = useQueryClient();
+  const { onError } = useErrorHandler();
 
   const { mutate: deleteExpense, isLoading: deleting } = useDeleteExpense({
     onSuccess: (res) => {
@@ -30,9 +31,7 @@ export default function DeleteExpense({ data, onComplete }) {
       client.invalidateQueries({ queryKey: ["summary"] });
       client.invalidateQueries({ queryKey: ["recent-transactions"] });
     },
-    onError: (err) => {
-      console.log(err);
-    },
+    onError,
   });
 
   return (
@@ -41,9 +40,7 @@ export default function DeleteExpense({ data, onComplete }) {
         Are you sure you want to delete the following expense?
       </Text>
       <Divider my="md" />
-      <Grid>
-        <ExpenseCard changeDetection={false} hideMenu data={data} />
-      </Grid>
+      <ExpenseCard hideMenu data={data} />
       <Text color="red" fz="sm" fw="bold">
         This action cannot be undone!
       </Text>

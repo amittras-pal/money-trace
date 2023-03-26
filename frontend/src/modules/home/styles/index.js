@@ -1,29 +1,48 @@
 import { createStyles } from "@mantine/core";
 
-export const useBudgetBreakdownStyles = createStyles((theme) => ({
-  noInfo: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.gray[8],
-  },
-  item: {
-    padding: 8,
-    borderRadius: theme.radius.sm,
-    boxShadow: theme.shadows.md,
-    backgroundColor: theme.colors.dark[6],
-    border: "1px solid transparent",
-    transition: `all 1s ease-out`,
-  },
-  itemFlash: {
-    border: `1px solid ${theme.colors.gray[6]}`,
-    backgroundColor: theme.colors.dark[4],
-  },
-  badge: {
-    display: "flex",
-    gap: theme.spacing.xs,
-    alignItems: "center",
-    marginRight: "auto",
-  },
-}));
+export const useStyles = createStyles((theme) => {
+  return {
+    budgetWrapper: {
+      borderRadius: theme.radius.md,
+      backgroundColor: theme.colors.dark[6],
+      boxShadow: theme.shadows.md,
+      padding: theme.spacing.sm,
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+    },
+    listWrapper: {
+      borderRadius: theme.radius.md,
+      backgroundColor: theme.colors.dark[6],
+      boxShadow: theme.shadows.md,
+      padding: theme.spacing.sm,
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
+    },
+    noInfo: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: theme.radius.md,
+      backgroundColor: theme.colors.gray[8],
+    },
+    item: {
+      padding: 8,
+      borderRadius: theme.radius.sm,
+      boxShadow: theme.shadows.md,
+      backgroundColor: theme.colors.dark[7],
+      border: "1px solid transparent",
+      transition: `all 1s ease-out`,
+      "&:not(:last-child)": {
+        marginBottom: theme.spacing.xs,
+      },
+    },
+    badge: {
+      display: "flex",
+      gap: theme.spacing.xs,
+      alignItems: "center",
+      marginRight: "auto",
+    },
+  };
+});
