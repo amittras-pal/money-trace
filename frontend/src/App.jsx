@@ -8,7 +8,12 @@ import theme from "./theme";
 
 export default function App() {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      withCSSVariables
+      theme={theme}
+    >
       <UserProvider>
         <Notifications position="top-center" autoClose={3500} />
         <BudgetMonitor />

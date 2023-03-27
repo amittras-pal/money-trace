@@ -1,20 +1,18 @@
-import {
-  Box,
-  Divider,
-  Group,
-  Pagination,
-  ScrollArea,
-  SimpleGrid,
-} from "@mantine/core";
+import { Box, Divider, Group } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
 import dayjs from "dayjs";
-import React, { useRef, useState } from "react";
-import ExpenseListSkeleton from "../../components/ExpenseListSkeleton";
+import React, { useMemo, useRef, useState } from "react";
+import AgGridMod from "../../components/ag-grid/AgGridMod";
+import {
+  Category,
+  SubCategory,
+  dateFormatter,
+  RowMenu,
+} from "../../components/ag-grid/utils";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
 import FilterAndSort from "./components/FilterAndSort";
-import List from "./components/List";
 import { useExpenseList } from "./services";
 
 export default function Expenses() {
@@ -27,13 +25,7 @@ export default function Expenses() {
       endDate: dayjs().endOf("month").toDate(),
       categories: [],
     },
-    paginate: {
-      page: 0,
-      size: 20,
-    },
-    sort: {
-      date: -1,
-    },
+    sort: { date: -1 },
   });
 
   const ref = useRef();
@@ -41,6 +33,54 @@ export default function Expenses() {
     refetchOnWondowFocus: false,
     onError,
   });
+
+  const columns = useMemo(
+    /** @returns {Array<import("ag-grid-community").ColDef>} */
+    () => {
+      return [
+        {
+          headerName: "",
+          cellRenderer: RowMenu,
+          cellRendererParams: {
+            onEditExpense: console.log,
+            onDeleteExpense: console.log,
+          },
+          field: "_id",
+          pinned: "left",
+          maxWidth: 50,
+          flex: 0,
+          cellStyle: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        },
+        { headerName: "Title", field: "title", minWidth: 120 },
+        {
+          headerName: "Date",
+          field: "date",
+          sortable: true,
+          initialSort: "desc",
+          valueFormatter: dateFormatter,
+        },
+        {
+          headerName: "Category",
+          field: "category",
+          sortable: true,
+          cellRenderer: Category,
+        },
+        {
+          headerName: "Sub Category",
+          field: "subCategory",
+          sortable: true,
+          cellRenderer: SubCategory,
+        },
+      ];
+    },
+    []
+  );
 
   return (
     <>
@@ -55,27 +95,15 @@ export default function Expenses() {
           sort={payload.sort}
           setPayload={setPayload}
         />
-        <Pagination
-          spacing={4}
-          mt="xs"
-          size="sm"
-          total={data?.data?.response?.meta?.totalPages ?? 10}
-          page={payload.paginate.page}
-          onChange={(e) =>
-            setPayload((s) => ({ ...s, paginate: { size: 20, page: e - 1 } }))
-          }
-        />
         <Divider my="sm" sx={{ width: "100%" }} />
         <Box sx={{ flexGrow: 1, width: "100%" }} ref={ref}>
-          <ScrollArea h={ref.current?.clientHeight ?? 0} scrollbarSize={6}>
-            <SimpleGrid cols={isMobile ? 1 : 3} spacing="xs">
-              {isLoading ? (
-                <ExpenseListSkeleton />
-              ) : (
-                <List data={data?.data?.response?.data} />
-              )}
-            </SimpleGrid>
-          </ScrollArea>
+          <AgGridMod
+            height={ref.current?.clientHeight ?? 0}
+            columnDefs={columns}
+            rowData={data?.data?.response?.data ?? []}
+            pagination={true}
+            paginationAutoPageSize={true}
+          />
         </Box>
       </Group>
     </>
