@@ -22,7 +22,7 @@ function BudgetItem({ amount, category, subCategories }) {
         </Badge>
         <Text fw="bold">{formatCurrency(amount)}</Text>
       </Group>
-      <Group spacing={8}>
+      <Group spacing={6}>
         {icons.map(({ Icon, label }) => (
           <Tooltip
             label={label}
@@ -36,6 +36,19 @@ function BudgetItem({ amount, category, subCategories }) {
           </Tooltip>
         ))}
       </Group>
+      {/* <Text
+        fz="xs"
+        color="orange"
+        ml="auto"
+        component={Link}
+        to={{
+          pathname: "/expenses",
+          search: new URLSearchParams({ category }).toString(),
+        }}
+      >
+        View Expenses
+        <IconArrowRight size={12} style={{ marginLeft: 4, marginBottom: -2 }} />
+      </Text> */}
     </Box>
   );
 }

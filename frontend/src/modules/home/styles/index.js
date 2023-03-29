@@ -34,6 +34,9 @@ export const useStyles = createStyles((theme) => {
       backgroundColor: theme.colors.dark[7],
       border: "1px solid transparent",
       transition: `all 1s ease-out`,
+      display: "flex",
+      flexDirection: "column",
+      gap: 4,
       "&:not(:last-child)": {
         marginBottom: theme.spacing.xs,
       },

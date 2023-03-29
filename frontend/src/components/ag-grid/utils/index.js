@@ -1,33 +1,103 @@
-import { ActionIcon, Badge, Menu } from "@mantine/core";
-import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Badge,
+  Group,
+  Menu,
+  Popover,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
+import {
+  IconChevronRight,
+  IconDotsVertical,
+  IconEdit,
+  IconFilter,
+  IconInfoCircle,
+  IconTrash,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { useMemo } from "react";
-import { getColor, getIcons } from "../../../constants/categories";
+import { useEffect, useMemo, useState } from "react";
+import { getColor } from "../../../constants/categories";
+import ExpenseDescription from "../../ExpenseDescription";
 
 export function dateFormatter({ value }) {
   return dayjs(value).format("DD MMM, hh:mm a");
 }
 
-export function Category({ value }) {
+export function ColumnHeader(props) {
+  const [isFilterActive, setIsFilterActive] = useState(false);
+  useEffect(() => {
+    const instance = props.api.getFilterInstance(props.column.colId);
+    setIsFilterActive(instance?.isFilterActive() ?? false);
+  }, [props]);
+
   return (
-    <Badge variant="light" size="sm" color={getColor(value)}>
-      {value}
+    <Group position="apart" sx={{ width: "100%" }}>
+      <Text fw="bold">{props.displayName}</Text>
+      {props.enableMenu && (
+        <ActionIcon
+          size="md"
+          radius="xl"
+          color={isFilterActive ? "blue" : "gray"}
+          variant={"filled"}
+          onClick={(e) => props.showColumnMenu(e.target)}
+        >
+          <IconFilter size={16} />
+        </ActionIcon>
+      )}
+    </Group>
+  );
+}
+
+export function Category({ data }) {
+  return (
+    <Badge
+      size="sm"
+      component="div"
+      variant="light"
+      color={getColor(data.category)}
+    >
+      {data.category}{" "}
+      <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
+      {data.subCategory}
     </Badge>
   );
 }
 
-export function SubCategory({ value, data, column, ...rest }) {
-  const Icon = getIcons(data.category, value)[0].Icon;
+export function DescriptionHeader() {
   return (
-    <Badge
-      variant="light"
-      size="sm"
-      color={getColor(data.category)}
-      leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
-    >
-      {column.actualWidth >= 250 ? value : ""}
-    </Badge>
+    <ThemeIcon size="sm" radius="xl" color="orange" variant="light" mx="auto">
+      <IconInfoCircle size={18} />
+    </ThemeIcon>
   );
+}
+
+export function Description({ value }) {
+  if (!value)
+    return (
+      <ActionIcon size="sm" radius="xl" disabled>
+        <IconInfoCircle size={18} />
+      </ActionIcon>
+    );
+  else
+    return (
+      <Popover
+        withinPortal
+        withArrow
+        shadow="md"
+        width={280}
+        position="bottom-start"
+      >
+        <Popover.Target>
+          <ActionIcon size="sm" radius="xl" color="blue" variant="light">
+            <IconInfoCircle size={18} />
+          </ActionIcon>
+        </Popover.Target>
+        <Popover.Dropdown>
+          <ExpenseDescription>{value}</ExpenseDescription>
+        </Popover.Dropdown>
+      </Popover>
+    );
 }
 
 export function RowMenu({ data, onEditExpense, onDeleteExpense }) {
@@ -71,5 +141,3 @@ export function RowMenu({ data, onEditExpense, onDeleteExpense }) {
     </Menu>
   );
 }
-
-// function CategoryFilter(props) {}

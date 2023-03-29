@@ -14,6 +14,9 @@
       &-cell {
         color: var(--mantine-color-gray-2);
         transition: background-color 0.2s;
+        &.no-pad {
+          padding: 0px;
+        }
       }
       &-active {
         background-color: var(--mantine-color-dark-4) !important;
@@ -77,6 +80,11 @@
       color: var(--mantine-color-gray-2);
     }
   }
+}
+
+.ag-menu {
+  background-color: transparent;
+  border-radius: var(--mantine-radius-md);
 }
 
 .ag-dnd-ghost {

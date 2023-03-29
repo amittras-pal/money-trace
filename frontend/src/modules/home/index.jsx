@@ -67,6 +67,7 @@ export default function Home() {
         opened={showForm || confirm}
         withCloseButton={false}
         onClose={handleClose}
+        withOverlay
       >
         {showForm && (
           <ExpenseForm data={targetExpense} onComplete={handleClose} />
@@ -81,6 +82,7 @@ export default function Home() {
           position="bottom"
           opened={drawer}
           onClose={listDrawer.close}
+          zIndex={199}
           title={`Recent Transactions (${
             list?.data?.response?.data?.length ?? 0
           })`}

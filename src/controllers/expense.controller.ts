@@ -90,7 +90,7 @@ export const getMonthSummary = routeHandler(
           subCategories: { $addToSet: "$subCategory" },
         },
       },
-      { $sort: { _id: 1 } },
+      { $sort: { spent: -1 } },
     ]);
 
     res.json({
