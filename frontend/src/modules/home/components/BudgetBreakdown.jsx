@@ -1,5 +1,18 @@
-import { Box, Button, Divider, Group, ScrollArea, Text } from "@mantine/core";
-import { IconArrowRight, IconChevronUp, IconPlus } from "@tabler/icons-react";
+import {
+  Badge,
+  Box,
+  Button,
+  Divider,
+  Group,
+  ScrollArea,
+  Text,
+} from "@mantine/core";
+import {
+  IconAlertTriangleFilled,
+  IconArrowRight,
+  IconChevronUp,
+  IconPlus,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
@@ -7,7 +20,7 @@ import BudgetItem from "../../../components/BudgetItem";
 import { useCurrentUser } from "../../../context/user";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useMediaMatch } from "../../../hooks/useMediaMatch";
-import { formatCurrency } from "../../../utils";
+import { formatCurrency, getPercentage } from "../../../utils";
 import { useSummary } from "../services";
 import { useStyles } from "../styles";
 
@@ -37,12 +50,27 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
     );
 
   return (
-    <Box className={classes.budgetWrapper} ref={ref}>
-      <Text fw="bold">Summary, {dayjs().format("MMM, 'YY")}</Text>
+    <Box ref={ref} className={classes.budgetWrapper}>
+      <Group position="apart">
+        <Text fw="bold">Summary, {dayjs().format("MMM, 'YY")}</Text>
+        {getPercentage(summary?.data?.response.total, budget) > 100 && (
+          <Badge
+            color="red"
+            variant="filled"
+            size="sm"
+            radius="sm"
+            leftSection={
+              <IconAlertTriangleFilled size={10} style={{ marginBottom: -1 }} />
+            }
+          >
+            Budget Exceeded
+          </Badge>
+        )}
+      </Group>
       <Divider my="xs" />
       <ScrollArea
         mb="xs"
-        h={ref.current ? (ref.current?.clientHeight * 0.75).toFixed(0) : 0}
+        h={ref.current ? (ref.current?.clientHeight * 0.7).toFixed(0) : 0}
       >
         {summary?.data?.response.summary?.map((category) => (
           <BudgetItem
@@ -62,7 +90,7 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
           <Text fz="sm">{formatCurrency(summary?.data?.response?.total)}</Text>
           <Text fz="sm">of {formatCurrency(budget)}</Text>
           <Text fw="bold" fz="sm">
-            ({((summary?.data?.response.total / budget) * 100).toFixed(0)}%)
+            ({getPercentage(summary?.data?.response.total, budget)}%)
           </Text>
         </Group>
         <Group

@@ -10,3 +10,7 @@ const formatter = new Intl.NumberFormat("en-IN", {
 export function formatCurrency(amount) {
   return formatter.format(amount);
 }
+
+export function getPercentage(amount, total) {
+  return ((amount / total) * 100).toFixed(0);
+}

@@ -78,7 +78,7 @@ export default function BudgetMonitor() {
           inputMode="numeric"
           {...register("amount")}
           error={errors.amount?.message}
-          autoFocus111
+          autoFocus
         />
         <Button type="submit" fullWidth disabled={!isValid} loading={creating}>
           Create Budget

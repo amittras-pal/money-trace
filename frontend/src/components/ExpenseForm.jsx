@@ -15,17 +15,25 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { getCategories } from "../constants/categories";
+import { useCurrentUser } from "../context/user";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { useCreateExpense, useEditExpense } from "../modules/home/services";
 import { expenseSchema } from "../modules/home/utils";
 
 export default function ExpenseForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();
+  const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const client = useQueryClient();
+
+  const minDate = useMemo(() => {
+    const userDate = dayjs(userData.createdAt).toDate().getTime();
+    const oldestAllowed = dayjs().subtract(6, "days").toDate().getTime();
+    return dayjs(Math.max(userDate, oldestAllowed)).toDate();
+  }, [userData]);
 
   const handleClose = () => {
     onComplete();
@@ -141,8 +149,8 @@ export default function ExpenseForm({ data, onComplete }) {
         <DateTimePicker
           label="Expense Date"
           placeholder="Select Date"
-          minDate={dayjs().subtract(6, "days").toDate()}
-          maxDate={new Date()}
+          minDate={minDate}
+          maxDate={dayjs().add(5, "min").toDate()}
           value={watch("date")}
           onChange={(e) => setFieldValue("date", e)}
           error={errors.date?.message}
