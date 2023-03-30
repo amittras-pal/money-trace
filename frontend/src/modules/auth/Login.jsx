@@ -16,6 +16,7 @@ import { IconCheck } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
@@ -35,6 +36,7 @@ export default function Login() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
@@ -82,12 +84,17 @@ export default function Login() {
             error={errors?.email?.message}
             required
           />
-          <PasswordInput
-            {...register("pin")}
-            placeholder="Pin"
-            inputMode="numeric"
-            label="Pin"
+          <PinInput
+            length={6}
+            onChange={(e) =>
+              setValue("pin", e, {
+                shouldTouch: true,
+                shouldDirty: true,
+                shouldValidate: true,
+              })
+            }
             error={errors?.pin?.message}
+            label="Create a pin"
             required
           />
           <Text fw="bold" mb="sm">

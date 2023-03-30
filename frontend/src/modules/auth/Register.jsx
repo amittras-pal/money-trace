@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Divider,
-  PasswordInput,
   Text,
   TextInput,
 } from "@mantine/core";
@@ -14,6 +13,7 @@ import { IconCheck } from "@tabler/icons-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import PublicGuard from "../guards/PublicGuard";
@@ -30,6 +30,7 @@ export default function Register() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
@@ -55,6 +56,14 @@ export default function Register() {
     onError,
   });
 
+  const setFieldValue = (name, value) => {
+    setValue(name, value, {
+      shouldTouch: true,
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
   return (
     <PublicGuard>
       <Box
@@ -75,6 +84,7 @@ export default function Register() {
             label="Full Name"
             error={errors?.userName?.message}
             required
+            autoFocus
           />
           <TextInput
             {...register("email")}
@@ -83,20 +93,19 @@ export default function Register() {
             error={errors?.email?.message}
             required
           />
-          <PasswordInput
-            {...register("pin")}
-            placeholder="Pin"
-            inputMode="numeric"
-            label="Pin"
+          <PinInput
+            length={6}
+            onChange={(e) => setFieldValue("pin", e)}
             error={errors?.pin?.message}
+            label="Create a pin"
             required
           />
-          <PasswordInput
-            {...register("confirmPin")}
-            placeholder="Confirm Pin"
-            inputMode="numeric"
-            label="Confirm Pin"
+          <PinInput
+            secret
+            length={6}
+            onChange={(e) => setFieldValue("confirmPin", e)}
             error={errors?.confirmPin?.message}
+            label="Confirm your pin"
             required
           />
           <Button
