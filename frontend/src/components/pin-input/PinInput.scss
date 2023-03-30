@@ -16,4 +16,8 @@
       }
     }
   }
+  &.invalid .pincode-input-text {
+    border-color: var(--mantine-color-red-5) !important;
+    color: var(--mantine-color-red-5) !important;
+  }
 }

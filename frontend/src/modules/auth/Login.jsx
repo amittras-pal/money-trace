@@ -6,7 +6,6 @@ import {
   Container,
   Divider,
   Group,
-  PasswordInput,
   Text,
   TextInput,
 } from "@mantine/core";
@@ -39,7 +38,7 @@ export default function Login() {
     setValue,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onChange",
+    mode: "onBlur",
     shouldFocusError: true,
     defaultValues: {
       email: "",
@@ -83,6 +82,7 @@ export default function Login() {
             label="Email Address"
             error={errors?.email?.message}
             required
+            autoFocus
           />
           <PinInput
             length={6}
@@ -94,7 +94,8 @@ export default function Login() {
               })
             }
             error={errors?.pin?.message}
-            label="Create a pin"
+            label="Secure Pin"
+            secret
             required
           />
           <Text fw="bold" mb="sm">

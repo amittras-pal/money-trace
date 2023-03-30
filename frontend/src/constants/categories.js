@@ -1,6 +1,5 @@
 import {
   IconApps,
-  IconBallFootball,
   IconBasket,
   IconBook,
   IconCategory,
@@ -22,6 +21,7 @@ import {
   IconHotelService,
   IconParking,
   IconPaw,
+  IconPingPong,
   IconRouter,
   IconStereoGlasses,
   IconTags,
@@ -43,7 +43,7 @@ const CATEGORIES = [
       },
       { title: "Movies", icon: IconStereoGlasses },
       { title: "Music", icon: IconHeadphones },
-      { title: "Sports", icon: IconBallFootball },
+      { title: "Sports", icon: IconPingPong },
       { title: "Other", icon: IconCategory },
     ],
   },

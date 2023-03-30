@@ -47,7 +47,6 @@ function ItemList({ list, onEditExpense, onDeleteExpense }) {
           data={exp}
           onEditExpense={onEditExpense}
           onDeleteExpense={onDeleteExpense}
-          addBottomMargin
         />
       ))
     : "No Expenses";

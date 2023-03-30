@@ -15,14 +15,13 @@ import { useDeleteExpense } from "../modules/home/services";
 import ExpenseCard from "./ExpenseCard";
 
 export default function DeleteExpense({ data, onComplete }) {
-  console.log(data);
   const { primaryColor } = useMantineTheme();
   const client = useQueryClient();
   const { onError } = useErrorHandler();
 
   const { mutate: deleteExpense, isLoading: deleting } = useDeleteExpense({
     onSuccess: (res) => {
-      onComplete();
+      onComplete(true);
       notifications.show({
         message: res.data?.message,
         color: "green",
@@ -45,7 +44,11 @@ export default function DeleteExpense({ data, onComplete }) {
         This action cannot be undone!
       </Text>
       <Group grow mt="lg">
-        <Button variant="outline" onClick={onComplete} disabled={deleting}>
+        <Button
+          variant="outline"
+          onClick={() => onComplete(false)}
+          disabled={deleting}
+        >
           Cancel
         </Button>
         <Button onClick={() => deleteExpense(data._id)} loading={deleting}>

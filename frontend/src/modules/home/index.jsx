@@ -1,5 +1,6 @@
 import { Drawer, Modal, SimpleGrid } from "@mantine/core";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
@@ -15,6 +16,8 @@ export default function Home() {
   useDocumentTitle(`${APP_TITLE} | Dashboard`);
   const { onError } = useErrorHandler();
 
+  const client = useQueryClient();
+
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
   const [drawer, listDrawer] = useDisclosure(false);
@@ -26,9 +29,13 @@ export default function Home() {
     onError,
   });
 
-  const handleClose = () => {
+  const handleClose = (refreshData) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
+    if (refreshData) {
+      client.invalidateQueries({ queryKey: ["summary"] });
+      client.invalidateQueries({ queryKey: ["recent-transactions"] });
+    }
     setTimeout(() => {
       setTargetExpense(null);
     }, 1000);

@@ -8,17 +8,25 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import {
-  IconChevronRight,
+  IconArrowsSort,
   IconDotsVertical,
   IconEdit,
   IconFilter,
   IconInfoCircle,
+  IconSortAscending,
+  IconSortDescending,
   IconTrash,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { getColor } from "../../../constants/categories";
 import ExpenseDescription from "../../ExpenseDescription";
+
+function getNextSortOrder(current) {
+  if (!current) return "asc";
+  if (current === "asc") return "desc";
+  return null;
+}
 
 export function dateFormatter({ value }) {
   return dayjs(value).format("DD MMM, hh:mm a");
@@ -32,8 +40,10 @@ export function ColumnHeader(props) {
   }, [props]);
 
   return (
-    <Group position="apart" sx={{ width: "100%" }}>
-      <Text fw="bold">{props.displayName}</Text>
+    <Group position="start" sx={{ width: "100%" }} spacing="xs">
+      <Text fw="bold" mr="auto">
+        {props.displayName}
+      </Text>
       {props.enableMenu && (
         <ActionIcon
           size="md"
@@ -45,11 +55,26 @@ export function ColumnHeader(props) {
           <IconFilter size={16} />
         </ActionIcon>
       )}
+      {props.enableSorting && (
+        <ActionIcon
+          size="md"
+          radius="xl"
+          color={props.column.sort ? "blue" : "gray"}
+          variant={"filled"}
+          onClick={(e) =>
+            props.setSort(getNextSortOrder(props.column.sort), e.shiftKey)
+          }
+        >
+          {!props.column.sort && <IconArrowsSort size={16} />}
+          {props.column.sort === "asc" && <IconSortAscending size={16} />}
+          {props.column.sort === "desc" && <IconSortDescending size={16} />}
+        </ActionIcon>
+      )}
     </Group>
   );
 }
 
-export function Category({ data }) {
+export function Category({ data, value }) {
   return (
     <Badge
       size="sm"
@@ -57,9 +82,7 @@ export function Category({ data }) {
       variant="light"
       color={getColor(data.category)}
     >
-      {data.category}{" "}
-      <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
-      {data.subCategory}
+      {value}
     </Badge>
   );
 }
@@ -81,13 +104,7 @@ export function Description({ value }) {
     );
   else
     return (
-      <Popover
-        withinPortal
-        withArrow
-        shadow="md"
-        width={280}
-        position="bottom-start"
-      >
+      <Popover withinPortal shadow="md" width={280} position="right-start">
         <Popover.Target>
           <ActionIcon size="sm" radius="xl" color="blue" variant="light">
             <IconInfoCircle size={18} />

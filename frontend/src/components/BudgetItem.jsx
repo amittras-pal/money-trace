@@ -29,9 +29,10 @@ function BudgetItem({ amount, category, subCategories }) {
             withArrow
             key={label}
             events={{ hover: true, touch: true }}
+            position="right"
           >
             <ThemeIcon size="sm" variant="light" color={color}>
-              <Icon size={18} />
+              <Icon size={16} />
             </ThemeIcon>
           </Tooltip>
         ))}

@@ -33,7 +33,7 @@ export default function Register() {
     setValue,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onChange",
+    mode: "onBlur",
     shouldFocusError: true,
     defaultValues: {
       userName: "",

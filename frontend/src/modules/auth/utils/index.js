@@ -4,10 +4,10 @@ export const loginSchema = yup.object().shape({
   email: yup.string().email("Invalid Email.").required("Email is required."),
   pin: yup
     .number()
-    .typeError("Pin should be numeric")
+    .typeError("Pin should be numeric.")
     .required("Pin is required.")
-    .min(100000, "Incorrect pin length.")
-    .max(999999, "Incorrect pin length."),
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
 });
 
 export const registerSchema = yup.object().shape({
@@ -15,10 +15,10 @@ export const registerSchema = yup.object().shape({
   email: yup.string().email("Invalid Email.").required("Email is required."),
   pin: yup
     .number()
-    .typeError("Pin should be numeric")
+    .typeError("Pin should be numeric.")
     .required("Pin is required.")
-    .min(100000, "Pin must be 6 characters long.")
-    .max(999999, "Pin must be 6 characters long."),
+    .min(100000, "Invalid Pin.")
+    .max(999999, "Invalid Pin."),
   confirmPin: yup
     .number()
     .oneOf([yup.ref("pin"), null], "Pins do not match")

@@ -13,7 +13,6 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -27,7 +26,6 @@ export default function ExpenseForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
-  const client = useQueryClient();
 
   const minDate = useMemo(() => {
     const userDate = dayjs(userData.createdAt).toDate().getTime();
@@ -36,7 +34,7 @@ export default function ExpenseForm({ data, onComplete }) {
   }, [userData]);
 
   const handleClose = () => {
-    onComplete();
+    onComplete(false);
     reset();
   };
 
@@ -71,14 +69,13 @@ export default function ExpenseForm({ data, onComplete }) {
   };
 
   const handleSuccess = (res) => {
-    handleClose();
     notifications.show({
       message: res.data?.message,
       color: "green",
       icon: <IconCheck />,
     });
-    client.invalidateQueries({ queryKey: ["summary"] });
-    client.invalidateQueries({ queryKey: ["recent-transactions"] });
+    onComplete(true);
+    reset();
   };
 
   const { mutate: createExpense, isLoading: creating } = useCreateExpense({

@@ -31,13 +31,19 @@ function CategoryFilter(props, ref) {
     };
   });
 
+  const cleanup = () => {
+    props.api.destroyFilter("subCategory");
+    props.api.hidePopupMenu();
+  };
+
   const apply = () => {
     props.filterChangedCallback();
-    props.api.hidePopupMenu();
+    cleanup();
   };
 
   const clear = () => {
     props.api.destroyFilter("category");
+    cleanup();
   };
 
   return (
@@ -56,7 +62,6 @@ function CategoryFilter(props, ref) {
       <Text fw="bold" mb="sm">
         Filter Categories
       </Text>
-      {/* <ScrollArea h={200}> */}
       <Checkbox.Group value={categories} onChange={setCategories}>
         <Group
           spacing="xs"
@@ -66,19 +71,24 @@ function CategoryFilter(props, ref) {
             alignItems: "flex-start",
           }}
         >
-          {options.map((cat) => (
+          {options.map((opt) => (
             <Checkbox
-              key={cat.label}
-              label={cat.label}
-              value={cat.value}
+              key={opt.label}
+              label={opt.label}
+              value={opt.value}
+              color={opt.color}
               sx={{ cursor: "pointer" }}
             />
           ))}
         </Group>
       </Checkbox.Group>
-      {/* </ScrollArea> */}
       <Group grow mt="sm" sx={{ position: "sticky", bottom: 0 }}>
-        <Button size="xs" variant="light" onClick={clear}>
+        <Button
+          size="xs"
+          variant="light"
+          onClick={clear}
+          disabled={!categories.length}
+        >
           Clear
         </Button>
         <Button size="xs" onClick={apply} disabled={!categories.length}>

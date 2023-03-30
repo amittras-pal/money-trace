@@ -13,6 +13,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { memo, useMemo } from "react";
 import { getColor, getIcons } from "../constants/categories";
 import { formatCurrency } from "../utils";
+import ExpenseDescription from "./ExpenseDescription";
 dayjs.extend(relativeTime);
 
 function ExpenseCard({
@@ -20,9 +21,8 @@ function ExpenseCard({
   onEditExpense,
   onDeleteExpense,
   hideMenu = false,
-  addBottomMargin = false,
 }) {
-  const { classes, cx } = useExpenseStyles();
+  const { classes } = useExpenseStyles();
 
   const isEditable = useMemo(
     () => dayjs(data.date) >= dayjs().subtract(7, "days"),
@@ -38,11 +38,7 @@ function ExpenseCard({
   );
 
   return (
-    <Box
-      className={cx(classes.wrapper, {
-        [classes.addBottomMargin]: addBottomMargin,
-      })}
-    >
+    <Box className={classes.wrapper}>
       <Group
         noWrap
         spacing={0}
@@ -63,9 +59,9 @@ function ExpenseCard({
             {data.title}
           </Text>
           {data.description && (
-            <Text color="dimmed" fz="sm">
+            <ExpenseDescription color="dimmed" fz="sm">
               {data.description}
-            </Text>
+            </ExpenseDescription>
           )}
           <Badge
             variant="light"
@@ -75,12 +71,14 @@ function ExpenseCard({
           >
             {data.category} / {data.subCategory}
           </Badge>
-          <Badge color="dark" size="sm" variant="filled">
-            {dayjs(data.date).fromNow()}
-          </Badge>
-          <Text fz="lg" fw="bold" mt="auto">
-            {formatCurrency(data.amount)}
-          </Text>
+          <Group position="apart" align="center" mt={4}>
+            <Badge color="dark" size="sm" variant="filled">
+              {dayjs(data.date).fromNow()}
+            </Badge>
+            <Text fz="lg" fw="bold" mt="auto">
+              {formatCurrency(data.amount)}
+            </Text>
+          </Group>
         </Group>
         <Group sx={{ flexDirection: "column" }} spacing="xs">
           {!hideMenu && (
@@ -130,8 +128,8 @@ const useExpenseStyles = createStyles((theme) => ({
     padding: theme.spacing.xs,
     borderRadius: theme.radius.sm,
     transition: "all 0.25s ease-in-out",
-  },
-  addBottomMargin: {
-    marginBottom: theme.spacing.xs,
+    "&:not(:last-child)": {
+      marginBottom: theme.spacing.xs,
+    },
   },
 }));

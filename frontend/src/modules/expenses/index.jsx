@@ -1,10 +1,17 @@
-import { Box, Divider, Group, Text } from "@mantine/core";
+import { Box, Divider, Group, Modal, Text } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
-import { useDocumentTitle } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
 import {
   Category,
@@ -14,6 +21,9 @@ import {
   RowMenu,
 } from "../../components/ag-grid/utils";
 import CategoryFilter from "../../components/ag-grid/utils/CategoryFilter";
+import SubCategoryFilter from "../../components/ag-grid/utils/SubCategoryFilter";
+import DeleteExpense from "../../components/DeleteExpense";
+import ExpenseForm from "../../components/ExpenseForm";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
@@ -23,9 +33,14 @@ import { useExpenseList } from "./services";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
-  const { userData } = useCurrentUser();
+  const { userData, budget } = useCurrentUser();
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
+  const [showForm, formModal] = useDisclosure(false);
+  const [confirm, deleteModal] = useDisclosure(false);
+  const [targetExpense, setTargetExpense] = useState(null);
+  const client = useQueryClient();
+
   const [payload, setPayload] = useState({
     filter: {
       startDate: dayjs().startOf("month").toDate(),
@@ -39,9 +54,12 @@ export default function Expenses() {
     if (isMobile)
       notifications.show({
         id: "device-info",
-        message: "For best experience, use this view on a desktop computer!",
+        title: "Incompatible Device",
+        message:
+          "Some features of this view only work properly on a desktop computer!",
+        autoClose: 10000,
         icon: <IconInfoCircle />,
-        color: "blue",
+        color: "orange",
       });
 
     return () => {
@@ -51,9 +69,41 @@ export default function Expenses() {
 
   const ref = useRef();
   const { isLoading, data } = useExpenseList(payload, {
-    refetchOnWondowFocus: false,
+    refetchOnWindowFocus: false,
+    onSuccess: (res) => {
+      setFilterTotal(
+        res.data?.response?.data
+          ?.reduce((sum, item) => sum + item.amount, 0)
+          .toFixed(2)
+      );
+    },
     onError,
   });
+
+  const handleClose = (refreshData) => {
+    if (showForm) formModal.close();
+    if (confirm) deleteModal.close();
+    if (refreshData) client.invalidateQueries(["list", payload]);
+    setTimeout(() => {
+      setTargetExpense(null);
+    }, 1000);
+  };
+
+  const editExpense = useCallback(
+    (target) => {
+      setTargetExpense(target);
+      formModal.open();
+    },
+    [formModal]
+  );
+
+  const deleteExpense = useCallback(
+    (target) => {
+      setTargetExpense(target);
+      deleteModal.open();
+    },
+    [deleteModal]
+  );
 
   const columns = useMemo(
     /** @returns {Array<import("ag-grid-community").ColDef>} */
@@ -63,8 +113,8 @@ export default function Expenses() {
           headerName: "",
           cellRenderer: RowMenu,
           cellRendererParams: {
-            onEditExpense: console.log,
-            onDeleteExpense: console.log,
+            onEditExpense: editExpense,
+            onDeleteExpense: deleteExpense,
           },
           field: "_id",
           pinned: "left",
@@ -97,14 +147,22 @@ export default function Expenses() {
         {
           headerName: "Category",
           field: "category",
-          minWidth: 320,
+          minWidth: 240,
           cellRenderer: Category,
           filter: CategoryFilter,
         },
         {
+          headerName: "Sub Category",
+          field: "subCategory",
+          minWidth: 240,
+          cellRenderer: Category,
+          filter: SubCategoryFilter,
+        },
+        {
           headerName: "Amount",
           field: "amount",
-          minWidth: 120,
+          minWidth: 140,
+          sortable: true,
           valueFormatter: ({ value }) => formatCurrency(value),
         },
 
@@ -118,17 +176,15 @@ export default function Expenses() {
         },
       ];
     },
-    [isMobile]
+    [isMobile, deleteExpense, editExpense]
   );
 
-  const updateFilterTotal = (e) => {
+  const updateFilterTotal = (grid) => {
     let total = 0;
-    let rows = 0;
-    e.api.forEachNodeAfterFilter((node) => {
+    grid.api.forEachNodeAfterFilter((node) => {
       total += node.data.amount;
-      rows++;
     });
-    setFilterTotal(rows === data?.data?.response?.data?.length ? 0 : total);
+    setFilterTotal(total);
   };
 
   const handleMonthChange = (e) => {
@@ -166,8 +222,8 @@ export default function Expenses() {
             }
           />
           <Text ta="right" fw="bold" fz="xs">
-            Filter Total:{" "}
-            {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."}
+            Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
+            {formatCurrency(budget)}
           </Text>
         </Group>
         <Divider my="sm" sx={{ width: "100%" }} />
@@ -183,6 +239,20 @@ export default function Expenses() {
           />
         </Box>
       </Group>
+      <Modal
+        centered
+        opened={showForm || confirm}
+        withCloseButton={false}
+        onClose={handleClose}
+        withOverlay
+      >
+        {showForm && (
+          <ExpenseForm data={targetExpense} onComplete={handleClose} />
+        )}
+        {confirm && (
+          <DeleteExpense data={targetExpense} onComplete={handleClose} />
+        )}
+      </Modal>
     </>
   );
 }

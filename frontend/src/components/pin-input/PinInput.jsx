@@ -5,7 +5,7 @@ import "./PinInput.scss";
 
 export default function PinInput({ label, error, required, ...props }) {
   return (
-    <Box mb="md" className="pi-mod">
+    <Box mb="md" className={`pi-mod ${error ? "invalid" : ""}`}>
       <Text fz="sm" fw={500} mb={2}>
         {label}{" "}
         {required ? (
@@ -19,7 +19,7 @@ export default function PinInput({ label, error, required, ...props }) {
       <RPinInput {...props} type="numeric" />
       {error && (
         <Text fz="xs" c="red">
-          {label}
+          {error}
         </Text>
       )}
     </Box>
