@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Badge,
+  Box,
   Group,
   Menu,
   Popover,
@@ -15,10 +16,12 @@ import {
   IconInfoCircle,
   IconSortAscending,
   IconSortDescending,
+  IconTemplate,
   IconTrash,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
+import { primaryColor } from "../../../constants/app";
 import { getColor } from "../../../constants/categories";
 import ExpenseDescription from "../../ExpenseDescription";
 
@@ -26,10 +29,6 @@ function getNextSortOrder(current) {
   if (!current) return "asc";
   if (current === "asc") return "desc";
   return null;
-}
-
-export function dateFormatter({ value }) {
-  return dayjs(value).format("DD MMM, hh:mm a");
 }
 
 export function ColumnHeader(props) {
@@ -48,7 +47,7 @@ export function ColumnHeader(props) {
         <ActionIcon
           size="md"
           radius="xl"
-          color={isFilterActive ? "blue" : "gray"}
+          color={isFilterActive ? primaryColor : "gray"}
           variant={"filled"}
           onClick={(e) => props.showColumnMenu(e.target)}
         >
@@ -59,7 +58,7 @@ export function ColumnHeader(props) {
         <ActionIcon
           size="md"
           radius="xl"
-          color={props.column.sort ? "blue" : "gray"}
+          color={props.column.sort ? primaryColor : "gray"}
           variant={"filled"}
           onClick={(e) =>
             props.setSort(getNextSortOrder(props.column.sort), e.shiftKey)
@@ -74,7 +73,21 @@ export function ColumnHeader(props) {
   );
 }
 
-export function Category({ data, value }) {
+export function DescriptionColumnHeader() {
+  return (
+    <ThemeIcon
+      size="sm"
+      radius="xl"
+      color={primaryColor}
+      variant="light"
+      mx="auto"
+    >
+      <IconInfoCircle size={18} />
+    </ThemeIcon>
+  );
+}
+
+export function CategoryCell({ data, value }) {
   return (
     <Badge
       size="sm"
@@ -87,15 +100,7 @@ export function Category({ data, value }) {
   );
 }
 
-export function DescriptionHeader() {
-  return (
-    <ThemeIcon size="sm" radius="xl" color="orange" variant="light" mx="auto">
-      <IconInfoCircle size={18} />
-    </ThemeIcon>
-  );
-}
-
-export function Description({ value }) {
+export function DescriptionCell({ value }) {
   if (!value)
     return (
       <ActionIcon size="sm" radius="xl" disabled>
@@ -106,7 +111,12 @@ export function Description({ value }) {
     return (
       <Popover withinPortal shadow="md" width={280} position="right-start">
         <Popover.Target>
-          <ActionIcon size="sm" radius="xl" color="blue" variant="light">
+          <ActionIcon
+            size="sm"
+            radius="xl"
+            color={primaryColor}
+            variant="light"
+          >
             <IconInfoCircle size={18} />
           </ActionIcon>
         </Popover.Target>
@@ -117,7 +127,7 @@ export function Description({ value }) {
     );
 }
 
-export function RowMenu({ data, onEditExpense, onDeleteExpense }) {
+export function RowMenuCell({ data, onEditExpense, onDeleteExpense }) {
   const isEditable = useMemo(
     () => dayjs(data.date) >= dayjs().subtract(7, "days"),
     [data.date]
@@ -156,5 +166,31 @@ export function RowMenu({ data, onEditExpense, onDeleteExpense }) {
         )}
       </Menu.Dropdown>
     </Menu>
+  );
+}
+
+export function NoDataOverlay(props) {
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        gap: "1.25rem",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <ThemeIcon size={140} variant="light" radius="lg">
+        <IconTemplate size={100} />
+      </ThemeIcon>
+      <Text
+        ta="center"
+        sx={(theme) => ({ color: theme.colors[primaryColor][4] })}
+      >
+        {props.message}
+      </Text>
+    </Box>
   );
 }

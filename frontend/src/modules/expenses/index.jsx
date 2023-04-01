@@ -14,17 +14,19 @@ import React, {
 } from "react";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
 import {
-  Category,
-  dateFormatter,
-  Description,
-  DescriptionHeader,
-  RowMenu,
-} from "../../components/ag-grid/utils";
-import CategoryFilter from "../../components/ag-grid/utils/CategoryFilter";
-import SubCategoryFilter from "../../components/ag-grid/utils/SubCategoryFilter";
+  CategoryCell,
+  DescriptionCell,
+  DescriptionColumnHeader,
+  RowMenuCell,
+} from "../../components/ag-grid/plugins/components";
+import {
+  CategoryFilter,
+  SubCategoryFilter,
+} from "../../components/ag-grid/plugins/filters";
+import { dateFormatter } from "../../components/ag-grid/plugins/formatters";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
-import { APP_TITLE } from "../../constants/app";
+import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
@@ -59,7 +61,7 @@ export default function Expenses() {
           "Some features of this view only work properly on a desktop computer!",
         autoClose: 10000,
         icon: <IconInfoCircle />,
-        color: "orange",
+        color: primaryColor,
       });
 
     return () => {
@@ -111,7 +113,7 @@ export default function Expenses() {
       return [
         {
           headerName: "",
-          cellRenderer: RowMenu,
+          cellRenderer: RowMenuCell,
           cellRendererParams: {
             onEditExpense: editExpense,
             onDeleteExpense: deleteExpense,
@@ -132,8 +134,8 @@ export default function Expenses() {
           headerName: "Description",
           field: "description",
           maxWidth: 50,
-          cellRenderer: Description,
-          headerComponent: DescriptionHeader,
+          cellRenderer: DescriptionCell,
+          headerComponent: DescriptionColumnHeader,
           headerClass: "no-pad",
           cellStyle: {
             paddingLeft: 0,
@@ -148,14 +150,14 @@ export default function Expenses() {
           headerName: "Category",
           field: "category",
           minWidth: 240,
-          cellRenderer: Category,
+          cellRenderer: CategoryCell,
           filter: CategoryFilter,
         },
         {
           headerName: "Sub Category",
           field: "subCategory",
           minWidth: 240,
-          cellRenderer: Category,
+          cellRenderer: CategoryCell,
           filter: SubCategoryFilter,
         },
         {
@@ -229,13 +231,18 @@ export default function Expenses() {
         <Divider my="sm" sx={{ width: "100%" }} />
         <Box sx={{ flexGrow: 1, width: "100%" }} ref={ref}>
           <AgGridMod
-            height={ref.current?.clientHeight ?? 0}
-            columnDefs={columns}
-            rowData={data?.data?.response?.data ?? []}
             pagination={true}
+            columnDefs={columns}
+            popupParent={document.body}
             paginationAutoPageSize={true}
             onFilterChanged={updateFilterTotal}
-            popupParent={document.body}
+            height={ref.current?.clientHeight ?? 0}
+            rowData={data?.data?.response?.data ?? []}
+            noRowsOverlayComponentParams={{
+              message: `No expenses recorded for ${dayjs(
+                payload.filter.startDate
+              ).format("MMM, 'YY")}`,
+            }}
           />
         </Box>
       </Group>

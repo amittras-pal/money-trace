@@ -1,7 +1,7 @@
 import { AgGridReact } from "ag-grid-react";
 import React from "react";
 import "./AgGridMod.scss";
-import { ColumnHeader } from "./utils";
+import { ColumnHeader, NoDataOverlay } from "./plugins/components";
 
 /**
  * Central Mod for Ag Grid community, Material Theme.
@@ -17,6 +17,7 @@ export default function AgGridMod({ height, ...props }) {
       <AgGridReact
         rowHeight={60}
         headerHeight={60}
+        noRowsOverlayComponent={NoDataOverlay}
         defaultColDef={{
           flex: 1,
           resizable: true,

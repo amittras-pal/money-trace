@@ -1,7 +1,9 @@
+import { primaryColor } from "../constants/app";
+
 /** @type {import("@mantine/core").MantineTheme} */
 const theme = {
   colorScheme: "dark",
-  primaryColor: "orange",
+  primaryColor: primaryColor,
   defaultRadius: "sm",
   activeStyles: { transform: "scale(0.95)" },
   components: {

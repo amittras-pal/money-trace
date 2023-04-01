@@ -39,7 +39,7 @@ function BudgetItem({ amount, category, subCategories }) {
       </Group>
       {/* <Text
         fz="xs"
-        color="orange"
+        color={primaryColor}
         ml="auto"
         component={Link}
         to={{

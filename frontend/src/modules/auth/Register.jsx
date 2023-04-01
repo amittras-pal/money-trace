@@ -14,7 +14,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import PinInput from "../../components/pin-input/PinInput";
-import { APP_TITLE } from "../../constants/app";
+import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import PublicGuard from "../guards/PublicGuard";
 import { useRegisterUser } from "./services";
@@ -117,7 +117,7 @@ export default function Register() {
           >
             Create Account
           </Button>
-          <Text align="center" c="orange" td="underline">
+          <Text align="center" c={primaryColor} td="underline">
             <Text component={Link} to="/login">
               Login to existing account.
             </Text>

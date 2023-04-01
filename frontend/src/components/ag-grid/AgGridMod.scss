@@ -21,13 +21,13 @@
         background-color: var(--mantine-color-dark-4) !important;
         .ag-header-cell-resize {
           transition: all 0.2s ease-in-out;
-          background-color: var(--mantine-color-orange-8);
+          background-color: var(--mantine-color-primary-8);
         }
       }
       .ag-column-resizing,
       .ag-header-cell-moving {
         border-radius: var(--mantine-radius-sm);
-        border: 2px solid var(--mantine-color-orange-5);
+        border: 2px solid var(--mantine-color-primary-5);
         background-color: var(--mantine-color-dark-4) !important;
         background-color: var(--mantine-color-dark-4) !important;
       }
@@ -89,7 +89,7 @@
 .ag-dnd-ghost {
   background-color: var(--mantine-color-dark-6);
   box-shadow: var(--mantine-shadow-md);
-  border: 1px solid var(--mantine-color-orange-5);
+  border: 1px solid var(--mantine-color-primary-5);
   border-radius: var(--mantine-radius-sm);
   color: var(--mantine-color-gray-2);
   height: 3rem !important;
