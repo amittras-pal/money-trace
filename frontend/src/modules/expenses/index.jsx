@@ -1,4 +1,11 @@
-import { Box, Divider, Group, Modal, Text } from "@mantine/core";
+import {
+  Box,
+  Divider,
+  Group,
+  LoadingOverlay,
+  Modal,
+  Text,
+} from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -32,10 +39,11 @@ import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
 import { formatCurrency } from "../../utils";
 import { useExpenseList } from "./services";
+import { useBudget } from "../budgetMonitor/services";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
-  const { userData, budget } = useCurrentUser();
+  const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const [showForm, formModal] = useDisclosure(false);
@@ -69,9 +77,11 @@ export default function Expenses() {
   }, [isMobile]);
 
   const ref = useRef();
-  const { isLoading, data } = useExpenseList(payload, {
+  const { data: listRes, isLoading: loadingList } = useExpenseList(payload, {
     refetchOnWindowFocus: false,
     onSuccess: (res) => {
+      gridApi?.api.destroyFilter("category.group");
+      gridApi?.api.destroyFilter("category._id");
       setFilterTotal(
         res.data?.response?.data
           ?.reduce((sum, item) => sum + item.amount, 0)
@@ -79,6 +89,11 @@ export default function Expenses() {
       );
     },
     onError,
+  });
+
+  const { data: budgetRes, isLoading: loadingBudget } = useBudget({
+    month: dayjs(payload.startDate).month(),
+    year: dayjs(payload.startDate).year(),
   });
 
   const handleClose = (refreshData) => {
@@ -190,8 +205,6 @@ export default function Expenses() {
   };
 
   const handleMonthChange = (e) => {
-    gridApi.api.destroyFilter("category.group");
-    gridApi.api.destroyFilter("category._id");
     setPayload((prev) => ({
       ...prev,
       startDate: dayjs(e).startOf("month"),
@@ -225,7 +238,7 @@ export default function Expenses() {
           />
           <Text ta="right" fw="bold" fz="xs">
             Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
-            {formatCurrency(budget)}
+            {formatCurrency(budgetRes?.data?.response?.amount ?? 0)}
           </Text>
         </Group>
         <Divider my="sm" sx={{ width: "100%" }} />
@@ -237,7 +250,7 @@ export default function Expenses() {
             paginationAutoPageSize={true}
             onFilterChanged={updateFilterTotal}
             height={ref.current?.clientHeight ?? 0}
-            rowData={data?.data?.response ?? []}
+            rowData={listRes?.data?.response ?? []}
             onGridReady={setGridApi}
             noRowsOverlayComponentParams={{
               message: `No expenses recorded for ${dayjs(
@@ -261,6 +274,7 @@ export default function Expenses() {
           <DeleteExpense data={targetExpense} onComplete={handleClose} />
         )}
       </Modal>
+      <LoadingOverlay visible={loadingBudget || loadingList} />
     </>
   );
 }
