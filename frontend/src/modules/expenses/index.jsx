@@ -46,8 +46,8 @@ export default function Expenses() {
   const [filterTotal, setFilterTotal] = useState(0);
   const [gridApi, setGridApi] = useState(null);
   const [payload, setPayload] = useState({
-    startDate: dayjs().subtract(1, "month").startOf("month").toDate(),
-    endDate: dayjs().subtract(1, "month").endOf("month").toDate(),
+    startDate: dayjs().startOf("month").toDate(),
+    endDate: dayjs().endOf("month").toDate(),
     sort: { date: -1 },
   });
 

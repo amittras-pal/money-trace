@@ -16,11 +16,12 @@ import { IconCheck } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { getCategories } from "../constants/categories";
 import { useCurrentUser } from "../context/user";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { useCreateExpense, useEditExpense } from "../modules/home/services";
 import { expenseSchema } from "../modules/home/utils";
+import { useCategories } from "../services/categories";
+import CategorySelectItem from "./CategorySelectItem";
 
 export default function ExpenseForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();
@@ -46,15 +47,13 @@ export default function ExpenseForm({ data, onComplete }) {
     watch,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onBlur",
+    mode: "onChange",
     shouldFocusError: true,
     defaultValues: {
       title: data ? data.title : "",
       description: data ? data.description : "",
       amount: data ? data.amount : "",
-      category: data ? data.category : "",
-      subCategory: data ? data.subCategory : "",
-      catValue: data ? `${data.category}:${data.subCategory}` : "",
+      categoryId: data ? data.categoryId : "",
       date: data ? dayjs(data.date).toDate() : dayjs().toDate(),
     },
     resolver: yupResolver(expenseSchema),
@@ -78,6 +77,8 @@ export default function ExpenseForm({ data, onComplete }) {
     reset();
   };
 
+  const { isLoading, data: categoryRes } = useCategories();
+
   const { mutate: createExpense, isLoading: creating } = useCreateExpense({
     onSuccess: handleSuccess,
     onError,
@@ -90,7 +91,6 @@ export default function ExpenseForm({ data, onComplete }) {
 
   const handleSave = (values) => {
     const payload = Object.assign({}, values);
-    delete payload.catValue;
     if (data) {
       editExpense({ ...payload, _id: data._id });
     } else createExpense(payload);
@@ -103,7 +103,7 @@ export default function ExpenseForm({ data, onComplete }) {
       onSubmit={handleSubmit(handleSave)}
     >
       <Text fz="lg" fw="bold" c={primaryColor} mb="sm">
-        Add a new Expense
+        {data ? "Edit Expense" : "Add a new Expense"}
       </Text>
       <Divider />
       <Box>
@@ -132,16 +132,18 @@ export default function ExpenseForm({ data, onComplete }) {
         <Select
           searchable
           label="Category"
-          placeholder="Pick a category"
-          data={getCategories()}
-          value={watch("catValue")}
-          error={errors.catValue?.message}
-          onChange={(e) => {
-            const [category, subCategory] = e.split(":");
-            setFieldValue("category", category);
-            setFieldValue("subCategory", subCategory);
-            setFieldValue("catValue", e);
-          }}
+          placeholder={isLoading ? "Loading Categories" : "Pick a category"}
+          disabled={isLoading}
+          value={watch("categoryId")}
+          error={errors.categoryId?.message}
+          onChange={(e) => setFieldValue("categoryId", e)}
+          itemComponent={CategorySelectItem}
+          data={
+            categoryRes?.data?.response?.map((cat) => ({
+              ...cat,
+              value: cat._id,
+            })) ?? []
+          }
         />
         <DateTimePicker
           label="Expense Date"

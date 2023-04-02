@@ -14,10 +14,10 @@ import { TypedRequest, TypedResponse } from "../types/requests";
 export const createExpense = routeHandler(
   async (req: TypedRequest<{}, IExpense>, res: TypedResponse) => {
     const { userId } = req;
-    const { title, amount, date, category, subCategory }: IExpense = req.body;
+    const { title, amount, date, categoryId }: IExpense = req.body;
     const ex: IExpense = req.body;
 
-    if (!title || !amount || !date || !category || !subCategory) {
+    if (!title || !amount || !date || !categoryId) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all required fields.");
     }
@@ -30,18 +30,17 @@ export const createExpense = routeHandler(
 );
 
 /**
- * Save a new expense.
+ * Update an expense.
  * @description get expenses of a user
  * @method PUT /api/expenses
  * @access protected
  */
 export const updateExpense = routeHandler(
   async (req: TypedRequest<{}, IExpense>, res: TypedResponse) => {
-    const { title, amount, date, category, subCategory, _id }: IExpense =
-      req.body;
+    const { title, amount, date, categoryId, _id }: IExpense = req.body;
     const ex: IExpense = req.body;
 
-    if (!_id || !title || !amount || !date || !category || !subCategory) {
+    if (!_id || !title || !amount || !date || !categoryId) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all required fields.");
     }

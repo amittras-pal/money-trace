@@ -24,7 +24,6 @@ export default function Home() {
   const [targetExpense, setTargetExpense] = useState(null);
 
   const { isLoading, data: list } = useRecentTransactions({
-    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     onError,
   });

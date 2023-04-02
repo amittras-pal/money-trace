@@ -9,9 +9,7 @@ export type IExpense = {
   title: String;
   description: String;
   date: Date;
-  category: String;
   categoryId: Types.ObjectId | String;
-  subCategory: String;
   user: Types.ObjectId;
   plan?: Types.ObjectId;
   amount: Number;
