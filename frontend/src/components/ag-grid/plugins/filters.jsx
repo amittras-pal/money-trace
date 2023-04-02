@@ -4,6 +4,7 @@ import {
   Checkbox,
   createStyles,
   Group,
+  Loader,
   ScrollArea,
   Text,
 } from "@mantine/core";
@@ -14,7 +15,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { getChildren, getParents } from "../../../constants/categories";
+import { useCategories } from "../../../services/categories";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -36,28 +37,36 @@ const useStyles = createStyles((theme) => ({
 
 function Category(props, ref) {
   const { classes } = useStyles();
-  const [categories, setCategories] = useState([]);
-  const options = useMemo(() => {
-    return getParents().map((parent) => {
-      const children = getChildren(parent.value);
-      return { ...parent, children };
+  const [selection, setSelection] = useState([]);
+
+  const { isLoading, data: catRes } = useCategories();
+
+  const categoryOptions = useMemo(() => {
+    const s = new Set();
+    const avCats = new Set();
+    props.api.forEachNode((node) => {
+      avCats.add(node.data.category.group);
     });
-  }, []);
+    catRes?.data?.response?.forEach((cat) => {
+      if (avCats.has(cat.group)) s.add(cat.group);
+    });
+    return Array.from(s);
+  }, [catRes?.data?.response, props.api]);
 
   useImperativeHandle(ref, () => {
     return {
       doesFilterPass(params) {
-        return categories.length
-          ? categories.includes(params.data.category)
+        return selection.length
+          ? selection.includes(params.data.category.group)
           : true;
       },
 
       isFilterActive() {
-        return categories.length > 0;
+        return selection.length > 0;
       },
 
       getModel() {
-        return categories;
+        return selection;
       },
 
       setModel(model) {},
@@ -65,7 +74,7 @@ function Category(props, ref) {
   });
 
   const cleanup = () => {
-    props.api.destroyFilter("subCategory");
+    props.api.destroyFilter("category._id");
     props.api.hidePopupMenu();
   };
 
@@ -75,7 +84,7 @@ function Category(props, ref) {
   };
 
   const clear = () => {
-    props.api.destroyFilter("category");
+    props.api.destroyFilter("category.group");
     cleanup();
   };
 
@@ -84,17 +93,20 @@ function Category(props, ref) {
       <Text fw="bold" mb="sm">
         Filter Categories
       </Text>
-      <Checkbox.Group value={categories} onChange={setCategories}>
+      <Checkbox.Group value={selection} onChange={setSelection}>
         <Group spacing="xs" className={classes.selectionGroup}>
-          {options.map((opt) => (
-            <Checkbox
-              key={opt.label}
-              label={opt.label}
-              value={opt.value}
-              color={opt.color}
-              sx={{ cursor: "pointer" }}
-            />
-          ))}
+          {isLoading ? (
+            <Loader size={32} />
+          ) : (
+            categoryOptions.map((opt) => (
+              <Checkbox
+                key={opt}
+                label={opt}
+                value={opt}
+                sx={{ cursor: "pointer" }}
+              />
+            ))
+          )}
         </Group>
       </Checkbox.Group>
       <Group grow mt="sm" sx={{ position: "sticky", bottom: 0 }}>
@@ -102,11 +114,11 @@ function Category(props, ref) {
           size="xs"
           variant="light"
           onClick={clear}
-          disabled={!categories.length}
+          disabled={!selection.length}
         >
           Clear
         </Button>
-        <Button size="xs" onClick={apply} disabled={!categories.length}>
+        <Button size="xs" onClick={apply} disabled={!selection.length}>
           Apply
         </Button>
       </Group>
@@ -115,43 +127,46 @@ function Category(props, ref) {
 }
 
 function SubCategory(props, ref) {
-  const [categories, setCategories] = useState([]);
+  const [selection, setSelection] = useState([]);
   const { classes } = useStyles();
 
-  const options = useMemo(() => {
-    const instance = props.api.getFilterInstance("category");
+  const { isLoading, data: catRes } = useCategories();
+
+  const categoryOptions = useMemo(() => {
+    const instance = props.api.getFilterInstance("category.group");
     if (!instance || !instance?.isFilterActive()) return [];
 
-    const primCatSelection = instance?.getModel();
-    const avSubCats = new Set();
-    props.api.forEachNode((node) => avSubCats.add(node.data.subCategory));
-
-    const secSelectable = [];
-
-    primCatSelection.forEach((cat) => {
-      secSelectable.push({
-        category: cat,
-        children: getChildren(cat).filter((opt) => avSubCats.has(opt.value)),
-      });
+    const selectedGroups = instance?.getModel();
+    const avCats = new Set();
+    props.api.forEachNode((node) => {
+      avCats.add(node.data.category._id);
     });
+    const filtered = catRes?.data?.response.filter(
+      (cat) => selectedGroups.includes(cat.group) && avCats.has(cat._id)
+    );
+    return filtered.reduce((grouping, current) => {
+      const groupIndex = grouping.findIndex((g) => g.label === current.group);
+      if (groupIndex > -1) grouping[groupIndex].children.push(current);
+      else grouping.push({ label: current.group, children: [current] });
 
-    return secSelectable;
-  }, [props.api]);
+      return grouping;
+    }, []);
+  }, [catRes?.data?.response, props.api]);
 
   useImperativeHandle(ref, () => {
     return {
       doesFilterPass(params) {
-        return categories.length
-          ? categories.includes(params.data.subCategory)
+        return selection.length
+          ? selection.includes(params.data.category._id)
           : true;
       },
 
       isFilterActive() {
-        return categories.length > 0;
+        return selection.length > 0;
       },
 
       getModel() {
-        return categories;
+        return selection;
       },
 
       setModel(model) {},
@@ -164,7 +179,7 @@ function SubCategory(props, ref) {
   };
 
   const clear = () => {
-    props.api.destroyFilter("subCategory");
+    props.api.destroyFilter("category._id");
     props.api.hidePopupMenu();
   };
 
@@ -173,26 +188,27 @@ function SubCategory(props, ref) {
       <Text fw="bold" mb="sm">
         Filter Sub Categories
       </Text>
-      <ScrollArea h={options.length > 0 ? 200 : 75}>
-        {options.length > 0 ? (
-          <Checkbox.Group value={categories} onChange={setCategories}>
+      <ScrollArea h={categoryOptions.length > 0 ? 200 : 75}>
+        {categoryOptions.length > 0 ? (
+          <Checkbox.Group value={selection} onChange={setSelection}>
             <Group spacing="xs" className={classes.selectionGroup}>
-              {options.map((opt) => (
-                <Fragment key={opt.category}>
-                  <Text fz="xs" color={opt.children[0].color}>
-                    {opt.category}
-                  </Text>
-                  {opt.children.map((child) => (
-                    <Checkbox
-                      key={child.label}
-                      label={child.label}
-                      value={child.value}
-                      color={child.color}
-                      sx={{ cursor: "pointer" }}
-                    />
-                  ))}
-                </Fragment>
-              ))}
+              {isLoading ? (
+                <Loader size={32} />
+              ) : (
+                categoryOptions.map((opt) => (
+                  <Fragment key={opt.label}>
+                    <Text fz="xs">{opt.label}</Text>
+                    {opt.children.map((child) => (
+                      <Checkbox
+                        key={child._id}
+                        label={child.label}
+                        value={child._id}
+                        sx={{ cursor: "pointer" }}
+                      />
+                    ))}
+                  </Fragment>
+                ))
+              )}
             </Group>
           </Checkbox.Group>
         ) : (
@@ -202,17 +218,17 @@ function SubCategory(props, ref) {
           </Text>
         )}
       </ScrollArea>
-      {options.length > 0 && (
+      {categoryOptions.length > 0 && (
         <Group grow mt="sm" sx={{ position: "sticky", bottom: 0 }}>
           <Button
             size="xs"
             variant="light"
             onClick={clear}
-            disabled={!categories.length}
+            disabled={!selection.length}
           >
             Clear
           </Button>
-          <Button size="xs" onClick={apply} disabled={!categories.length}>
+          <Button size="xs" onClick={apply} disabled={!selection.length}>
             Apply
           </Button>
         </Group>

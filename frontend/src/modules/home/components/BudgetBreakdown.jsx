@@ -4,6 +4,7 @@ import {
   Button,
   Divider,
   Group,
+  Loader,
   ScrollArea,
   Text,
 } from "@mantine/core";
@@ -30,8 +31,11 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
   const isMobile = useMediaMatch();
   const { classes } = useStyles();
 
-  // Handle Loading
-  const { data: summary, refetch } = useSummary({
+  const {
+    data: summary,
+    refetch,
+    isLoading,
+  } = useSummary({
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     onError,
@@ -46,6 +50,13 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
     return (
       <Box className={classes.noInfo}>
         <Text>Budget Info not Available.</Text>
+      </Box>
+    );
+
+  if (isLoading)
+    return (
+      <Box className={classes.noInfo}>
+        <Loader size={50} />
       </Box>
     );
 
@@ -72,14 +83,16 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
         mb="xs"
         h={ref.current ? (ref.current?.clientHeight * 0.7).toFixed(0) : 0}
       >
-        {summary?.data?.response.summary?.map((category) => (
-          <BudgetItem
-            category={category._id}
-            subCategories={category.subCategories}
-            amount={category.spent}
-            key={category._id}
-          />
-        ))}
+        {Object.entries(summary?.data?.response.summary)?.map(
+          ([category, data]) => (
+            <BudgetItem
+              category={category}
+              subCategories={data.subCategories}
+              total={data.total}
+              key={category}
+            />
+          )
+        )}
       </ScrollArea>
       <Group grow mt="auto" spacing="xs" align="flex-start">
         <Group sx={{ flexDirection: "column" }} spacing="xs" align="flex-start">

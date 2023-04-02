@@ -23,5 +23,5 @@ export const expenseSchema = yup.object().shape({
     .typeError("Amount has to be a number")
     .required("Amount is required")
     .min(1, "Amount value must be greater than 0"),
-  catValue: yup.string().required("Category is required."),
+  categoryId: yup.string().required("Category is required."),
 });

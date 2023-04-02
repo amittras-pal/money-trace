@@ -1,31 +1,31 @@
-import { Badge, Box, Group, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import React, { memo, useMemo } from "react";
-import { getColor, getIcons } from "../constants/categories";
 import { useStyles } from "../modules/home/styles";
+import { Badge, Box, Group, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { formatCurrency } from "../utils";
+import { Icons } from "../constants/categories";
 
-function BudgetItem({ amount, category, subCategories }) {
+function BudgetItem({ category, subCategories, total }) {
   const { classes } = useStyles();
-  const { color, icons } = useMemo(
-    () => ({
-      color: getColor(category),
-      icons: getIcons(category, subCategories),
-    }),
-    [category, subCategories]
-  );
+
+  const subItems = useMemo(() => {
+    return subCategories.map((item) => ({
+      ...item,
+      Icon: Icons[item.icon],
+    }));
+  }, [subCategories]);
 
   return (
     <Box className={classes.item}>
       <Group position="apart" align="center" mb={2}>
-        <Badge color={color} size="sm" radius="sm">
+        <Badge color={subCategories[0].color} size="sm" radius="sm">
           {category}
         </Badge>
-        <Text fw="bold">{formatCurrency(amount)}</Text>
+        <Text fw="bold">{formatCurrency(total)}</Text>
       </Group>
       <Group spacing={6}>
-        {icons.map(({ Icon, label }) => (
+        {subItems.map(({ label, value, color, Icon }) => (
           <Tooltip
-            label={label}
+            label={`${label}: ${formatCurrency(value)}`}
             withArrow
             key={label}
             events={{ hover: true, touch: true }}
@@ -57,6 +57,6 @@ function BudgetItem({ amount, category, subCategories }) {
 export default memo(
   BudgetItem,
   (prev, next) =>
-    prev.amount === next.amount &&
+    prev.total === next.total &&
     JSON.stringify(prev.subCategories) === JSON.stringify(next.subCategories)
 );

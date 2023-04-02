@@ -43,14 +43,13 @@ export default function Expenses() {
   const [targetExpense, setTargetExpense] = useState(null);
   const client = useQueryClient();
 
+  const [filterTotal, setFilterTotal] = useState(0);
+  const [gridApi, setGridApi] = useState(null);
   const [payload, setPayload] = useState({
-    filter: {
-      startDate: dayjs().startOf("month").toDate(),
-      endDate: dayjs().endOf("month").toDate(),
-    },
+    startDate: dayjs().subtract(1, "month").startOf("month").toDate(),
+    endDate: dayjs().subtract(1, "month").endOf("month").toDate(),
     sort: { date: -1 },
   });
-  const [filterTotal, setFilterTotal] = useState(0);
 
   useEffect(() => {
     if (isMobile)
@@ -148,14 +147,15 @@ export default function Expenses() {
         { headerName: "Title", field: "title", minWidth: isMobile ? 240 : 320 },
         {
           headerName: "Category",
-          field: "category",
+          field: "category.group",
           minWidth: 240,
           cellRenderer: CategoryCell,
           filter: CategoryFilter,
         },
         {
           headerName: "Sub Category",
-          field: "subCategory",
+          colId: "category._id",
+          field: "category.label",
           minWidth: 240,
           cellRenderer: CategoryCell,
           filter: SubCategoryFilter,
@@ -190,12 +190,12 @@ export default function Expenses() {
   };
 
   const handleMonthChange = (e) => {
+    gridApi.api.destroyFilter("category.group");
+    gridApi.api.destroyFilter("category._id");
     setPayload((prev) => ({
       ...prev,
-      filter: {
-        startDate: dayjs(e).startOf("month"),
-        endDate: dayjs(e).endOf("month"),
-      },
+      startDate: dayjs(e).startOf("month"),
+      endDate: dayjs(e).endOf("month"),
       sort: {
         date: -1,
       },
@@ -215,7 +215,7 @@ export default function Expenses() {
             size="xs"
             placeholder="Select month"
             variant="filled"
-            value={payload.filter.startDate}
+            value={payload.startDate}
             disabled={dayjs(userData?.createdAt).month() === dayjs().month()}
             onChange={handleMonthChange}
             maxDate={dayjs().toDate()}
@@ -237,10 +237,11 @@ export default function Expenses() {
             paginationAutoPageSize={true}
             onFilterChanged={updateFilterTotal}
             height={ref.current?.clientHeight ?? 0}
-            rowData={data?.data?.response?.data ?? []}
+            rowData={data?.data?.response ?? []}
+            onGridReady={setGridApi}
             noRowsOverlayComponentParams={{
               message: `No expenses recorded for ${dayjs(
-                payload.filter.startDate
+                payload.startDate
               ).format("MMM, 'YY")}`,
             }}
           />

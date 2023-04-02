@@ -60,17 +60,9 @@ export const updateExpense = routeHandler(
 export const getMonthSummary = routeHandler(
   async (
     req: TypedRequest<{ firstDay: string; lastDay: string }, {}>,
-    res: TypedResponse<{ summary: Array<any>; total: number }>
+    res: TypedResponse<{ summary: Array<any>; total: Number }>
   ) => {
     const { firstDay, lastDay } = req.query;
-
-    /**
-     * Aggregation pipeline
-     * #1 find in 'expenses' collection
-     *    > unreverted expenses by the current user
-     *    > which are not part of an expense plan
-     *    > created between the first and last of the current month
-     */
     const summary = await Expense.aggregate([
       {
         $match: {
@@ -85,19 +77,57 @@ export const getMonthSummary = routeHandler(
       },
       {
         $group: {
-          _id: "$category",
-          spent: { $sum: "$amount" },
-          subCategories: { $addToSet: "$subCategory" },
+          _id: "$categoryId",
+          value: { $sum: "$amount" },
         },
       },
-      { $sort: { spent: -1 } },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $sort: { value: -1 } },
+      { $unwind: "$category" },
+      {
+        $project: {
+          _id: false,
+          amounts: false,
+          "category._id": false,
+          "category.__v": false,
+        },
+      },
+      {
+        $project: {
+          value: "$value",
+          label: "$category.label",
+          color: "$category.color",
+          group: "$category.group",
+          icon: "$category.icon",
+        },
+      },
     ]);
 
     res.json({
       message: "Summary for the current month retrieved successfully.",
       response: {
-        summary,
-        total: summary.reduce((sum, curr) => sum + curr.spent, 0),
+        summary: summary.reduce((acc, ci) => {
+          if (acc[ci.group]) {
+            acc[ci.group].subCategories.push(ci);
+            acc[ci.group].total += ci.value;
+          } else {
+            acc[ci.group] = {
+              subCategories: [],
+              total: 0,
+            };
+            acc[ci.group].subCategories.push(ci);
+            acc[ci.group].total += ci.value;
+          }
+          return acc;
+        }, {}),
+        total: summary.reduce((sum, curr) => sum + curr.value, 0),
       },
     });
   }
@@ -125,84 +155,59 @@ export const deleteExpense = routeHandler(
   }
 );
 
-type ListingParams = {
-  filter: {
-    startDate: string;
-    endDate: string;
-    categories?: string[];
-  };
-  sort?: {
-    date?: 1 | -1;
-    amount?: 1 | -1;
-  };
-  paginate?: {
-    page: number;
-    size: number;
-  };
-};
+/**
+ * @description Get a list of expenses for a date range.
+ * @method POST /api/expenses
+ * @access protected
+ */
+export const listExpenses = routeHandler(
+  async (
+    req: TypedRequest<
+      {},
+      {
+        startDate: string;
+        endDate: string;
+        plan: string;
+        sort: Record<string, 1 | -1>;
+      }
+    >,
+    res: TypedResponse<IExpense[]>
+  ) => {
+    const { startDate = "", endDate = "", plan = null, sort } = req.body;
 
-export const listing = routeHandler(
-  async (req: TypedRequest<{}, ListingParams>, res: TypedResponse<any[]>) => {
-    const { filter, paginate, sort } = req.body;
-
-    const matching: PipelineStage.Match = {
+    const matchPhase: PipelineStage.Match = {
       $match: {
         user: new Types.ObjectId(req.userId),
-        plan: null, // TODO: add matching with expense plans too.
-        date: {
-          $gte: new Date(filter.startDate),
-          $lte: new Date(filter.endDate),
-        },
+        plan: plan,
       },
     };
 
-    if (filter.categories?.length) {
-      matching.$match.category = {
-        $in: filter.categories,
+    const sortPhase: PipelineStage.Sort = {
+      $sort: sort,
+    };
+
+    const lookupPhase: PipelineStage.Lookup = {
+      $lookup: {
+        from: "categories",
+        localField: "categoryId",
+        foreignField: "_id",
+        as: "category",
+      },
+    };
+
+    const unwindPhase: PipelineStage.Unwind = { $unwind: "$category" };
+
+    if (startDate && endDate)
+      matchPhase.$match.date = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
       };
-    }
 
-    const sorting: PipelineStage.Sort = {
-      $sort: sort ? sort : { date: -1 },
-    };
-
-    const dataFacet: (
-      | PipelineStage.Match
-      | PipelineStage.Sort
-      | PipelineStage.Skip
-      | PipelineStage.Limit
-    )[] = [matching, sorting];
-
-    if (paginate)
-      dataFacet.push(
-        { $skip: paginate.page * paginate.size },
-        { $limit: paginate.size }
-      );
-
-    const expenses = await Expense.aggregate([
-      {
-        $facet: {
-          data: dataFacet,
-          meta: [
-            matching,
-            { $count: "totalDocuments" },
-            {
-              $addFields: {
-                ...paginate,
-                totalPages: {
-                  $ceil: { $divide: ["$totalDocuments", paginate?.size] },
-                },
-              },
-            },
-          ],
-        },
-      },
-      { $unwind: "$meta" },
-    ]);
-
-    res.json({
-      message: "List Retrieved",
-      response: expenses[0],
-    });
+    const expenses = await (<IExpense[]>(
+      (<unknown>(
+        Expense.aggregate([matchPhase, lookupPhase, unwindPhase, sortPhase])
+      ))
+    ));
+    res.json({ message: "List Retrieved.", response: expenses });
   }
 );

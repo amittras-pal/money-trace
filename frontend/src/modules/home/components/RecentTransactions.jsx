@@ -25,12 +25,12 @@ export default function RecentTransactions({
   ) : (
     <Box className={classes.listWrapper}>
       <Text fw="bold">
-        Recent Transactions ({list?.data?.response?.data?.length ?? 0})
+        Recent Transactions ({list?.data?.response?.length ?? 0})
       </Text>
       <Divider my="xs" />
       <ScrollArea h="calc(100vh - 152px)">
         <ItemList
-          list={list}
+          list={list.data?.response ?? []}
           onEditExpense={onEditExpense}
           onDeleteExpense={onDeleteExpense}
         />
@@ -40,8 +40,8 @@ export default function RecentTransactions({
 }
 
 function ItemList({ list, onEditExpense, onDeleteExpense }) {
-  return list.data?.response?.data?.length > 0
-    ? list?.data?.response?.data?.map?.((exp) => (
+  return list?.length > 0
+    ? list.map((exp) => (
         <ExpenseCard
           key={exp._id}
           data={exp}

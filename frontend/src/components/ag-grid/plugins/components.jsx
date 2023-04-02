@@ -22,7 +22,6 @@ import {
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { primaryColor } from "../../../constants/app";
-import { getColor } from "../../../constants/categories";
 import ExpenseDescription from "../../ExpenseDescription";
 
 function getNextSortOrder(current) {
@@ -93,7 +92,7 @@ export function CategoryCell({ data, value }) {
       size="sm"
       component="div"
       variant="light"
-      color={getColor(data.category)}
+      color={data.category.color}
     >
       {value}
     </Badge>

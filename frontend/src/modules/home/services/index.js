@@ -26,10 +26,9 @@ function getSummary() {
 
 function getRecentTransactions() {
   return axios.post(ENDPOINTS.list, {
-    filter: {
-      startDate: dayjs().subtract(7, "days").toDate(),
-      endDate: dayjs().toDate(),
-    },
+    startDate: dayjs().subtract(7, "days").toDate(),
+    endDate: dayjs().toDate(),
+    sort: { date: -1 },
   });
 }
 

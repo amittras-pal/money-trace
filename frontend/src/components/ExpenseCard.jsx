@@ -11,7 +11,7 @@ import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { memo, useMemo } from "react";
-import { getColor, getIcons } from "../constants/categories";
+import { Icons } from "../constants/categories";
 import { formatCurrency } from "../utils";
 import ExpenseDescription from "./ExpenseDescription";
 dayjs.extend(relativeTime);
@@ -29,13 +29,7 @@ function ExpenseCard({
     [data.date]
   );
 
-  const { color, Icon } = useMemo(
-    () => ({
-      color: getColor(data.category),
-      Icon: getIcons(data.category, [data.subCategory])[0].Icon,
-    }),
-    [data.category, data.subCategory]
-  );
+  const Icon = useMemo(() => Icons[data.category.icon], [data.category]);
 
   return (
     <Box className={classes.wrapper}>
@@ -66,10 +60,10 @@ function ExpenseCard({
           <Badge
             variant="light"
             size="sm"
-            color={color}
+            color={data.category.color}
             leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
           >
-            {data.category} / {data.subCategory}
+            {data.category.group} | {data.category.label}
           </Badge>
           <Group position="apart" align="center" mt={4}>
             <Badge color="dark" size="sm" variant="filled">

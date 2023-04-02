@@ -2,17 +2,9 @@ import { Types } from "mongoose";
 
 export interface ICategory {
   _id?: Types.ObjectId | string;
-  title: string;
-  amount: number;
+  label: string;
+  group: string;
   color: string;
-  managed: boolean;
+  icon: string;
   description?: string;
-}
-
-export interface CategoryOps extends ICategory {
-  operation?: "added" | "updated" | "removed";
-}
-
-export interface CategorySummary extends ICategory {
-  total: number;
 }
