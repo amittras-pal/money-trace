@@ -108,7 +108,7 @@ export function DescriptionCell({ value }) {
     );
   else
     return (
-      <Popover withinPortal shadow="md" width={280} position="right-start">
+      <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
         <Popover.Target>
           <ActionIcon
             size="sm"
@@ -119,8 +119,8 @@ export function DescriptionCell({ value }) {
             <IconInfoCircle size={18} />
           </ActionIcon>
         </Popover.Target>
-        <Popover.Dropdown>
-          <ExpenseDescription>{value}</ExpenseDescription>
+        <Popover.Dropdown p={8}>
+          <ExpenseDescription color="dimmed">{value}</ExpenseDescription>
         </Popover.Dropdown>
       </Popover>
     );

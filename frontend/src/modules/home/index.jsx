@@ -89,9 +89,7 @@ export default function Home() {
           opened={drawer}
           onClose={listDrawer.close}
           zIndex={199}
-          title={`Recent Transactions (${
-            list?.data?.response?.data?.length ?? 0
-          })`}
+          title={`Recent Transactions (${list?.data?.response?.length ?? 0})`}
         >
           <RecentTransactions
             onEditExpense={editExpense}
