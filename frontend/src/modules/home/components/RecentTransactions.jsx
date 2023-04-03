@@ -18,7 +18,7 @@ export default function RecentTransactions({
 
   return isMobile ? (
     <ItemList
-      list={list}
+      list={list.data?.response}
       onEditExpense={onEditExpense}
       onDeleteExpense={onDeleteExpense}
     />
