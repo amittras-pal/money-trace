@@ -7,7 +7,12 @@ import {
   Menu,
   Text,
 } from "@mantine/core";
-import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  IconChevronRight,
+  IconDotsVertical,
+  IconEdit,
+  IconTrash,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { memo, useMemo } from "react";
@@ -63,7 +68,9 @@ function ExpenseCard({
             color={data.category.color}
             leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
           >
-            {data.category.group} | {data.category.label}
+            {data.category.group}{" "}
+            <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
+            {data.category.label}
           </Badge>
           <Group position="apart" align="center" mt={4}>
             <Badge color="dark" size="sm" variant="filled">

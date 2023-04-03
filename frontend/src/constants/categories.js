@@ -1,8 +1,10 @@
+import { IconArmchair2, IconScissors } from "@tabler/icons-react";
 import {
   IconApps,
   IconBasket,
   IconBook,
   IconCategory,
+  IconCherry,
   IconCoins,
   IconCookie,
   IconDeviceGamepad2,
@@ -66,4 +68,7 @@ export const Icons = {
   IconTrash: IconTrash,
   IconUserShield: IconUserShield,
   IconUserStar: IconUserStar,
+  IconCherry: IconCherry,
+  IconScissors: IconScissors,
+  IconArmchair2: IconArmchair2,
 };

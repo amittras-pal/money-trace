@@ -56,7 +56,7 @@ export default function Home() {
         <BudgetBreakdown
           showForm={formModal.open}
           showRecent={listDrawer.open}
-          recents={list?.data?.response?.data?.length ?? 0}
+          recents={list?.data?.response?.length ?? 0}
           loadingRecents={isLoading}
         />
         {!isMobile && (

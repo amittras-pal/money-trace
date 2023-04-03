@@ -5,7 +5,10 @@ import { TypedRequest, TypedResponse } from "../types/requests";
 
 export const getCategories = routeHandler(
   async (_req: TypedRequest<{}, {}>, res: TypedResponse<ICategory[]>) => {
-    const categories: ICategory[] = await Category.find({});
+    const categories: ICategory[] = await Category.find({}).sort({
+      group: 1,
+      label: 1,
+    });
     res.json({ message: "Categories Retrieved", response: categories });
   }
 );
