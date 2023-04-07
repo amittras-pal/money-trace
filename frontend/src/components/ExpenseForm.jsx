@@ -35,7 +35,7 @@ export default function ExpenseForm({ data, onComplete }) {
   }, [userData]);
 
   const handleClose = () => {
-    onComplete(false);
+    onComplete(null);
     reset();
   };
 
@@ -73,7 +73,7 @@ export default function ExpenseForm({ data, onComplete }) {
       color: "green",
       icon: <IconCheck />,
     });
-    onComplete(true);
+    onComplete(res.data?.response);
     reset();
   };
 

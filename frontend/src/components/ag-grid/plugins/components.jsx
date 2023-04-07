@@ -126,7 +126,12 @@ export function DescriptionCell({ value }) {
     );
 }
 
-export function RowMenuCell({ data, onEditExpense, onDeleteExpense }) {
+export function RowMenuCell({
+  data,
+  onEditExpense,
+  onDeleteExpense,
+  rowIndex,
+}) {
   const isEditable = useMemo(
     () => dayjs(data.date) >= dayjs().subtract(7, "days"),
     [data.date]
@@ -149,7 +154,7 @@ export function RowMenuCell({ data, onEditExpense, onDeleteExpense }) {
         {isEditable && (
           <Menu.Item
             icon={<IconEdit size={14} />}
-            onClick={() => onEditExpense(data)}
+            onClick={() => onEditExpense(data, rowIndex)}
           >
             Edit
           </Menu.Item>

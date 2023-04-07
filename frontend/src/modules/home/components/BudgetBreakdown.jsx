@@ -83,7 +83,7 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
         mb="xs"
         h={ref.current ? (ref.current?.clientHeight * 0.7).toFixed(0) : 0}
       >
-        {Object.entries(summary?.data?.response.summary)?.map(
+        {Object.entries(summary?.data?.response.summary ?? {})?.map(
           ([category, data]) => (
             <BudgetItem
               category={category}

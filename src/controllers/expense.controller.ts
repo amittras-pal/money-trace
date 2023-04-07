@@ -36,7 +36,10 @@ export const createExpense = routeHandler(
  * @access protected
  */
 export const updateExpense = routeHandler(
-  async (req: TypedRequest<{}, IExpense>, res: TypedResponse) => {
+  async (
+    req: TypedRequest<{}, IExpense>,
+    res: TypedResponse<IExpense | null>
+  ) => {
     const { title, amount, date, categoryId, _id }: IExpense = req.body;
     const ex: IExpense = req.body;
 
@@ -46,7 +49,10 @@ export const updateExpense = routeHandler(
     }
 
     await Expense.findByIdAndUpdate(_id, { $set: ex });
-    res.json({ message: "Expense updated successfully." });
+    const update: IExpense | null = await Expense.findById(_id).populate(
+      "categoryId"
+    );
+    res.json({ message: "Expense updated successfully.", response: update });
   }
 );
 

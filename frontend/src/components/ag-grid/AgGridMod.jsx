@@ -17,6 +17,7 @@ export default function AgGridMod({ height, ...props }) {
       <AgGridReact
         rowHeight={60}
         headerHeight={60}
+        animateRows={false}
         noRowsOverlayComponent={NoDataOverlay}
         defaultColDef={{
           flex: 1,
