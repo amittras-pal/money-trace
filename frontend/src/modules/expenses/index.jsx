@@ -39,12 +39,14 @@ import { useMediaMatch } from "../../hooks/useMediaMatch";
 import { formatCurrency } from "../../utils";
 import { useBudget } from "../budgetMonitor/services";
 import { useExpenseList } from "./services";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
+  const client = useQueryClient();
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
   const [targetExpense, setTargetExpense] = useState(null);
@@ -81,7 +83,7 @@ export default function Expenses() {
       grid?.api.destroyFilter("category.group");
       grid?.api.destroyFilter("category._id");
       setFilterTotal(
-        res.data?.response?.data
+        res.data?.response
           ?.reduce((sum, item) => sum + item.amount, 0)
           .toFixed(2)
       );
@@ -97,7 +99,7 @@ export default function Expenses() {
   const handleClose = (refreshData) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
-    if (refreshData) {
+    if (refreshData && typeof refreshData === "object") {
       const update = {
         ...refreshData,
         categoryId: refreshData.categoryId._id,
@@ -119,6 +121,8 @@ export default function Expenses() {
       );
       node.setData(update);
       grid.api.flashCells({ rowNodes: [node], columns: updatedKeys });
+    } else if (refreshData && typeof refreshData === "boolean") {
+      client.invalidateQueries(["list", payload]);
     }
     setTimeout(() => {
       setTargetExpense(null);

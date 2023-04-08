@@ -8,7 +8,6 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { useDeleteExpense } from "../modules/home/services";
@@ -16,7 +15,6 @@ import ExpenseCard from "./ExpenseCard";
 
 export default function DeleteExpense({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();
-  const client = useQueryClient();
   const { onError } = useErrorHandler();
 
   const { mutate: deleteExpense, isLoading: deleting } = useDeleteExpense({
@@ -27,8 +25,6 @@ export default function DeleteExpense({ data, onComplete }) {
         color: "green",
         icon: <IconCheck />,
       });
-      client.invalidateQueries({ queryKey: ["summary"] });
-      client.invalidateQueries({ queryKey: ["recent-transactions"] });
     },
     onError,
   });
@@ -46,7 +42,7 @@ export default function DeleteExpense({ data, onComplete }) {
       <Group grow mt="lg">
         <Button
           variant="outline"
-          onClick={() => onComplete(false)}
+          onClick={() => onComplete(null)}
           disabled={deleting}
         >
           Cancel

@@ -73,7 +73,7 @@ export default function ExpenseForm({ data, onComplete }) {
       color: "green",
       icon: <IconCheck />,
     });
-    onComplete(res.data?.response);
+    onComplete(res.data?.response ?? true);
     reset();
   };
 

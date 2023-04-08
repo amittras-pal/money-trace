@@ -60,7 +60,7 @@ export default function BudgetMonitor() {
 
   return (
     <Modal
-      opened={!budget && !isLoading && isError}
+      opened={getAuthToken() && !budget && !isLoading && isError}
       lockScroll
       closeOnClickOutside={false}
       closeOnEscape={false}
