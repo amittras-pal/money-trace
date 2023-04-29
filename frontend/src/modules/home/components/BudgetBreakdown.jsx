@@ -76,7 +76,7 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
   return (
     <Box ref={ref} className={classes.budgetWrapper}>
       <Group position="apart">
-        <Text fw="bold">Summary, {dayjs().format("MMM, 'YY")}</Text>
+        <Text fw="bold">{dayjs().format("MMM, 'YY")}</Text>
         {summary?.data?.response?.total > budget && (
           <Badge
             color="red"
@@ -87,7 +87,8 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
               <IconAlertTriangleFilled size={10} style={{ marginBottom: -1 }} />
             }
           >
-            Budget Exceeded
+            Budget Exceeded:{" "}
+            {formatCurrency(summary?.data?.response?.total - budget)}
           </Badge>
         )}
       </Group>

@@ -72,17 +72,34 @@ export function ColumnHeader(props) {
   );
 }
 
+export function RowCount({ api }) {
+  return (
+    <Text component="span" mx="auto" color="red" fw="bold">
+      {api.getDisplayedRowCount()}
+    </Text>
+  );
+}
+
 export function DescriptionColumnHeader() {
   return (
-    <ThemeIcon
-      size="sm"
-      radius="xl"
-      color={primaryColor}
-      variant="light"
-      mx="auto"
-    >
-      <IconInfoCircle size={18} />
-    </ThemeIcon>
+    <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
+      <Popover.Target>
+        <ActionIcon
+          size="sm"
+          radius="xl"
+          color="orange"
+          mx="auto"
+          variant="light"
+        >
+          <IconInfoCircle size={18} />
+        </ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown p={8}>
+        <Text color="dimmed" fz="xs">
+          Expense Description
+        </Text>
+      </Popover.Dropdown>
+    </Popover>
   );
 }
 

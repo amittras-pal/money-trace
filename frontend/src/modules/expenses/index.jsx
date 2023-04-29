@@ -25,6 +25,7 @@ import {
   CategoryCell,
   DescriptionCell,
   DescriptionColumnHeader,
+  RowCount,
   RowMenuCell,
 } from "../../components/ag-grid/plugins/components";
 import {
@@ -151,6 +152,7 @@ export default function Expenses() {
       return [
         {
           headerName: "",
+          headerComponent: RowCount,
           cellRenderer: RowMenuCell,
           cellRendererParams: {
             onEditExpense: editExpense,
@@ -159,7 +161,7 @@ export default function Expenses() {
           field: "_id",
           pinned: "left",
           maxWidth: 50,
-          flex: 0,
+          headerClass: "no-pad",
           cellStyle: {
             paddingLeft: 0,
             paddingRight: 0,
