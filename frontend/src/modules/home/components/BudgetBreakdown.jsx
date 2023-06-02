@@ -6,12 +6,13 @@ import {
   Group,
   Loader,
   Progress,
-  ScrollArea,
   Text,
 } from "@mantine/core";
 import {
   IconAlertTriangleFilled,
   IconArrowRight,
+  IconArrowUpRight,
+  IconCash,
   IconChevronUp,
   IconPlus,
 } from "@tabler/icons-react";
@@ -111,19 +112,25 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
             alignItems: "flex-start",
           }}
           h="100%"
-          spacing={6}
+          spacing={4}
         >
           <Group position="apart" w="100%">
-            <Text color="dimmed" fz="sm" fw="bold">
-              Spent:
+            <Text fz="sm" fw="bold" color={percColor}>
+              {percSpent}%
             </Text>
-            <Text fz="sm" fw="bold" color={percColor} ml="xs">
-              ({percSpent}%)
+            <Text size="sm" fw="normal">
+              of {formatCurrency(budget)}
             </Text>
           </Group>
           <Progress size="xs" value={percSpent} color={percColor} w="100%" />
-          <Text fz="sm">{formatCurrency(summary?.data?.response?.total)}</Text>
-          <Text fz="sm">of {formatCurrency(budget)}</Text>
+          <Text fz="sm">
+            <IconArrowUpRight size={16} style={{ marginBottom: -3 }} />{" "}
+            {formatCurrency(summary?.data?.response?.total)}
+          </Text>
+          <Text fz="sm">
+            <IconCash size={16} style={{ marginBottom: -3 }} />{" "}
+            {formatCurrency(budget - summary?.data?.response?.total)}
+          </Text>
         </Group>
         <Group
           sx={{

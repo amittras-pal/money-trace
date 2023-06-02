@@ -113,7 +113,7 @@ export default function Login() {
               <Chip variant="filled" value="/expenses">
                 Transactions
               </Chip>
-              <Chip variant="filled" value="/plans" disabled>
+              <Chip variant="filled" value="/plans">
                 Plans
               </Chip>
               <Chip variant="filled" value="/account" disabled>
