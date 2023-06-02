@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
+  Checkbox,
   Divider,
   Group,
   Select,
@@ -22,11 +23,14 @@ import { useCreateExpense, useEditExpense } from "../modules/home/services";
 import { expenseSchema } from "../modules/home/utils";
 import { useCategories } from "../services/categories";
 import CategorySelectItem from "./CategorySelectItem";
+import { useExpensePlans } from "../modules/plans/services";
+import { useParams } from "react-router-dom";
 
 export default function ExpenseForm({ data, onComplete }) {
   const { primaryColor } = useMantineTheme();
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
+  const params = useParams();
 
   const minDate = useMemo(() => {
     const userDate = dayjs(userData.createdAt).toDate().getTime();
@@ -50,11 +54,13 @@ export default function ExpenseForm({ data, onComplete }) {
     mode: "onChange",
     shouldFocusError: true,
     defaultValues: {
-      title: data ? data.title : "",
-      description: data ? data.description : "",
-      amount: data ? data.amount : "",
-      categoryId: data ? data.categoryId : "",
+      title: data?.title ?? "",
+      description: data?.description ?? "",
+      amount: data?.amount ?? "",
+      categoryId: data?.categoryId ?? "",
       date: data ? dayjs(data.date).toDate() : dayjs().toDate(),
+      addToPlan: data ? Boolean(data.plan) : false,
+      plan: data?.plan ?? "",
     },
     resolver: yupResolver(expenseSchema),
   });
@@ -77,7 +83,12 @@ export default function ExpenseForm({ data, onComplete }) {
     reset();
   };
 
-  const { isLoading, data: categoryRes } = useCategories();
+  const { data: categoryRes, isLoading: loadingCategories } = useCategories();
+  const { data: plansRes, isLoading: loadingPlans } = useExpensePlans(true, {
+    enabled: watch("addToPlan"),
+    refetchOnMount: false,
+    onError,
+  });
 
   const { mutate: createExpense, isLoading: creating } = useCreateExpense({
     onSuccess: handleSuccess,
@@ -91,7 +102,7 @@ export default function ExpenseForm({ data, onComplete }) {
 
   const handleSave = (values) => {
     const payload = Object.assign({}, values);
-    if (data) {
+    if (data?._id) {
       editExpense({ ...payload, _id: data._id });
     } else createExpense(payload);
   };
@@ -132,8 +143,10 @@ export default function ExpenseForm({ data, onComplete }) {
         <Select
           searchable
           label="Category"
-          placeholder={isLoading ? "Loading Categories" : "Pick a category"}
-          disabled={isLoading}
+          placeholder={
+            loadingCategories ? "Loading Categories" : "Pick a category"
+          }
+          disabled={loadingCategories}
           value={watch("categoryId")}
           error={errors.categoryId?.message}
           onChange={(e) => setFieldValue("categoryId", e)}
@@ -154,6 +167,28 @@ export default function ExpenseForm({ data, onComplete }) {
           onChange={(e) => setFieldValue("date", e)}
           error={errors.date?.message}
         />
+        <Checkbox
+          {...register("addToPlan")}
+          label="Add to Plan"
+          mb="md"
+          disabled={!!params.id}
+        />
+        {watch("addToPlan") && (
+          <Select
+            label="Select Plan"
+            placeholder={loadingPlans ? "Loading plans" : "Select Plan"}
+            disabled={loadingPlans || !!params.id}
+            value={watch("plan")}
+            error={errors.plan?.message}
+            onChange={(e) => setFieldValue("plan", e)}
+            data={
+              plansRes?.data?.response?.map((plan) => ({
+                label: plan.name,
+                value: plan._id,
+              })) ?? []
+            }
+          />
+        )}
       </Box>
       <Group grow>
         <Button type="reset" variant="outline" disabled={creating || editing}>

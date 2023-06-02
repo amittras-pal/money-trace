@@ -19,9 +19,8 @@ export const ROUTES = [
   },
   {
     icon: <IconReport size={16} />,
-    label: "Expense Plans",
+    label: "Vacations & Plans",
     path: "/plans",
     exactMatch: false,
-    disabled: true,
   },
 ];

@@ -1,8 +1,8 @@
-import React, { memo, useMemo } from "react";
-import { useStyles } from "../modules/home/styles";
 import { Badge, Box, Group, Text, ThemeIcon, Tooltip } from "@mantine/core";
-import { formatCurrency } from "../utils";
+import React, { useMemo } from "react";
 import { Icons } from "../constants/categories";
+import { useStyles } from "../modules/home/styles";
+import { formatCurrency } from "../utils";
 
 function BudgetItem({ category, subCategories, total }) {
   const { classes } = useStyles();
@@ -37,26 +37,8 @@ function BudgetItem({ category, subCategories, total }) {
           </Tooltip>
         ))}
       </Group>
-      {/* <Text
-        fz="xs"
-        color={primaryColor}
-        ml="auto"
-        component={Link}
-        to={{
-          pathname: "/expenses",
-          search: new URLSearchParams({ category }).toString(),
-        }}
-      >
-        View Expenses
-        <IconArrowRight size={12} style={{ marginLeft: 4, marginBottom: -2 }} />
-      </Text> */}
     </Box>
   );
 }
 
-export default memo(
-  BudgetItem,
-  (prev, next) =>
-    prev.total === next.total &&
-    JSON.stringify(prev.subCategories) === JSON.stringify(next.subCategories)
-);
+export default BudgetItem;

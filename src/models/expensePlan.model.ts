@@ -12,7 +12,7 @@ const expensePlanSchema = new Schema<IExpensePlan>(
     description: {
       type: String,
       required: [true, "Plan description is required"],
-      maxlength: 180,
+      maxlength: 400,
     },
     user: {
       type: Schema.Types.ObjectId,

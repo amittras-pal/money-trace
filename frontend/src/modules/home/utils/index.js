@@ -24,4 +24,9 @@ export const expenseSchema = yup.object().shape({
     .required("Amount is required")
     .min(1, "Amount value must be greater than 0"),
   categoryId: yup.string().required("Category is required."),
+  addToPlan: yup.boolean(),
+  plan: yup.string().when("addToPlan", {
+    is: true,
+    then: () => yup.string().required("Plan is required"),
+  }),
 });

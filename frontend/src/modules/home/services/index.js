@@ -15,11 +15,12 @@ function deleteExpense(id) {
   return axios.delete(ENDPOINTS.expenses, { params: { id } });
 }
 
-function getSummary() {
+function getSummary(plan = null) {
   return axios.get(ENDPOINTS.summary, {
     params: {
-      firstDay: dayjs().startOf("month").toDate(),
-      lastDay: dayjs().endOf("month").toDate(),
+      firstDay: plan ? null : dayjs().startOf("month").toDate(),
+      lastDay: plan ? null : dayjs().endOf("month").toDate(),
+      plan: plan,
     },
   });
 }
@@ -57,11 +58,11 @@ export function useDeleteExpense(options) {
 }
 
 /**
- *
+ * @param {string} plan
  * @param {import("@tanstack/react-query").UseQueryOptions} options
  */
-export function useSummary(options) {
-  return useQuery(["summary"], getSummary, options);
+export function useSummary(plan, options) {
+  return useQuery(["summary", plan], () => getSummary(plan), options);
 }
 
 /**

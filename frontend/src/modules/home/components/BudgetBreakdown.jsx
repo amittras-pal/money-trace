@@ -40,7 +40,7 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
     data: summary,
     refetch,
     isLoading,
-  } = useSummary({
+  } = useSummary(null, {
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     onError,
@@ -93,21 +93,16 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
         )}
       </Group>
       <Divider my="xs" />
-      <ScrollArea
-        mb="xs"
-        h={ref.current ? (ref.current?.clientHeight * 0.7).toFixed(0) : 0}
-      >
-        {Object.entries(summary?.data?.response.summary ?? {})?.map(
-          ([category, data]) => (
-            <BudgetItem
-              category={category}
-              subCategories={data.subCategories}
-              total={data.total}
-              key={category}
-            />
-          )
-        )}
-      </ScrollArea>
+      {Object.entries(summary?.data?.response.summary ?? {})?.map(
+        ([category, data]) => (
+          <BudgetItem
+            category={category}
+            subCategories={data.subCategories}
+            total={data.total}
+            key={category}
+          />
+        )
+      )}
       <Group grow mt="auto" spacing="xs" align="flex-start">
         <Group
           sx={{

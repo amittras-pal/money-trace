@@ -64,22 +64,35 @@ export const updateExpense = routeHandler(
  */
 export const getMonthSummary = routeHandler(
   async (
-    req: TypedRequest<{ firstDay: string; lastDay: string }, {}>,
+    req: TypedRequest<
+      {
+        firstDay: string | undefined;
+        lastDay: string | undefined;
+        plan: string | undefined;
+      },
+      {}
+    >,
     res: TypedResponse<{ summary: Array<any>; total: Number }>
   ) => {
-    const { firstDay, lastDay } = req.query;
-    const summary = await Expense.aggregate([
-      {
-        $match: {
-          user: new Types.ObjectId(req.userId),
-          plan: null,
-          reverted: false,
-          date: {
-            $gte: new Date(firstDay),
-            $lte: new Date(lastDay),
-          },
-        },
+    const { firstDay, lastDay, plan } = req.query;
+    const matcher: PipelineStage.Match = {
+      $match: {
+        user: new Types.ObjectId(req.userId),
+        reverted: false,
       },
+    };
+
+    if (firstDay?.length && lastDay?.length)
+      matcher.$match.date = {
+        $gte: new Date(firstDay),
+        $lte: new Date(lastDay),
+      };
+
+    if (plan?.length) matcher.$match.plan = new Types.ObjectId(plan);
+    else matcher.$match.plan = null;
+
+    const summary = await Expense.aggregate([
+      matcher,
       {
         $group: {
           _id: "$categoryId",
@@ -170,21 +183,18 @@ export const listExpenses = routeHandler(
     req: TypedRequest<
       {},
       {
-        startDate: string;
-        endDate: string;
-        plan: string;
+        startDate: string | undefined;
+        endDate: string | undefined;
+        plan: string | undefined;
         sort: Record<string, 1 | -1>;
       }
     >,
     res: TypedResponse<IExpense[]>
   ) => {
-    const { startDate = "", endDate = "", plan = null, sort } = req.body;
+    const { startDate, endDate, plan, sort } = req.body;
 
     const matchPhase: PipelineStage.Match = {
-      $match: {
-        user: new Types.ObjectId(req.userId),
-        plan: plan,
-      },
+      $match: { user: new Types.ObjectId(req.userId) },
     };
 
     const sortPhase: PipelineStage.Sort = {
@@ -202,11 +212,15 @@ export const listExpenses = routeHandler(
 
     const unwindPhase: PipelineStage.Unwind = { $unwind: "$category" };
 
-    if (startDate && endDate)
+    // Add start/end date and plan if available.
+    if (startDate?.length && endDate?.length)
       matchPhase.$match.date = {
         $gte: new Date(startDate),
         $lte: new Date(endDate),
       };
+
+    if (plan) matchPhase.$match.plan = new Types.ObjectId(plan);
+    else matchPhase.$match.plan = null;
 
     const expenses = await (<IExpense[]>(
       (<unknown>(
