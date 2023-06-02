@@ -1,35 +1,27 @@
 import { Box, Loader, SimpleGrid, Text, ThemeIcon } from "@mantine/core";
-import { useDocumentTitle } from "@mantine/hooks";
 import { IconListCheck } from "@tabler/icons-react";
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
-import { APP_TITLE, primaryColor } from "../../../constants/app";
+import { primaryColor } from "../../../constants/app";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useSummary } from "../../home/services";
-import { usePlanDetails } from "../services";
 
 function PlanSummary() {
   const { onError } = useErrorHandler();
   const params = useParams();
 
-  const { data: detailsRes, isLoading: loadingDetails } = usePlanDetails(
-    params.id,
-    { onError }
-  );
   const { data: summary, isLoading: loadingSummary } = useSummary(params.id, {
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     onError,
   });
 
-  useDocumentTitle(`${APP_TITLE} | Plan: ${detailsRes?.data?.response?.name}`);
-
   const summaryData = useMemo(() => {
     return summary ? Object.entries(summary?.data?.response.summary ?? {}) : [];
   }, [summary]);
 
-  if (loadingSummary || loadingDetails)
+  if (loadingSummary)
     return (
       <Box
         sx={{

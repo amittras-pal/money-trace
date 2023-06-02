@@ -6,6 +6,7 @@ import {
   Group,
   Loader,
   Progress,
+  SimpleGrid,
   Text,
 } from "@mantine/core";
 import {
@@ -94,16 +95,18 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
         )}
       </Group>
       <Divider my="xs" />
-      {Object.entries(summary?.data?.response.summary ?? {})?.map(
-        ([category, data]) => (
-          <BudgetItem
-            category={category}
-            subCategories={data.subCategories}
-            total={data.total}
-            key={category}
-          />
-        )
-      )}
+      <SimpleGrid cols={1} spacing="xs">
+        {Object.entries(summary?.data?.response.summary ?? {})?.map(
+          ([category, data]) => (
+            <BudgetItem
+              category={category}
+              subCategories={data.subCategories}
+              total={data.total}
+              key={category}
+            />
+          )
+        )}
+      </SimpleGrid>
       <Group grow mt="auto" spacing="xs" align="flex-start">
         <Group
           sx={{

@@ -37,9 +37,6 @@ export const useStyles = createStyles((theme) => {
       display: "flex",
       flexDirection: "column",
       gap: 4,
-      "&:not(:last-child)": {
-        marginBottom: theme.spacing.xs,
-      },
     },
     badge: {
       display: "flex",

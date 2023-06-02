@@ -19,7 +19,7 @@ import { useMediaMatch } from "../../../hooks/useMediaMatch";
 import { formatCurrency } from "../../../utils";
 import { useExpenseList } from "../../expenses/services";
 
-export default function PlanExpensesList({ onExpenseAction }) {
+export default function PlanExpensesList({ onExpenseAction, plan }) {
   const { onError } = useErrorHandler();
   const params = useParams();
   const ref = useRef();
@@ -54,6 +54,7 @@ export default function PlanExpensesList({ onExpenseAction }) {
           cellRendererParams: {
             onEditExpense: (data) => onExpenseAction(data, "edit"),
             onDeleteExpense: (data) => onExpenseAction(data, "delete"),
+            plan: plan,
           },
           field: "_id",
           pinned: "left",
@@ -120,7 +121,7 @@ export default function PlanExpensesList({ onExpenseAction }) {
         },
       ];
     },
-    [isMobile, onExpenseAction]
+    [isMobile, onExpenseAction, plan]
   );
 
   return (

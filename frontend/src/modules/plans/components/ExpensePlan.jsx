@@ -6,7 +6,12 @@ import {
   Text,
   createStyles,
 } from "@mantine/core";
-import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconEdit,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -33,7 +38,45 @@ export default function ExpensePlan({ data, onPlanAction, hideMenu }) {
             {data.description}
           </Text>
         </Box>
-        {data.open && !hideMenu && (
+        {!hideMenu && (
+          <>
+            {data?.open ? (
+              <Menu shadow="md" position="bottom-end">
+                <Menu.Target>
+                  <ActionIcon size="sm" radius="xl" variant="light">
+                    <IconDotsVertical size={16} />
+                  </ActionIcon>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Item
+                    icon={<IconEdit size={14} />}
+                    onClick={() => onPlanAction(data, "edit")}
+                  >
+                    Edit
+                  </Menu.Item>
+                  <Menu.Item
+                    color="red"
+                    icon={<IconX size={14} />}
+                    onClick={() => onPlanAction(data, "close")}
+                  >
+                    Close
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            ) : (
+              <ActionIcon
+                color="red"
+                variant="light"
+                radius="xl"
+                onClick={() => onPlanAction(data, "delete")}
+              >
+                <IconTrash size={16} />
+              </ActionIcon>
+            )}
+          </>
+        )}
+        {/* {data.open && !hideMenu && (
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
               <ActionIcon size="sm" radius="xl" variant="light">
@@ -57,7 +100,7 @@ export default function ExpensePlan({ data, onPlanAction, hideMenu }) {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
-        )}
+        )} */}
       </Box>
       <Divider mb="sm" mt="auto" />
       <Text size="sm">

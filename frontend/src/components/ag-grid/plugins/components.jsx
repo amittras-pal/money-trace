@@ -148,11 +148,14 @@ export function RowMenuCell({
   onEditExpense,
   onDeleteExpense,
   rowIndex,
+  plan,
 }) {
-  const isEditable = useMemo(
-    () => dayjs(data.date) >= dayjs().subtract(7, "days"),
-    [data.date]
-  );
+  const isEditable = useMemo(() => {
+    if (!plan?.open) return false;
+    return dayjs(data.date) >= dayjs().subtract(7, "days");
+  }, [data.date, plan]);
+
+  if (!isEditable) return null;
 
   return (
     <Menu shadow="md" position="right-start" withinPortal>
