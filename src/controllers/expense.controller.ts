@@ -22,6 +22,9 @@ export const createExpense = routeHandler(
       throw new Error("Please provide all required fields.");
     }
 
+    if (req.body.plan) ex.plan = new Types.ObjectId(req.body.plan);
+    else ex.plan = null;
+
     const expense = new Expense({ ...ex, user: userId });
     await expense.save();
 

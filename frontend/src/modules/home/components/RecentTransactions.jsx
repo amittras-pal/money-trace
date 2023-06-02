@@ -28,7 +28,7 @@ export default function RecentTransactions({
         Recent Transactions ({list?.data?.response?.length ?? 0})
       </Text>
       <Divider my="xs" />
-      <ScrollArea h="calc(100vh - 152px)">
+      <ScrollArea h="calc(100vh - 162px)">
         <ItemList
           list={list.data?.response ?? []}
           onEditExpense={onEditExpense}

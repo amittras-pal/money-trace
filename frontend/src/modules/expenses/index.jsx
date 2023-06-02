@@ -8,16 +8,9 @@ import {
 } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
-import { notifications } from "@mantine/notifications";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
@@ -33,14 +26,13 @@ import {
   SubCategoryFilter,
 } from "../../components/ag-grid/plugins/filters";
 import { dateFormatter } from "../../components/ag-grid/plugins/formatters";
-import { APP_TITLE, primaryColor } from "../../constants/app";
+import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
 import { formatCurrency } from "../../utils";
 import { useBudget } from "../budgetMonitor/services";
 import { useExpenseList } from "./services";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
@@ -59,23 +51,6 @@ export default function Expenses() {
     endDate: dayjs().endOf("month").toDate(),
     sort: { date: -1 },
   });
-
-  useEffect(() => {
-    if (isMobile)
-      notifications.show({
-        id: "device-info",
-        title: "Incompatible Device",
-        message:
-          "Some features of this view only work properly on a desktop computer!",
-        autoClose: 10000,
-        icon: <IconInfoCircle />,
-        color: primaryColor,
-      });
-
-    return () => {
-      notifications.hide("device-info");
-    };
-  }, [isMobile]);
 
   const ref = useRef();
   const { data: listRes, isLoading: loadingList } = useExpenseList(payload, {
@@ -253,12 +228,14 @@ export default function Expenses() {
         position="left"
         align="flex-start"
       >
-        <Group grow spacing="xs" sx={{ width: "100%" }}>
+        <Group spacing="xs" sx={{ width: "100%" }}>
           <MonthPickerInput
             size="xs"
+            sx={{ flex: 1, textAlign: "center" }}
             placeholder="Select month"
             variant="filled"
             value={payload.startDate}
+            valueFormat="MMM 'YY"
             disabled={dayjs(userData?.createdAt).month() === dayjs().month()}
             onChange={handleMonthChange}
             maxDate={dayjs().toDate()}
@@ -266,7 +243,7 @@ export default function Expenses() {
               userData ? dayjs(userData?.createdAt).toDate() : dayjs().toDate()
             }
           />
-          <Text ta="right" fw="bold" fz="xs">
+          <Text ta="right" fw="bold" fz="xs" sx={{ flex: 3 }}>
             Total: {filterTotal > 0 ? formatCurrency(filterTotal) : "N.A."} of{" "}
             {formatCurrency(budgetRes?.data?.response?.amount ?? 0)}
           </Text>

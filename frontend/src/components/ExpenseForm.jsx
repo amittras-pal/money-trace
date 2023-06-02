@@ -102,6 +102,7 @@ export default function ExpenseForm({ data, onComplete }) {
 
   const handleSave = (values) => {
     const payload = Object.assign({}, values);
+    if (!values.plan) delete payload.plan;
     if (data?._id) {
       editExpense({ ...payload, _id: data._id });
     } else createExpense(payload);
@@ -142,6 +143,7 @@ export default function ExpenseForm({ data, onComplete }) {
         />
         <Select
           searchable
+          required
           label="Category"
           placeholder={
             loadingCategories ? "Loading Categories" : "Pick a category"
@@ -166,6 +168,7 @@ export default function ExpenseForm({ data, onComplete }) {
           value={watch("date")}
           onChange={(e) => setFieldValue("date", e)}
           error={errors.date?.message}
+          required
         />
         <Checkbox
           {...register("addToPlan")}
@@ -176,6 +179,7 @@ export default function ExpenseForm({ data, onComplete }) {
         {watch("addToPlan") && (
           <Select
             label="Select Plan"
+            required
             placeholder={loadingPlans ? "Loading plans" : "Select Plan"}
             disabled={loadingPlans || !!params.id}
             value={watch("plan")}

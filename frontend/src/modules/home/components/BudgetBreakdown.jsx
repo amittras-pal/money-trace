@@ -6,6 +6,7 @@ import {
   Group,
   Loader,
   Progress,
+  ScrollArea,
   SimpleGrid,
   Text,
 } from "@mantine/core";
@@ -95,19 +96,21 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
         )}
       </Group>
       <Divider my="xs" />
-      <SimpleGrid cols={1} spacing="xs">
-        {Object.entries(summary?.data?.response.summary ?? {})?.map(
-          ([category, data]) => (
-            <BudgetItem
-              category={category}
-              subCategories={data.subCategories}
-              total={data.total}
-              key={category}
-            />
-          )
-        )}
-      </SimpleGrid>
-      <Group grow mt="auto" spacing="xs" align="flex-start">
+      <ScrollArea h={`calc(100vh - ${isMobile ? 272 : 242}px)`}>
+        <SimpleGrid cols={1} spacing="xs">
+          {Object.entries(summary?.data?.response.summary ?? {})?.map(
+            ([category, data]) => (
+              <BudgetItem
+                category={category}
+                subCategories={data.subCategories}
+                total={data.total}
+                key={category}
+              />
+            )
+          )}
+        </SimpleGrid>
+      </ScrollArea>
+      <Group grow spacing="xs" align="flex-start" mt="auto">
         <Group
           sx={{
             flexDirection: "column",

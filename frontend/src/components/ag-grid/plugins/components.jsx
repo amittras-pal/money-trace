@@ -151,7 +151,7 @@ export function RowMenuCell({
   plan,
 }) {
   const isEditable = useMemo(() => {
-    if (!plan?.open) return false;
+    if (plan && !plan.open) return false;
     return dayjs(data.date) >= dayjs().subtract(7, "days");
   }, [data.date, plan]);
 

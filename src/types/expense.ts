@@ -11,7 +11,7 @@ export type IExpense = {
   date: Date;
   categoryId: Types.ObjectId | String;
   user: Types.ObjectId;
-  plan?: Types.ObjectId;
+  plan?: Types.ObjectId | null;
   amount: Number;
   reverted: Boolean;
 };
