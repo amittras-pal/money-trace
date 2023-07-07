@@ -102,10 +102,9 @@ export default function ExpenseForm({ data, onComplete }) {
 
   const handleSave = (values) => {
     const payload = Object.assign({}, values);
-    if (!values.plan) delete payload.plan;
-    if (data?._id) {
-      editExpense({ ...payload, _id: data._id });
-    } else createExpense(payload);
+    if (!values.plan || !values.addToPlan) payload.plan = null;
+    if (data?._id) editExpense({ ...payload, _id: data._id });
+    else createExpense(payload);
   };
 
   return (
@@ -174,7 +173,6 @@ export default function ExpenseForm({ data, onComplete }) {
           {...register("addToPlan")}
           label="Add to Plan"
           mb="md"
-          disabled={!!params.id}
         />
         {watch("addToPlan") && (
           <Select
