@@ -102,7 +102,7 @@ export default function ExpenseForm({ data, onComplete }) {
 
   const handleSave = (values) => {
     const payload = Object.assign({}, values);
-    if (!values.plan || !values.addToPlan) delete payload.plan;
+    if (!values.plan || !values.addToPlan) payload.plan = null;
     if (data?._id) editExpense({ ...payload, _id: data._id });
     else createExpense(payload);
   };
