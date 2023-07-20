@@ -29,6 +29,7 @@ function ExpenseCard({
   onEditExpense,
   onDeleteExpense,
   hideMenu = false,
+  showAbsoluteDate = false,
 }) {
   const { classes } = useExpenseStyles();
 
@@ -93,7 +94,9 @@ function ExpenseCard({
           </Badge>
           <Group position="apart" align="center" mt={4}>
             <Badge color="dark" size="sm" variant="filled">
-              {dayjs(data.date).fromNow()}
+              {showAbsoluteDate
+                ? dayjs(data.date).format("DD MMM 'YY hh:mm a")
+                : dayjs(data.date).fromNow()}
             </Badge>
             <Text fz="lg" fw="bold" mt="auto">
               {formatCurrency(data.amount)}
@@ -114,7 +117,9 @@ function ExpenseCard({
                   <Menu.Item
                     icon={<IconEdit size={14} />}
                     onClick={() => onEditExpense(data)}
+                    // disabled={data.copied}
                   >
+                    {/* {data.copied ? "Copied Expense" : "Edit"} */}
                     Edit
                   </Menu.Item>
                 )}

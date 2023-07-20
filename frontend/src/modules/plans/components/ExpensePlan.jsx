@@ -34,7 +34,7 @@ export default function ExpensePlan({ data, onPlanAction, hideMenu }) {
           >
             {data.name}
           </Text>
-          <Text size="xs" color="dimmed">
+          <Text size="xs" color="dimmed" sx={{ whiteSpace: "pre-wrap" }}>
             {data.description}
           </Text>
         </Box>
@@ -104,7 +104,7 @@ export default function ExpensePlan({ data, onPlanAction, hideMenu }) {
       </Box>
       <Divider mb="sm" mt="auto" />
       <Text size="sm">
-        Last Updated: {dayjs(data.updatedAt).format("DD-MMM 'YY, hh:MM a")}
+        Last Updated: {dayjs(data.updatedAt).format("DD MMM 'YY, hh:mm a")}
       </Text>
     </Box>
   );

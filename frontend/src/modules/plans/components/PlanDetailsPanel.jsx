@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import React from "react";
 
 export default function PlanDetailsPanel({ data }) {
-  console.log(data);
   return (
     <Box
       sx={(theme) => ({

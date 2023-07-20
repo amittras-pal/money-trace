@@ -54,6 +54,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
           cellRendererParams: {
             onEditExpense: (data) => onExpenseAction(data, "edit"),
             onDeleteExpense: (data) => onExpenseAction(data, "delete"),
+            onCopyToBudget: (data) => onExpenseAction(data, "copy"),
             plan: plan,
           },
           field: "_id",

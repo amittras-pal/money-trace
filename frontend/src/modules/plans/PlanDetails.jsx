@@ -12,11 +12,13 @@ import PlanDetailsPanel from "./components/PlanDetailsPanel";
 import PlanExpensesList from "./components/PlanExpensesList";
 import PlanSummary from "./components/PlanSummary";
 import { usePlanDetails } from "./services";
+import CopyExpense from "../../components/CopyExpense";
 
 export default function PlanDetails() {
   const params = useParams();
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
+  const [copy, copyModal] = useDisclosure(false);
   const [targetExpense, setTargetExpense] = useState(null);
   const client = useQueryClient();
   const { onError } = useErrorHandler();
@@ -36,19 +38,34 @@ export default function PlanDetails() {
   const handleClose = (refreshData) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
+    if (copy) copyModal.close();
+
     if (refreshData) {
       client.invalidateQueries(["list", payload]);
       client.invalidateQueries(["summary", params.id]);
+      client.invalidateQueries(["plan-details", params.id]);
     }
+
     setTimeout(() => {
       setTargetExpense(null);
-    }, 1000);
+    }, 500);
   };
 
   const handleExpenseAction = (data, mode) => {
     setTargetExpense(data);
-    if (mode === "edit") formModal.open();
-    else deleteModal.open();
+    switch (mode) {
+      case "edit":
+        formModal.open();
+        break;
+      case "delete":
+        deleteModal.open();
+        break;
+      // case "copy":
+      //   copyModal.open();
+      //   break;
+      default:
+        break;
+    }
   };
 
   const openCreateForm = () => {
@@ -100,7 +117,7 @@ export default function PlanDetails() {
       )}
       <Modal
         centered
-        opened={showForm || confirm}
+        opened={showForm || confirm || copy}
         withCloseButton={false}
         onClose={handleClose}
         withOverlay
@@ -111,6 +128,7 @@ export default function PlanDetails() {
         {confirm && (
           <DeleteExpense data={targetExpense} onComplete={handleClose} />
         )}
+        {copy && <CopyExpense data={targetExpense} onComplete={handleClose} />}
       </Modal>
     </>
   );

@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import {
   IconArrowsSort,
+  IconCopy,
   IconDotsVertical,
   IconEdit,
   IconFilter,
@@ -147,15 +148,23 @@ export function RowMenuCell({
   data,
   onEditExpense,
   onDeleteExpense,
+  onCopyToBudget,
   rowIndex,
   plan,
 }) {
-  const isEditable = useMemo(() => {
-    if (plan && !plan.open) return false;
-    return dayjs(data.date) >= dayjs().subtract(7, "days");
+  const availableActions = useMemo(() => {
+    const actions = [];
+    if (plan) {
+      // actions.push("copy");
+      if (plan.open && dayjs(data.date) >= dayjs().subtract(7, "days"))
+        actions.push("edit", "delete");
+    } else if (dayjs(data.date) >= dayjs().subtract(7, "days"))
+      actions.push("edit", "delete");
+
+    return actions;
   }, [data.date, plan]);
 
-  if (!isEditable) return null;
+  if (!availableActions.length) return null;
 
   return (
     <Menu shadow="md" position="right-start" withinPortal>
@@ -164,22 +173,31 @@ export function RowMenuCell({
           size="sm"
           radius="xl"
           variant="light"
-          disabled={!isEditable}
+          disabled={!availableActions.length}
         >
           <IconDotsVertical size={16} />
         </ActionIcon>
       </Menu.Target>
 
       <Menu.Dropdown>
-        {isEditable && (
+        {availableActions.includes("edit") && (
           <Menu.Item
             icon={<IconEdit size={14} />}
             onClick={() => onEditExpense(data, rowIndex)}
+            disabled={data.copied}
           >
-            Edit
+            {data.copied ? "Copied Expense" : "Edit"}
           </Menu.Item>
         )}
-        {isEditable && (
+        {availableActions.includes("copy") && (
+          <Menu.Item
+            icon={<IconCopy size={14} />}
+            onClick={() => onCopyToBudget(data)}
+          >
+            Copy to Budget
+          </Menu.Item>
+        )}
+        {availableActions.includes("delete") && (
           <Menu.Item
             color="red"
             icon={<IconTrash size={14} />}

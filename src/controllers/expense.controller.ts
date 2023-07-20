@@ -74,6 +74,35 @@ export const updateExpense = routeHandler(
 );
 
 /**
+ * Delete expense
+ * @description Delete a single expense by a user
+ * @method DELETE /api/expenses
+ * @access protected
+ */
+export const deleteExpense = routeHandler(
+  async (req: TypedRequest<{ id: "string" }, {}>, res: TypedResponse) => {
+    const expense: IExpense | null = await Expense.findById(req.query.id);
+    if (expense?.plan) {
+      await ExpensePlan.findByIdAndUpdate(expense.plan, {
+        $set: { lastAction: "Expense Removed" },
+      });
+    }
+
+    const deleted = await Expense.deleteOne({
+      user: new Types.ObjectId(req.userId),
+      _id: new Types.ObjectId(req.query.id),
+    });
+
+    if (deleted.acknowledged && deleted.deletedCount === 1) {
+      res.json({ message: "Expense deleted successfully." });
+    } else if (deleted.deletedCount === 0) {
+      res.status(StatusCodes.NOT_FOUND);
+      throw new Error("The Expense you're trying to delete does not exist.");
+    }
+  }
+);
+
+/**
  * Save a new expense.
  * @description get expenses summarized by category in the month time frame provided
  * @method GET /api/expenses/summary
@@ -165,35 +194,6 @@ export const getMonthSummary = routeHandler(
         total: summary.reduce((sum, curr) => sum + curr.value, 0),
       },
     });
-  }
-);
-
-/**
- * Delete expense
- * @description Delete a single expense by a user
- * @method DELETE /api/expenses
- * @access protected
- */
-export const deleteExpense = routeHandler(
-  async (req: TypedRequest<{ id: "string" }, {}>, res: TypedResponse) => {
-    const expense: IExpense | null = await Expense.findById(req.query.id);
-    if (expense?.plan) {
-      await ExpensePlan.findByIdAndUpdate(expense.plan, {
-        $set: { lastAction: "Expense Removed" },
-      });
-    }
-
-    const deleted = await Expense.deleteOne({
-      user: new Types.ObjectId(req.userId),
-      _id: new Types.ObjectId(req.query.id),
-    });
-
-    if (deleted.acknowledged && deleted.deletedCount === 1) {
-      res.json({ message: "Expense deleted successfully." });
-    } else if (deleted.deletedCount === 0) {
-      res.status(StatusCodes.NOT_FOUND);
-      throw new Error("The Expense you're trying to delete does not exist.");
-    }
   }
 );
 
