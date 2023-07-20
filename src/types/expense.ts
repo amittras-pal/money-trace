@@ -14,4 +14,5 @@ export type IExpense = {
   plan?: Types.ObjectId | null;
   amount: Number;
   reverted: Boolean;
+  copied: Boolean;
 };

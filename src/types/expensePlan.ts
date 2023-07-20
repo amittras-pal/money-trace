@@ -6,4 +6,11 @@ export type IExpensePlan = {
   description: String;
   user: Types.ObjectId;
   open: Boolean;
+  lastAction:
+    | "Created"
+    | "Updated"
+    | "Expense Added"
+    | "Expense Updated"
+    | "Expense Removed"
+    | "Closed";
 };

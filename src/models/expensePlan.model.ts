@@ -24,6 +24,10 @@ const expensePlanSchema = new Schema<IExpensePlan>(
       required: true,
       default: true,
     },
+    lastAction: {
+      type: String,
+      default: "Created",
+    },
   },
   { timestamps: true }
 );

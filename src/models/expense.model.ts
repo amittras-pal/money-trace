@@ -15,6 +15,7 @@ const expenseSchema = new Schema<IExpense>(
     user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     amount: { type: Number, required: true },
     reverted: { type: Boolean, required: true, default: false },
+    copied: { type: Boolean, default: false },
   },
   { timestamps: false }
 );

@@ -173,6 +173,7 @@ export default function ExpenseForm({ data, onComplete }) {
           {...register("addToPlan")}
           label="Add to Plan"
           mb="md"
+          disabled={!!params.id}
         />
         {watch("addToPlan") && (
           <Select
