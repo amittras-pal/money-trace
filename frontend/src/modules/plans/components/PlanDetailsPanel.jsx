@@ -20,7 +20,7 @@ export default function PlanDetailsPanel({ data }) {
       </Text>
       <Text>{data.description}</Text>
       <Divider my="lg" />
-      <Text display="flex" sx={{ alignItems: "center" }}>
+      <Text fz="sm" display="flex" sx={{ alignItems: "center" }}>
         <Text component="span" color="dimmed">
           Status:{" "}
         </Text>
@@ -33,7 +33,7 @@ export default function PlanDetailsPanel({ data }) {
           {data.open ? "Open" : "Closed"}
         </Badge>
       </Text>
-      <Text>
+      <Text fz="sm">
         <Text component="span" color="dimmed">
           Created:{" "}
         </Text>
@@ -41,12 +41,20 @@ export default function PlanDetailsPanel({ data }) {
           {dayjs(data.createdAt).format("DD MMM, hh:mm a")}
         </Text>
       </Text>
-      <Text>
+      <Text fz="sm">
         <Text component="span" color="dimmed">
           Last Updated:{" "}
         </Text>
         <Text component="span" fw="bold">
           {dayjs(data.updatedAt).format("DD MMM, hh:mm a")}
+        </Text>
+      </Text>
+      <Text fz="sm">
+        <Text component="span" color="dimmed">
+          Last Action:{" "}
+        </Text>
+        <Text component="span" fw="bold">
+          {data.lastAction}
         </Text>
       </Text>
     </Box>
