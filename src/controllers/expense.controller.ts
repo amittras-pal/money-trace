@@ -2,6 +2,7 @@ import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { PipelineStage, Types } from "mongoose";
 import Expense from "../models/expense.model";
+import ExpensePlan from "../models/expensePlan.model";
 import { IExpense } from "../types/expense";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
@@ -24,6 +25,12 @@ export const createExpense = routeHandler(
 
     if (req.body.plan) ex.plan = new Types.ObjectId(req.body.plan);
     else ex.plan = null;
+
+    if (req.body.plan) {
+      await ExpensePlan.findByIdAndUpdate(req.body.plan, {
+        $set: { lastAction: "Expense Added" },
+      });
+    }
 
     const expense = new Expense({ ...ex, user: userId });
     await expense.save();
@@ -55,6 +62,13 @@ export const updateExpense = routeHandler(
     const update: IExpense | null = await Expense.findById(_id).populate(
       "categoryId"
     );
+
+    if (update?.plan) {
+      await ExpensePlan.findByIdAndUpdate(update.plan, {
+        $set: { lastAction: "Expense Updated" },
+      });
+    }
+
     res.json({ message: "Expense updated successfully.", response: update });
   }
 );
@@ -162,6 +176,13 @@ export const getMonthSummary = routeHandler(
  */
 export const deleteExpense = routeHandler(
   async (req: TypedRequest<{ id: "string" }, {}>, res: TypedResponse) => {
+    const expense: IExpense | null = await Expense.findById(req.query.id);
+    if (expense?.plan) {
+      await ExpensePlan.findByIdAndUpdate(expense.plan, {
+        $set: { lastAction: "Expense Removed" },
+      });
+    }
+
     const deleted = await Expense.deleteOne({
       user: new Types.ObjectId(req.userId),
       _id: new Types.ObjectId(req.query.id),

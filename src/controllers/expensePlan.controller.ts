@@ -84,7 +84,9 @@ export const updatePlan = routeHandler(
     if (!plan) throw new Error("Expense Plan not found.");
     const update: IExpensePlan | null = await ExpensePlan.findByIdAndUpdate(
       req.body._id,
-      { $set: req.body },
+      {
+        $set: { ...req.body, lastAction: req.body.open ? "Updated" : "Closed" },
+      },
       { new: true }
     );
     res.json({
