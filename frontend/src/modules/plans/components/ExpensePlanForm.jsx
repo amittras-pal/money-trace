@@ -64,7 +64,7 @@ export default function ExpensePlanForm({ data, onComplete }) {
 
   const handleSave = (values) => {
     const payload = Object.assign({}, values);
-    if (data) updatePlan({ ...payload, _id: data._id });
+    if (data) updatePlan({ ...payload, _id: data._id, open: true });
     else createPlan(payload);
   };
 
