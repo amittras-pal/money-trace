@@ -6,21 +6,44 @@ import {
   MediaQuery,
   Text,
   ThemeIcon,
+  Tooltip,
   useMantineTheme,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { IconChevronRight, IconLogout, IconPower } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
-import { useAppStyles } from "./styles";
 import logo from "../../resources/app-logo.svg";
-import { IconLogout, IconPower } from "@tabler/icons-react";
-import { modals } from "@mantine/modals";
-import { useQueryClient } from "@tanstack/react-query";
+import { useAppStyles } from "./styles";
+import { useMediaMatch } from "../../hooks/useMediaMatch";
 
 export default function AppHeader({ open, setOpen }) {
   const { classes } = useAppStyles();
   const theme = useMantineTheme();
   const client = useQueryClient();
   const navigate = useNavigate();
+  const [title, setTitle] = useState([APP_TITLE, ""]);
+  const isMobile = useMediaMatch();
+
+  const titleHandler = useCallback((entries) => {
+    const title = entries[0]?.addedNodes?.[0]?.data
+      ?.split("|")
+      .map((segment) => segment.trim());
+    setTitle(title);
+  }, []);
+
+  useEffect(() => {
+    const observer = new MutationObserver(titleHandler);
+    observer.observe(document.querySelector("title"), {
+      childList: true,
+      subtree: false,
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, [titleHandler]);
 
   const confirmLogout = () =>
     modals.openConfirmModal({
@@ -66,9 +89,26 @@ export default function AppHeader({ open, setOpen }) {
       >
         <Image src={logo} />
       </ThemeIcon>
-      <Text fz="lg" fw="bold" component={Link} to="/">
-        {APP_TITLE}
+      <Text
+        fz="lg"
+        fw="bold"
+        mr={4}
+        component={Link}
+        to="/"
+        sx={{ whiteSpace: "nowrap" }}
+      >
+        {title[0]} <IconChevronRight size={14} />
       </Text>
+      <Tooltip
+        label={title[1]}
+        disabled={!isMobile}
+        color="dark"
+        events={{ touch: true }}
+      >
+        <Text fz="sm" fw={400} color="dimmed" lineClamp={1}>
+          {title[1]}
+        </Text>
+      </Tooltip>
       <ActionIcon
         ml="auto"
         size="md"
