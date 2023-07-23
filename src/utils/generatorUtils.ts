@@ -3,46 +3,62 @@ import { readFile } from "fs/promises";
 import { groupBy, pick } from "lodash";
 import { IExpenseByMonth, ReportedExpense } from "../types/reportingdata";
 
-export const dateFormat = "DD MMM 'YY";
-export const dateTimeFormat = "DD MMM 'YY @ hh:mm a";
-export const dateTimePrecise = "DD MMM 'YY @ hh:mm:ss a";
 export const xPos = 25;
-export const formatter = new Intl.NumberFormat("en-IN", {
+const dateFormat = "DD MMM 'YY";
+const dateTimePrecise = "DD MMM 'YY @ hh:mm:ss a";
+const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
 });
 
-// Adds a notice for an incomplete month, if detected
-export function addIncompleteMonthNotice(
-  doc: PDFKit.PDFDocument,
-  month: IExpenseByMonth,
-  startDate: string,
-  endDate: string
-) {
-  const beginningMismatch =
-    dayjs(month._id).month() === dayjs(startDate).month() &&
-    dayjs(startDate).date() !== 1;
-  const endingMismatch =
-    dayjs(month._id).month() === dayjs(endDate).month() &&
-    dayjs(endDate).date() !== dayjs(endDate).daysInMonth();
-  if (beginningMismatch || endingMismatch) {
-    doc.fillColor("red", 1).text(`Summary Incomplete || `, { continued: true });
-    if (beginningMismatch) {
-      doc.text(
-        `Starts On: ${dayjs(startDate).date()} ${endingMismatch ? " || " : ""}`,
-        {
-          continued: endingMismatch,
-        }
-      );
-    }
-    if (endingMismatch) {
-      doc.text(`Ends On: ${dayjs(endDate).date()}`);
-    }
-  }
+// merges budget info into the expenses list
+export function mergeBudgetsInExpense(expensesData: any, budgetsData: any) {
+  const data: IExpenseByMonth[] = expensesData.map((month: any) => {
+    return {
+      _id: month._id,
+      budget: budgetsData.find((b: any) => b._id === month._id)?.amount,
+      total: month.total,
+      expenses: month.expenses.map((e: ReportedExpense) =>
+        pick(
+          {
+            ...e,
+            category: pick(
+              month.categories?.find(
+                (cat: any) => cat._id?.toString() === e.categoryId?.toString()
+              ),
+              ["label", "color", "group"]
+            ),
+          },
+          ["title", "description", "date", "amount", "category"]
+        )
+      ),
+    };
+  });
+
+  return data;
+}
+
+// Add basic metadata to the document
+export function addDocumentMeta(doc: PDFKit.PDFDocument, user: any) {
+  doc.info["Author"] = "MTrace Web";
+  doc.info["CreationDate"] = dayjs().toDate();
+  doc.info["Title"] = `${user.userName.replace(" ", "_")}_${dayjs().format(
+    "DD_MM_YYYY"
+  )}`;
+}
+
+// Set document font
+// currently using 'Crimson Regular'
+export async function setDocumentFont(doc: PDFKit.PDFDocument) {
+  const fontFile = await readFile(
+    "src/assets/fonts/static/CrimsonPro-Regular.ttf"
+  );
+  doc.registerFont("Crimson", fontFile);
+  doc.font("Crimson");
 }
 
 // Adds necessary info in the report
-export function addReportInfo(
+export function writeReportInfo(
   doc: PDFKit.PDFDocument,
   user: any,
   startDate: string,
@@ -76,35 +92,100 @@ export function addReportInfo(
     .text(dayjs().format(dateTimePrecise));
 }
 
-// Set document font
-// currently using 'Crimson Regular'
-export async function setDocumentFont(doc: PDFKit.PDFDocument) {
-  const fontFile = await readFile(
-    "src/assets/fonts/static/CrimsonPro-Regular.ttf"
-  );
-  doc.registerFont("Crimson", fontFile);
-  doc.font("Crimson");
+// Add Heading for the month
+export function writeMonthHeader(
+  doc: PDFKit.PDFDocument,
+  month: IExpenseByMonth
+) {
+  doc
+    .fontSize(24)
+    .fillColor("black")
+    .text(dayjs(month._id).format("MMMM, 'YY"));
+
+  doc
+    .fontSize(16)
+    .fillColor("black")
+    .text(`Set Budget: ${formatCurrency(month.budget)}`, {
+      continued: true,
+    })
+    .text(" || ", { continued: true })
+    .text(`Total Spent: ${formatCurrency(month.total)}`, {
+      continued: true,
+    })
+    .fillColor(getSeverityColor(month.total, month.budget))
+    .text(` (${getPercentage(month.total, month.budget).toFixed(2)} %)`);
 }
 
-// Add basic metadata to the document
-export function addDocumentMeta(doc: PDFKit.PDFDocument, user: any) {
-  doc.info["Author"] = "MTrace Web";
-  doc.info["CreationDate"] = dayjs().toDate();
-  doc.info["Title"] = `${user.userName.replace(" ", "_")}_${dayjs().format(
-    "DD_MM_YYYY"
-  )}`;
+// Adds a notice for an incomplete month, if detected
+export function writeIncompleteMonthNotice(
+  doc: PDFKit.PDFDocument,
+  month: IExpenseByMonth,
+  startDate: string,
+  endDate: string
+) {
+  const beginningMismatch =
+    dayjs(month._id).month() === dayjs(startDate).month() &&
+    dayjs(startDate).date() !== 1;
+  const endingMismatch =
+    dayjs(month._id).month() === dayjs(endDate).month() &&
+    dayjs(endDate).date() !== dayjs(endDate).daysInMonth();
+
+  if (beginningMismatch || endingMismatch) {
+    doc.fillColor("red", 1).text(`Summary Incomplete || `, { continued: true });
+    if (beginningMismatch) {
+      doc.text(
+        `Starts On: ${dayjs(startDate).date()} ${endingMismatch ? " || " : ""}`,
+        {
+          continued: endingMismatch,
+        }
+      );
+    }
+    if (endingMismatch) {
+      doc.text(`Ends On: ${dayjs(endDate).date()}`);
+    }
+  }
+}
+
+// write summary data to the month page
+export function writeMonthSummary(
+  month: IExpenseByMonth,
+  doc: PDFKit.PDFDocument
+) {
+  const summary = generateSummary(month.expenses);
+  summary.forEach((g) => {
+    doc
+      .moveDown(1)
+      .fontSize(16)
+      .fillColor("black")
+      .text(`${g.group}: ${formatCurrency(g.total)}`);
+    Object.entries(g.bySubCategory).forEach(([cat, list]) => {
+      doc
+        .fillColor("black", 0.5)
+        .fontSize(14)
+        .text(`•  ${cat}: `, { continued: true, indent: 16 })
+        .fillColor("black", 1)
+        .text(`${formatCurrency(getTotalAmount(list))}`);
+    });
+  });
+  doc.moveDown(1);
+  doc
+    .moveTo(xPos, doc.y)
+    .lineTo(doc.page.width - xPos, doc.y)
+    .strokeOpacity(0.7)
+    .strokeColor("black", 0.75);
+  doc.moveDown(1);
 }
 
 // currency format
-export function formatCurrency(amount: number | undefined) {
-  return amount ? formatter.format(amount) : "";
+function formatCurrency(amount: number | undefined) {
+  return amount ? currencyFormatter.format(amount) : "";
 }
 
-export function getPercentage(amount: number, budget: number): number {
+function getPercentage(amount: number, budget: number): number {
   return (amount / budget) * 100;
 }
 
-export function getSeverityColor(amount: number, budget: number) {
+function getSeverityColor(amount: number, budget: number) {
   const perc = getPercentage(amount, budget);
   if (perc <= 45) return "green";
   else if (perc > 45 && perc <= 70) return "yellow";
@@ -112,35 +193,8 @@ export function getSeverityColor(amount: number, budget: number) {
   else return "red";
 }
 
-// merges budget info into the expenses list
-export function mergeBudgetsInExpense(expensesData: any, budgetsData: any) {
-  const data: IExpenseByMonth[] = expensesData.map((month: any) => {
-    return {
-      _id: month._id,
-      budget: budgetsData.find((b: any) => b._id === month._id)?.amount,
-      total: month.total,
-      expenses: month.expenses.map((e: ReportedExpense) =>
-        pick(
-          {
-            ...e,
-            category: pick(
-              month.categories?.find(
-                (cat: any) => cat._id?.toString() === e.categoryId?.toString()
-              ),
-              ["label", "color", "group"]
-            ),
-          },
-          ["title", "description", "date", "amount", "category"]
-        )
-      ),
-    };
-  });
-
-  return data;
-}
-
 // Generate summary for list of expenses in a given month
-export function generateSummary(expenses: any[]) {
+function generateSummary(expenses: any[]) {
   const byCategory = groupBy(expenses, "category.group");
   return Object.entries(byCategory).map(([group, list]) => {
     return {
@@ -152,6 +206,6 @@ export function generateSummary(expenses: any[]) {
   });
 }
 
-export function getTotalAmount(list: any[]): number {
+function getTotalAmount(list: any[]): number {
   return list.reduce((sum, curr) => sum + curr.amount, 0);
 }

@@ -1,17 +1,13 @@
-import dayjs from "dayjs";
 import PDFDoc from "pdfkit";
 import { IExpenseByMonth, IExportingBudget } from "../types/reportingdata";
 import {
   addDocumentMeta,
-  addIncompleteMonthNotice,
-  addReportInfo,
-  formatCurrency,
-  generateSummary,
-  getPercentage,
-  getSeverityColor,
-  getTotalAmount,
   mergeBudgetsInExpense,
   setDocumentFont,
+  writeIncompleteMonthNotice,
+  writeMonthHeader,
+  writeMonthSummary,
+  writeReportInfo,
   xPos,
 } from "./generatorUtils";
 
@@ -47,30 +43,13 @@ export async function buildPDF(
     .text("MTrace Expense Report", alignCenter);
 
   // Related info
-  addReportInfo(doc, user, startDate, endDate);
+  writeReportInfo(doc, user, startDate, endDate);
 
   // Add New page for each month
   data.forEach((month) => {
     doc.addPage();
-    doc
-      .fontSize(24)
-      .fillColor("black")
-      .text(dayjs(month._id).format("MMMM, 'YY"));
-
-    doc
-      .fontSize(16)
-      .fillColor("black")
-      .text(`Set Budget: ${formatCurrency(month.budget)}`, {
-        continued: true,
-      })
-      .text(" || ", { continued: true })
-      .text(`Total Spent: ${formatCurrency(month.total)}`, {
-        continued: true,
-      })
-      .fillColor(getSeverityColor(month.total, month.budget))
-      .text(` (${getPercentage(month.total, month.budget).toFixed(2)} %)`);
-
-    addIncompleteMonthNotice(doc, month, startDate, endDate);
+    writeMonthHeader(doc, month);
+    writeIncompleteMonthNotice(doc, month, startDate, endDate);
 
     doc
       .moveDown(1)
@@ -83,33 +62,10 @@ export async function buildPDF(
       .strokeOpacity(0.7)
       .stroke("gray");
 
-    const summary = generateSummary(month.expenses);
-    summary.forEach((g) => {
-      doc
-        .moveDown(1)
-        .fontSize(16)
-        .fillColor("black")
-        .text(`${g.group}: ${formatCurrency(g.total)}`);
-      Object.entries(g.bySubCategory).forEach(([cat, list]) => {
-        doc
-          .fillColor("black", 0.5)
-          .fontSize(14)
-          .text(`•  ${cat}: `, { continued: true, indent: 16 })
-          .fillColor("black", 1)
-          .text(`${formatCurrency(getTotalAmount(list))}`);
-      });
-    });
-
-    doc.moveDown(1);
-
-    doc
-      .moveTo(xPos, doc.y)
-      .lineTo(doc.page.width - xPos, doc.y)
-      .strokeOpacity(0.7)
-      .strokeColor("black", 0.75);
-    doc.moveDown(1);
+    writeMonthSummary(month, doc);
   });
 
+  // Extra page with doc end
   doc.addPage();
   doc
     .fontSize(28)
