@@ -110,7 +110,6 @@ export const deletePlan = routeHandler(
     const result = await Expense.deleteMany({
       plan: new Types.ObjectId(req.query._id),
     });
-    console.log(result);
 
     res.json({
       message: `Expense plan deleted! ${result.deletedCount} Expenses deleted`,
