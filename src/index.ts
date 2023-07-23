@@ -6,6 +6,7 @@ import budgetRoutes from "./routes/budget.routes";
 import categoryRoutes from "./routes/category.routes";
 import expenseRoutes from "./routes/expense.routes";
 import expensePlanRoutes from "./routes/expensePlan.routes";
+import reportingRoutes from "./routes/reporting.routes";
 import userRoutes from "./routes/user.routes";
 
 const app: Application = express();
@@ -19,6 +20,7 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/budget", budgetRoutes);
 app.use("/api/expense-plan", expensePlanRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/reports", reportingRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("frontend/build"));
