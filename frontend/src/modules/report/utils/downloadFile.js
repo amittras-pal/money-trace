@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 export function downloadFile(dataBlob, fileName) {
   const href = URL.createObjectURL(dataBlob);
 
@@ -11,8 +9,4 @@ export function downloadFile(dataBlob, fileName) {
 
   document.body.removeChild(link);
   URL.revokeObjectURL(href);
-}
-
-export function dateStr(date) {
-  return dayjs(date).format("DD_MMMM_YYYY");
 }
