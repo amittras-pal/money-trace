@@ -8,7 +8,8 @@ import React, { useMemo, useState } from "react";
 import { APP_TITLE } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useDownloadReport } from "./services";
-import { dateStr, downloadFile } from "./utils/downloadFile";
+import { downloadFile } from "./utils/downloadFile";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
 
 export default function DownloadReport() {
   const [selection, setSelection] = useState([null, null]);
@@ -16,6 +17,7 @@ export default function DownloadReport() {
   const { classes } = useStyles();
   const { userData } = useCurrentUser();
   useDocumentTitle(`${APP_TITLE} | Download Report`);
+  const { onError } = useErrorHandler();
 
   const pickerProps = useMemo(
     () => ({
@@ -32,12 +34,11 @@ export default function DownloadReport() {
 
   const { mutate: download, isLoading } = useDownloadReport({
     onSuccess: (res) => {
-      console.log(res);
       downloadFile(
         res.data,
-        `Report_${dateStr(selection[0])}_${dateStr(selection[1])}_${
-          userData.userName
-        }`
+        `Report_${userData.userName.replace(" ", "_")}_${dayjs().format(
+          "DD-MM-YY-hh-MM-ss"
+        )}`
       );
       notifications.show({
         title: "Report Downloaded Successfully!",
@@ -46,15 +47,19 @@ export default function DownloadReport() {
       });
       setSelection([null, null]);
     },
-    onError: (err) => {
-      console.log(err);
-    },
+    onError,
   });
 
   const handleDownload = () => {
     download({
-      startDate: dayjs(selection[0]).startOf("month").toDate(),
-      endDate: dayjs(selection[1]).endOf("month").toDate(),
+      startDate:
+        view === "date"
+          ? selection[0]
+          : dayjs(selection[0]).startOf("month").toDate(),
+      endDate:
+        view === "date"
+          ? selection[1]
+          : dayjs(selection[1]).endOf("month").toDate(),
     });
   };
 

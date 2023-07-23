@@ -5,7 +5,7 @@ import Expense from "../models/expense.model";
 import User from "../models/user.model";
 import { IExportingBudget } from "../types/reportingdata";
 import { TypedRequest } from "../types/requests";
-import { buildPDF } from "../utils/reporting";
+import { buildPDF } from "../utils/reportGenerator";
 
 export const generateReport = routeHandler(
   async (
@@ -50,8 +50,8 @@ export const generateReport = routeHandler(
           $match: {
             user: new Types.ObjectId(req.userId),
             month: {
-              $gte: new Date(req.query.startDate).getMonth(),
-              $lte: new Date(req.query.endDate).getMonth(),
+              $gte: new Date(req.query.startDate).getMonth() - 1,
+              $lte: new Date(req.query.endDate).getMonth() + 1,
             },
             year: {
               $gte: new Date(req.query.startDate).getFullYear(),
