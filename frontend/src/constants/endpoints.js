@@ -9,4 +9,5 @@ export const ENDPOINTS = Object.freeze({
   categories: "/api/categories/get-all",
   plans: "/api/expense-plan",
   planDetails: "/api/expense-plan/details",
+  downloadReport: "/api/reports",
 });
