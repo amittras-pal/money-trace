@@ -1,5 +1,6 @@
 import {
   IconArrowsDoubleSwNe,
+  IconCalendarDown,
   IconDashboard,
   IconReport,
 } from "@tabler/icons-react";
@@ -21,6 +22,12 @@ export const ROUTES = [
     icon: <IconReport size={16} />,
     label: "Vacations & Plans",
     path: "/plans",
+    exactMatch: false,
+  },
+  {
+    icon: <IconCalendarDown size={16} />,
+    label: "Download Report",
+    path: "/report",
     exactMatch: false,
   },
 ];
