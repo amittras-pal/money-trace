@@ -14,8 +14,8 @@ import { IUser } from "../types/user";
  */
 export const register = routeHandler(
   async (req: TypedRequest<{}, Partial<IUser>>, res: TypedResponse) => {
-    const { userName, email, pin } = req.body;
-    if (!userName || !email || !pin) {
+    const { userName, email, pin, timeZone } = req.body;
+    if (!userName || !email || !pin || !timeZone) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all the required fields.");
     }
@@ -34,6 +34,7 @@ export const register = routeHandler(
       userName,
       email,
       pin: encryptedPin,
+      timeZone,
     });
 
     if (created)
@@ -107,5 +108,24 @@ export const getUserDetails = routeHandler(
       message: "User Details Retrieved Successfully!",
       response: user,
     });
+  }
+);
+
+/**
+ * @description update details of a user
+ * @method PUT /api/user/update
+ * @access protected
+ */
+export const updateUserDetails = routeHandler(
+  async (
+    req: TypedRequest<{}, Partial<IUser>>,
+    res: TypedResponse<IUser | null>
+  ) => {
+    await User.findByIdAndUpdate(req.userId, {
+      $set: { ...req.body },
+    });
+
+    const update = await User.findById(req.userId);
+    res.json({ message: "User details updated", response: update });
   }
 );
