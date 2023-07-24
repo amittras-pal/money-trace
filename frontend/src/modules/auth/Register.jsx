@@ -31,6 +31,7 @@ export default function Register() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     mode: "onBlur",
@@ -40,6 +41,7 @@ export default function Register() {
       email: "",
       pin: "",
       confirmPin: "",
+      timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
     resolver: yupResolver(registerSchema),
   });
@@ -108,6 +110,14 @@ export default function Register() {
             label="Confirm your pin"
             required
           />
+          <Text fz="sm" mb="md" align="center">
+            <Text component="span" color="dimmed">
+              Detected Time Zone:
+            </Text>{" "}
+            <Text component="span" fw="bold">
+              {watch("timeZone")}
+            </Text>
+          </Text>
           <Button
             fullWidth
             disabled={!isValid}

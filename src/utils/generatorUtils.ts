@@ -1,7 +1,13 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { readFile } from "fs/promises";
 import { groupBy, pick } from "lodash";
 import { IExpenseByMonth, ReportedExpense } from "../types/reportingdata";
+import { IUser } from "../types/user";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const xPos = 25;
 const dateFormat = "DD MMM 'YY";
@@ -39,12 +45,12 @@ export function mergeBudgetsInExpense(expensesData: any, budgetsData: any) {
 }
 
 // Add basic metadata to the document
-export function addDocumentMeta(doc: PDFKit.PDFDocument, user: any) {
+export function addDocumentMeta(doc: PDFKit.PDFDocument, user: IUser) {
   doc.info["Author"] = "MTrace Web";
-  doc.info["CreationDate"] = dayjs().toDate();
-  doc.info["Title"] = `${user.userName.replace(" ", "_")}_${dayjs().format(
-    "DD_MM_YYYY"
-  )}`;
+  doc.info["CreationDate"] = dayjs().tz(user.timeZone).toDate();
+  doc.info["Title"] = `${user.userName.replace(" ", "_")}_${dayjs()
+    .tz(user.timeZone)
+    .format("DD_MM_YYYY")}`;
 }
 
 // Set document font
@@ -60,7 +66,7 @@ export async function setDocumentFont(doc: PDFKit.PDFDocument) {
 // Adds necessary info in the report
 export function writeReportInfo(
   doc: PDFKit.PDFDocument,
-  user: any,
+  user: IUser,
   startDate: string,
   endDate: string
 ) {
@@ -79,9 +85,11 @@ export function writeReportInfo(
     .text("Date Range: ", { continued: true })
     .fillColor("black", 1)
     .text(
-      `${dayjs(startDate).format(dateFormat)} to ${dayjs(endDate).format(
-        dateFormat
-      )}`
+      `${dayjs(startDate).tz(user.timeZone).format(dateFormat)} to ${dayjs(
+        endDate
+      )
+        .tz(user.timeZone)
+        .format(dateFormat)}`
     );
   // Generation Date
   doc
@@ -89,18 +97,19 @@ export function writeReportInfo(
     .fontSize(16)
     .text("Generated On: ", { continued: true })
     .fillColor("black", 1)
-    .text(dayjs().format(dateTimePrecise));
+    .text(dayjs().tz(user.timeZone).format(dateTimePrecise));
 }
 
 // Add Heading for the month
 export function writeMonthHeader(
   doc: PDFKit.PDFDocument,
-  month: IExpenseByMonth
+  month: IExpenseByMonth,
+  user: IUser
 ) {
   doc
     .fontSize(24)
     .fillColor("black")
-    .text(dayjs(month._id).format("MMMM, 'YY"));
+    .text(dayjs(month._id).tz(user.timeZone).format("MMMM, 'YY"));
 
   doc
     .fontSize(16)
@@ -121,27 +130,33 @@ export function writeIncompleteMonthNotice(
   doc: PDFKit.PDFDocument,
   month: IExpenseByMonth,
   startDate: string,
-  endDate: string
+  endDate: string,
+  user: IUser
 ) {
   const beginningMismatch =
-    dayjs(month._id).month() === dayjs(startDate).month() &&
-    dayjs(startDate).date() !== 1;
+    dayjs(month._id).tz(user.timeZone).month() ===
+      dayjs(startDate).tz(user.timeZone).month() &&
+    dayjs(startDate).tz(user.timeZone).date() !== 1;
   const endingMismatch =
-    dayjs(month._id).month() === dayjs(endDate).month() &&
-    dayjs(endDate).date() !== dayjs(endDate).daysInMonth();
+    dayjs(month._id).tz(user.timeZone).month() ===
+      dayjs(endDate).tz(user.timeZone).month() &&
+    dayjs(endDate).tz(user.timeZone).date() !==
+      dayjs(endDate).tz(user.timeZone).daysInMonth();
 
   if (beginningMismatch || endingMismatch) {
     doc.fillColor("red", 1).text(`Summary Incomplete || `, { continued: true });
     if (beginningMismatch) {
       doc.text(
-        `Starts On: ${dayjs(startDate).date()} ${endingMismatch ? " || " : ""}`,
+        `Starts On: ${dayjs(startDate).tz(user.timeZone).date()} ${
+          endingMismatch ? " || " : ""
+        }`,
         {
           continued: endingMismatch,
         }
       );
     }
     if (endingMismatch) {
-      doc.text(`Ends On: ${dayjs(endDate).date()}`);
+      doc.text(`Ends On: ${dayjs(endDate).tz(user.timeZone).date()}`);
     }
   }
 }
