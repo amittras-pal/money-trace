@@ -103,6 +103,33 @@ export const deleteExpense = routeHandler(
 );
 
 /**
+ * @description Copies an expense to the regular budget.
+ * @method PUT /api/expenses/clone
+ * @access protected
+ */
+export const cloneExpense = routeHandler(
+  async (req: TypedRequest<{}, { _id: string }>, res: TypedResponse) => {
+    const existing = await Expense.findById(req.body._id);
+    const newExpense = await Expense.create({
+      amount: existing?.amount,
+      categoryId: existing?.categoryId,
+      date: existing?.date,
+      description: existing?.description,
+      plan: null,
+      reverted: existing?.reverted,
+      title: existing?.title,
+      user: existing?.user,
+      linked: new Types.ObjectId(existing?._id),
+    });
+
+    existing?.set("linked", new Types.ObjectId(newExpense._id));
+    existing?.save();
+
+    res.json({ message: "Expense copied to budget successfully!" });
+  }
+);
+
+/**
  * Save a new expense.
  * @description get expenses summarized by category in the month time frame provided
  * @method GET /api/expenses/summary

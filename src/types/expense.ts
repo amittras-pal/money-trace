@@ -6,13 +6,13 @@ import { Types } from "mongoose";
  */
 export type IExpense = {
   _id?: Types.ObjectId;
-  title: String;
-  description: String;
+  title: string;
+  description: string;
   date: Date;
-  categoryId: Types.ObjectId | String;
+  categoryId: Types.ObjectId | string;
   user: Types.ObjectId;
   plan?: Types.ObjectId | null;
   amount: Number;
   reverted: Boolean;
-  copied: Boolean;
+  linked: Types.ObjectId | string;
 };
