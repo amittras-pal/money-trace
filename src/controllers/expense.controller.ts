@@ -74,31 +74,42 @@ export const updateExpense = routeHandler(
 );
 
 /**
- * Delete expense
- * @description Delete a single expense by a user
+ * @description Delete a single expense by a user, also deletes linked expense, if any
  * @method DELETE /api/expenses
  * @access protected
  */
 export const deleteExpense = routeHandler(
   async (req: TypedRequest<{ id: "string" }, {}>, res: TypedResponse) => {
     const expense: IExpense | null = await Expense.findById(req.query.id);
+
+    // update plan state if expense was in a plan or expense was linked to a plan.
     if (expense?.plan) {
       await ExpensePlan.findByIdAndUpdate(expense.plan, {
         $set: { lastAction: "Expense Removed" },
       });
     }
 
-    const deleted = await Expense.deleteOne({
+    // delete linked expense, and update the plan if current/linked expense was in the plan.
+    if (expense?.linked) {
+      if (!expense.plan) {
+        const linkedExpenseInPlan = await Expense.findById(expense.linked);
+        await ExpensePlan.findByIdAndUpdate(linkedExpenseInPlan?.plan, {
+          $set: { lastAction: "Expense Removed" },
+        });
+      }
+      await Expense.deleteOne({
+        user: new Types.ObjectId(req.userId),
+        _id: new Types.ObjectId(expense.linked),
+      });
+    }
+
+    // delete original
+    await Expense.deleteOne({
       user: new Types.ObjectId(req.userId),
       _id: new Types.ObjectId(req.query.id),
     });
 
-    if (deleted.acknowledged && deleted.deletedCount === 1) {
-      res.json({ message: "Expense deleted successfully." });
-    } else if (deleted.deletedCount === 0) {
-      res.status(StatusCodes.NOT_FOUND);
-      throw new Error("The Expense you're trying to delete does not exist.");
-    }
+    res.json({ message: "Expense deleted successfully." });
   }
 );
 
