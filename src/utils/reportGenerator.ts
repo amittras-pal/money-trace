@@ -48,8 +48,8 @@ export async function buildPDF(
   // Add New page for each month
   data.forEach((month) => {
     doc.addPage();
-    writeMonthHeader(doc, month);
-    writeIncompleteMonthNotice(doc, month, startDate, endDate);
+    writeMonthHeader(doc, month, user);
+    writeIncompleteMonthNotice(doc, month, startDate, endDate, user);
 
     doc
       .moveDown(1)
