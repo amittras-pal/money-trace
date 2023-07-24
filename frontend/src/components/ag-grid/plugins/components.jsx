@@ -195,7 +195,7 @@ export function RowMenuCell({
             disabled={data.linked}
             onClick={() => onCopyToBudget(data)}
           >
-            Copy to Budget
+            {data.linked ? "Copied!" : "Copy to Budget"}
           </Menu.Item>
         )}
         {availableActions.includes("delete") && (
