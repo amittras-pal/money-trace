@@ -1,5 +1,6 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
+import omit from "lodash/omit";
 import { PipelineStage, Types } from "mongoose";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
@@ -40,8 +41,7 @@ export const createExpense = routeHandler(
 );
 
 /**
- * Update an expense.
- * @description get expenses of a user
+ * @description Updates expense and any linked expense as well.
  * @method PUT /api/expenses
  * @access protected
  */
@@ -58,6 +58,8 @@ export const updateExpense = routeHandler(
       throw new Error("Please provide all required fields.");
     }
 
+    // TODO: there is probably something wrong here.
+    // FIXME: check and fix.
     await Expense.findByIdAndUpdate(_id, { $set: ex });
     const update: IExpense | null = await Expense.findById(_id).populate(
       "categoryId"
@@ -66,6 +68,19 @@ export const updateExpense = routeHandler(
     if (update?.plan) {
       await ExpensePlan.findByIdAndUpdate(update.plan, {
         $set: { lastAction: "Expense Updated" },
+      });
+    }
+
+    // Update linked expense, if any.
+    if (update?.linked) {
+      if (!update.plan) {
+        const linkedExpenseInPlan = await Expense.findById(update.linked);
+        await ExpensePlan.findByIdAndUpdate(linkedExpenseInPlan?.plan, {
+          $set: { lastAction: "Expense Updated" },
+        });
+      }
+      await Expense.findByIdAndUpdate(update.linked, {
+        $set: omit(ex, ["_id", "plan", "linked"]),
       });
     }
 
