@@ -1,22 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "../config/axios";
-import { ENDPOINTS } from "../constants/endpoints";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import { getAuthToken } from "../utils";
-
-function getUserData() {
-  return axios.get(ENDPOINTS.userInfo);
-}
-
-/**
- *
- * @param {import("@tanstack/react-query").UseQueryOptions} options
- * @returns
- */
-function useUserData(options) {
-  return useQuery(["user"], getUserData, options);
-}
+import { useTZChangeDetection } from "../utils/tzCheck";
+import { useUserData } from "../services/user";
 
 const UserContext = createContext({
   userData: null,
@@ -34,6 +20,7 @@ export default function UserProvider({ children }) {
   const [budget, setBudget] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const { onError } = useErrorHandler();
+  const { checkTZChange } = useTZChangeDetection();
 
   useEffect(() => {
     const listener = () => {
@@ -47,7 +34,10 @@ export default function UserProvider({ children }) {
   // TODO: handle this.
   // eslint-disable-next-line no-unused-vars
   const { isLoading: loadingUser } = useUserData({
-    onSuccess: (res) => setUserData(res.data?.response),
+    onSuccess: (res) => {
+      checkTZChange(res?.data?.response?.timeZone);
+      setUserData(res.data?.response);
+    },
     onError,
     enabled: loggedIn,
     staleTime: 20 * 60 * 1000,

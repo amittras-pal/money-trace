@@ -19,6 +19,7 @@ import PinInput from "../../components/pin-input/PinInput";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useTZChangeDetection } from "../../utils/tzCheck";
 import PublicGuard from "../guards/PublicGuard";
 import { useLoginUser } from "./services";
 import { useAuthStyles } from "./styles";
@@ -31,6 +32,7 @@ export default function Login() {
   const [target, setTarget] = useState("/");
   useDocumentTitle(`${APP_TITLE} | Login`);
   const { onError } = useErrorHandler();
+  const { checkTZChange } = useTZChangeDetection();
 
   const {
     register,
@@ -50,7 +52,8 @@ export default function Login() {
   const { mutate: login, isLoading: loggingIn } = useLoginUser({
     onSuccess: (res) => {
       localStorage.setItem("authToken", res.data?.response?.token);
-      setUserData(res.data?.response.user);
+      checkTZChange(res.data?.response?.user?.timeZone);
+      setUserData(res.data?.response?.user);
       notifications.show({
         title: res.data?.message,
         message: `Welcome, ${res.data?.response?.user.userName}`,
