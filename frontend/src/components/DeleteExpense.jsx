@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Divider,
@@ -34,8 +35,12 @@ export default function DeleteExpense({ data, onComplete }) {
       <Text c={primaryColor}>
         Are you sure you want to delete the following expense?
       </Text>
-      <Divider my="md" />
+      <Divider my="sm" />
       <ExpenseCard hideMenu data={data} />
+      <Alert title="Linked Expense" color="red" mb="md">
+        This expense is linked to another expense, deleting it will also delete
+        the other one.
+      </Alert>
       <Text color="red" fz="sm" fw="bold">
         This action cannot be undone!
       </Text>

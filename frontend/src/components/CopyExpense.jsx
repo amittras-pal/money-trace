@@ -1,11 +1,10 @@
-// TODO: compoenent under development
 import { Box, Button, Divider, Group, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React from "react";
 import { useErrorHandler } from "../hooks/useErrorHandler";
-import { useEditExpense } from "../modules/home/services";
+import { useCopyExpenseToBudget } from "../modules/home/services";
 import ExpenseCard from "./ExpenseCard";
 
 export default function CopyExpense({ data, onComplete }) {
@@ -20,18 +19,16 @@ export default function CopyExpense({ data, onComplete }) {
     onComplete(true);
   };
 
-  const { mutate: markExpenseCopied, isLoading: copying } = useEditExpense({
-    onSuccess: handleSuccess,
-    onError,
-  });
+  const { mutate: markExpenseCopied, isLoading: copying } =
+    useCopyExpenseToBudget({
+      onSuccess: handleSuccess,
+      onError,
+    });
 
   return (
     <Box>
       <Text>
         You are about to copy the following expense to your general expenses.{" "}
-      </Text>
-      <Text mt="sm" c="orange">
-        Copied Expenses cannot be modified in the general expenses list.
       </Text>
       <Divider my="md" />
       <ExpenseCard hideMenu showAbsoluteDate data={data} />
@@ -56,7 +53,7 @@ export default function CopyExpense({ data, onComplete }) {
         </Button>
         <Button
           onClick={() => {
-            markExpenseCopied({ ...data, copied: true });
+            markExpenseCopied({ _id: data._id });
           }}
           loading={copying}
         >

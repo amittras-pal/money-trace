@@ -155,7 +155,7 @@ export function RowMenuCell({
   const availableActions = useMemo(() => {
     const actions = [];
     if (plan) {
-      // actions.push("copy");
+      actions.push("copy");
       if (plan.open && dayjs(data.date) >= dayjs().subtract(7, "days"))
         actions.push("edit", "delete");
     } else if (dayjs(data.date) >= dayjs().subtract(7, "days"))
@@ -192,9 +192,10 @@ export function RowMenuCell({
         {availableActions.includes("copy") && (
           <Menu.Item
             icon={<IconCopy size={14} />}
+            disabled={data.linked}
             onClick={() => onCopyToBudget(data)}
           >
-            Copy to Budget
+            {data.linked ? "Copied!" : "Copy to Budget"}
           </Menu.Item>
         )}
         {availableActions.includes("delete") && (
