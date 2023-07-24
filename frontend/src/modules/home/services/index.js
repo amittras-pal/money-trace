@@ -15,6 +15,10 @@ function deleteExpense(id) {
   return axios.delete(ENDPOINTS.expenses, { params: { id } });
 }
 
+function copyExpenseToBudget(payload) {
+  return axios.put(ENDPOINTS.cloneExpense, payload);
+}
+
 function getSummary(plan = null) {
   return axios.get(ENDPOINTS.summary, {
     params: {
@@ -55,6 +59,15 @@ export function useEditExpense(options) {
  */
 export function useDeleteExpense(options) {
   return useMutation(deleteExpense, options);
+}
+
+/**
+ *
+ * @param {import("@tanstack/react-query").UseMutationOptions} options
+ * @returns
+ */
+export function useCopyExpenseToBudget(options) {
+  return useMutation(copyExpenseToBudget, options);
 }
 
 /**

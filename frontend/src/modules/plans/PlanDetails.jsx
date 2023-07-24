@@ -60,9 +60,9 @@ export default function PlanDetails() {
       case "delete":
         deleteModal.open();
         break;
-      // case "copy":
-      //   copyModal.open();
-      //   break;
+      case "copy":
+        copyModal.open();
+        break;
       default:
         break;
     }

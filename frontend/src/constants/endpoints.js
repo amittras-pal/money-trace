@@ -5,6 +5,7 @@ export const ENDPOINTS = Object.freeze({
   expenses: "/api/expenses",
   summary: "/api/expenses/summary",
   list: "/api/expenses/list",
+  cloneExpense: "/api/expenses/clone",
   userInfo: "/api/user/details",
   categories: "/api/categories/get-all",
   plans: "/api/expense-plan",
