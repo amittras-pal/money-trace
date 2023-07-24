@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -61,6 +62,7 @@ export default function ExpenseForm({ data, onComplete }) {
       date: data ? dayjs(data.date).toDate() : dayjs().toDate(),
       addToPlan: data ? Boolean(data.plan) : false,
       plan: data?.plan ?? "",
+      linked: data?.linked ?? null,
     },
     resolver: yupResolver(expenseSchema),
   });
@@ -116,7 +118,13 @@ export default function ExpenseForm({ data, onComplete }) {
       <Text fz="lg" fw="bold" c={primaryColor} mb="sm">
         {data ? "Edit Expense" : "Add a new Expense"}
       </Text>
-      <Divider />
+      <Divider mb="sm" />
+      {data?.linked && (
+        <Alert color="red" title="Linked Expense" mb="sm">
+          This expense is linked to another expense, editing it will also edit
+          the other one.
+        </Alert>
+      )}
       <Box>
         <TextInput
           {...register("title")}
@@ -172,8 +180,13 @@ export default function ExpenseForm({ data, onComplete }) {
         <Checkbox
           {...register("addToPlan")}
           label="Add to Plan"
+          description={
+            data?.linked && !params.id
+              ? "Cannot add to plan as it a copied expense."
+              : ""
+          }
           mb="md"
-          disabled={!!params.id}
+          disabled={!!params.id || data?.linked}
         />
         {watch("addToPlan") && (
           <Select
