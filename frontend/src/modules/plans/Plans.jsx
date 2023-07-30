@@ -1,8 +1,17 @@
-import { ActionIcon, Box, Loader, Modal, SimpleGrid } from "@mantine/core";
-import React from "react";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Divider,
+  Loader,
+  Modal,
+  SimpleGrid,
+  Text,
+} from "@mantine/core";
+import React, { useMemo } from "react";
 import ExpensePlan from "./components/ExpensePlan";
 import { useExpensePlans, useUpdatePlan } from "./services";
-import { IconCheck, IconPlus, IconX } from "@tabler/icons-react";
+import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
 import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import ExpensePlanForm from "./components/ExpensePlanForm";
@@ -15,6 +24,16 @@ import { useErrorHandler } from "../../hooks/useErrorHandler";
 
 export default function Plans() {
   const { data, isLoading } = useExpensePlans(true);
+
+  const plansList = useMemo(() => {
+    const groups = { active: [], closed: [] };
+    if (!data) return groups;
+    data?.data?.response?.forEach((plan) => {
+      if (plan.open) groups.active.push(plan);
+      else groups.closed.push(plan);
+    });
+    return groups;
+  }, [data]);
 
   useDocumentTitle(`${APP_TITLE} | Expense Plans`);
   const { onError } = useErrorHandler();
@@ -49,21 +68,6 @@ export default function Plans() {
     },
     onError,
   });
-
-  if (isLoading)
-    return (
-      <Box
-        sx={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Loader size={80} />
-      </Box>
-    );
 
   const handlePlanAction = (data, mode) => {
     setTargetPlan(data);
@@ -100,8 +104,56 @@ export default function Plans() {
     }
   };
 
+  if (isLoading)
+    return (
+      <Box
+        sx={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader size={80} />
+      </Box>
+    );
+
+  if (!plansList.active.length && !plansList.closed.length)
+    return (
+      <Box
+        sx={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <IconChecklist size={80} />
+        <Text my="sm" align="center">
+          No plans have been created!
+        </Text>
+        <Text size="sm" align="center" color="dimmed" mb="sm">
+          Plans help you organize expenses which need to be tracked outside of
+          your general monthly budget.
+        </Text>
+        <Button size="sm" mt="sm" leftIcon={<IconPlus size={16} />}>
+          Create a plan
+        </Button>
+      </Box>
+    );
+
   return (
     <>
+      <Divider
+        labelPosition="center"
+        labelProps={{ color: "dimmed" }}
+        label={`Open Plans (${plansList.active.length})`}
+        mb="sm"
+        color="indigo"
+      />
       <SimpleGrid
         cols={2}
         spacing="lg"
@@ -110,7 +162,30 @@ export default function Plans() {
           { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
         ]}
       >
-        {data.data.response?.map((plan) => (
+        {plansList.active?.map((plan) => (
+          <ExpensePlan
+            data={plan}
+            key={plan._id}
+            onPlanAction={handlePlanAction}
+          />
+        ))}
+      </SimpleGrid>
+      <Divider
+        labelPosition="center"
+        labelProps={{ color: "dimmed" }}
+        label={`Closed Plans (${plansList.closed.length})`}
+        my="sm"
+        color="red"
+      />
+      <SimpleGrid
+        cols={2}
+        spacing="lg"
+        breakpoints={[
+          { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
+          { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
+        ]}
+      >
+        {plansList.closed?.map((plan) => (
           <ExpensePlan
             data={plan}
             key={plan._id}
