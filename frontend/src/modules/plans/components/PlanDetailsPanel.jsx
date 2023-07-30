@@ -17,7 +17,7 @@ export default function PlanDetailsPanel({ data }) {
       <Text fz="lg" fw="bold">
         {data.name}
       </Text>
-      <Text>{data.description}</Text>
+      <Text sx={{ whiteSpace: "pre-wrap" }}>{data.description}</Text>
       <Divider my="lg" />
       <Text fz="sm" display="flex" sx={{ alignItems: "center" }}>
         <Text component="span" color="dimmed">
