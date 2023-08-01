@@ -10,7 +10,8 @@ import {
   Tooltip,
 } from "@mantine/core";
 import {
-  IconCalendarUp,
+  IconCalendarCode,
+  IconCalendarTime,
   IconChevronRight,
   IconDotsVertical,
   IconEdit,
@@ -62,8 +63,8 @@ function ExpenseCard({
             {dayjs(data.date).month() !== dayjs().month() && (
               <Tooltip
                 label={
-                  <Text component="span" fw="normal">
-                    From {dayjs().subtract(1, "month").format("MMMM")}
+                  <Text component="span" fw="normal" size="sm">
+                    From {dayjs().subtract(1, "month").format("MMMM")}.
                   </Text>
                 }
                 color="dark"
@@ -71,7 +72,23 @@ function ExpenseCard({
                 events={{ touch: true }}
               >
                 <ThemeIcon size={"sm"} color="orange" variant="outline" mr={4}>
-                  <IconCalendarUp size={14} />
+                  <IconCalendarTime size={14} />
+                </ThemeIcon>
+              </Tooltip>
+            )}
+            {data.linked && (
+              <Tooltip
+                label={
+                  <Text component="span" fw="normal" size="sm">
+                    Created in a plan.
+                  </Text>
+                }
+                color="dark"
+                position="right"
+                events={{ touch: true }}
+              >
+                <ThemeIcon size={"sm"} color="yellow" variant="outline" mr={4}>
+                  <IconCalendarCode size={14} />
                 </ThemeIcon>
               </Tooltip>
             )}

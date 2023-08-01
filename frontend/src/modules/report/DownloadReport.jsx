@@ -12,11 +12,12 @@ import { downloadFile } from "./utils/downloadFile";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 
 export default function DownloadReport() {
+  useDocumentTitle(`${APP_TITLE} | Download Report`);
   const [selection, setSelection] = useState([null, null]);
   const [view, setView] = useState("month");
+
   const { classes } = useStyles();
   const { userData } = useCurrentUser();
-  useDocumentTitle(`${APP_TITLE} | Download Report`);
   const { onError } = useErrorHandler();
 
   const pickerProps = useMemo(
@@ -36,9 +37,7 @@ export default function DownloadReport() {
     onSuccess: (res) => {
       downloadFile(
         res.data,
-        `Report_${userData.userName.replace(" ", "_")}_${dayjs().format(
-          "DD-MM-YY-hh-MM-ss"
-        )}`
+        `Report_${userData.userName.replace(" ", "_")}_${dayjs().toDate().toISOString()}`
       );
       notifications.show({
         title: "Report Downloaded Successfully!",
@@ -52,26 +51,20 @@ export default function DownloadReport() {
 
   const handleDownload = () => {
     download({
-      startDate:
-        view === "date"
-          ? selection[0]
-          : dayjs(selection[0]).startOf("month").toDate(),
-      endDate:
-        view === "date"
-          ? selection[1]
-          : dayjs(selection[1]).endOf("month").toDate(),
+      startDate: dayjs(selection[0]).startOf(view).toDate(),
+      endDate: dayjs(selection[1]).endOf(view).toDate(),
     });
   };
 
   const handleViewChange = () => {
-    setView((v) => (v === "month" ? "date" : "month"));
+    setView((v) => (v === "month" ? "day" : "month"));
     setSelection([null, null]);
   };
 
   return (
     <Group position="center" sx={{ flexDirection: "column" }}>
-      <Text>Select {view} range to download report.</Text>
-      {view === "date" ? (
+      <Text>Select {view}s range to download report.</Text>
+      {view === "day" ? (
         <DatePicker
           {...pickerProps}
           value={selection}
@@ -94,7 +87,7 @@ export default function DownloadReport() {
           Download
         </Button>
         <Button onClick={handleViewChange} variant="outline">
-          Select {view === "month" ? "date" : "month"}s
+          Select {view === "day" ? "month" : "day"}s
         </Button>
       </Group>
     </Group>

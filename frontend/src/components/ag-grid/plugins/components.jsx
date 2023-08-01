@@ -7,6 +7,7 @@ import {
   Popover,
   Text,
   ThemeIcon,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconArrowsSort,
@@ -24,6 +25,7 @@ import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { primaryColor } from "../../../constants/app";
 import ExpenseDescription from "../../ExpenseDescription";
+import { IconCalendarCode } from "@tabler/icons-react";
 
 function getNextSortOrder(current) {
   if (!current) return "asc";
@@ -234,6 +236,30 @@ export function NoDataOverlay(props) {
       >
         {props.message}
       </Text>
+    </Box>
+  );
+}
+
+export function ExpenseTitleCell({ value, data }) {
+  return (
+    <Box sx={{ display: "flex", height: "100%", alignItems: "center" }}>
+      {data.linked && (
+        <Tooltip
+          label={
+            <Text component="span" fw="normal" size="sm">
+              Created in a plan.
+            </Text>
+          }
+          color="dark"
+          position="right"
+          events={{ touch: true }}
+        >
+          <ThemeIcon size={"sm"} color="yellow" variant="outline" mr={6}>
+            <IconCalendarCode size={14} />
+          </ThemeIcon>
+        </Tooltip>
+      )}
+      <Text>{value}</Text>
     </Box>
   );
 }

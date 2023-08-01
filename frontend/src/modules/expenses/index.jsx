@@ -18,6 +18,7 @@ import {
   CategoryCell,
   DescriptionCell,
   DescriptionColumnHeader,
+  ExpenseTitleCell,
   RowCount,
   RowMenuCell,
 } from "../../components/ag-grid/plugins/components";
@@ -163,6 +164,7 @@ export default function Expenses() {
         {
           headerName: "Title",
           field: "title",
+          cellRenderer: ExpenseTitleCell,
           minWidth: isMobile ? 240 : 320,
         },
         {
