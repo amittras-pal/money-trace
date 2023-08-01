@@ -37,7 +37,9 @@ export default function DownloadReport() {
     onSuccess: (res) => {
       downloadFile(
         res.data,
-        `Report_${userData.userName.replace(" ", "_")}_${dayjs().toDate().toISOString()}`
+        `Report_${userData.userName.replace(" ", "_")}_${dayjs()
+          .toDate()
+          .toISOString()}.pdf`
       );
       notifications.show({
         title: "Report Downloaded Successfully!",
