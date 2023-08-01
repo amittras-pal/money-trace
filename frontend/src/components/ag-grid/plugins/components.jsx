@@ -254,8 +254,14 @@ export function ExpenseTitleCell({ value, data }) {
           position="right"
           events={{ touch: true }}
         >
-          <ThemeIcon size={"sm"} color="yellow" variant="outline" mr={6}>
-            <IconCalendarCode size={14} />
+          <ThemeIcon
+            size="sm"
+            color="indigo"
+            variant="light"
+            radius="lg"
+            mr={6}
+          >
+            <IconCalendarCode size={14} stroke={1.5} />
           </ThemeIcon>
         </Tooltip>
       )}

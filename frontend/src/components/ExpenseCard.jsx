@@ -60,38 +60,6 @@ function ExpenseCard({
           }}
         >
           <Text fw="bold" fz="sm">
-            {dayjs(data.date).month() !== dayjs().month() && (
-              <Tooltip
-                label={
-                  <Text component="span" fw="normal" size="sm">
-                    From {dayjs().subtract(1, "month").format("MMMM")}.
-                  </Text>
-                }
-                color="dark"
-                position="right"
-                events={{ touch: true }}
-              >
-                <ThemeIcon size={"sm"} color="orange" variant="outline" mr={4}>
-                  <IconCalendarTime size={14} />
-                </ThemeIcon>
-              </Tooltip>
-            )}
-            {data.linked && (
-              <Tooltip
-                label={
-                  <Text component="span" fw="normal" size="sm">
-                    Created in a plan.
-                  </Text>
-                }
-                color="dark"
-                position="right"
-                events={{ touch: true }}
-              >
-                <ThemeIcon size={"sm"} color="yellow" variant="outline" mr={4}>
-                  <IconCalendarCode size={14} />
-                </ThemeIcon>
-              </Tooltip>
-            )}
             {data.title}
           </Text>
           {data.description && (
@@ -104,6 +72,7 @@ function ExpenseCard({
             size="sm"
             color={data.category.color}
             leftSection={<Icon size={12} style={{ marginBottom: -2 }} />}
+            mt={4}
           >
             {data.category.group}{" "}
             <IconChevronRight size={12} style={{ marginBottom: -2 }} />{" "}
@@ -120,7 +89,7 @@ function ExpenseCard({
             </Text>
           </Group>
         </Group>
-        <Group sx={{ flexDirection: "column" }} spacing="xs">
+        <Group sx={{ flexDirection: "column" }} spacing={6}>
           {!hideMenu && (
             <Menu shadow="md" position="bottom-end">
               <Menu.Target>
@@ -151,6 +120,38 @@ function ExpenseCard({
                 )}
               </Menu.Dropdown>
             </Menu>
+          )}
+          {dayjs(data.date).month() !== dayjs().month() && (
+            <Tooltip
+              label={
+                <Text component="span" fw="normal" size="sm">
+                  From {dayjs().subtract(1, "month").format("MMMM")}.
+                </Text>
+              }
+              color="dark"
+              position="right"
+              events={{ touch: true }}
+            >
+              <ThemeIcon radius="lg" size="sm" color="orange" variant="light">
+                <IconCalendarTime size={14} stroke={1.5} />
+              </ThemeIcon>
+            </Tooltip>
+          )}
+          {data.linked && (
+            <Tooltip
+              label={
+                <Text component="span" fw="normal" size="sm">
+                  Created in a plan.
+                </Text>
+              }
+              color="dark"
+              position="right"
+              events={{ touch: true }}
+            >
+              <ThemeIcon radius="lg" size="sm" color="indigo" variant="light">
+                <IconCalendarCode size={14} stroke={1.5} />
+              </ThemeIcon>
+            </Tooltip>
           )}
         </Group>
       </Group>
