@@ -57,7 +57,7 @@ export default function ExpenseForm({ data, onComplete }) {
     defaultValues: {
       title: data?.title ?? "",
       description: data?.description ?? "",
-      amount: data?.amount ?? "",
+      amount: data?.amount ?? 0,
       categoryId: data?.categoryId ?? "",
       date: data ? dayjs(data.date).toDate() : dayjs().toDate(),
       addToPlan: data ? Boolean(data.plan) : false,
@@ -146,7 +146,19 @@ export default function ExpenseForm({ data, onComplete }) {
           placeholder="Amount"
           label="Amount"
           inputMode="numeric"
-          required
+          onBlur={(e) => {
+            if (!e.target.value)
+              setValue("amount", 0, {
+                shouldTouch: true,
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+          }}
+          description={`${
+            !parseInt(watch("amount"))
+              ? "Keeping 0 as amount will indicate a record type expense."
+              : ""
+          }`}
         />
         <Select
           searchable

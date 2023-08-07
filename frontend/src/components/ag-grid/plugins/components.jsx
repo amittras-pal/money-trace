@@ -11,9 +11,11 @@ import {
 } from "@mantine/core";
 import {
   IconArrowsSort,
-  IconCopy,
+  IconBookmark,
+  IconCalendarCode,
   IconDotsVertical,
   IconEdit,
+  IconFileAlert,
   IconFilter,
   IconInfoCircle,
   IconSortAscending,
@@ -83,7 +85,7 @@ export function RowCount({ api }) {
   );
 }
 
-export function DescriptionColumnHeader() {
+export function DescriptionHeader() {
   return (
     <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
       <Popover.Target>
@@ -106,6 +108,29 @@ export function DescriptionColumnHeader() {
   );
 }
 
+export function ExpenseMetaHeader() {
+  return (
+    <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
+      <Popover.Target>
+        <ActionIcon
+          size="sm"
+          radius="xl"
+          color="orange"
+          mx="auto"
+          variant="light"
+        >
+          <IconFileAlert size={18} />
+        </ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown p={8}>
+        <Text color="dimmed" fz="xs">
+          Expense Metadata
+        </Text>
+      </Popover.Dropdown>
+    </Popover>
+  );
+}
+
 export function CategoryCell({ data, value }) {
   return (
     <Badge
@@ -119,16 +144,10 @@ export function CategoryCell({ data, value }) {
   );
 }
 
-export function DescriptionCell({ value }) {
-  if (!value)
+export function ExpenseMetaCell({ data, page }) {
+  if (data.linked || !data.amount)
     return (
-      <ActionIcon size="sm" radius="xl" disabled>
-        <IconInfoCircle size={18} />
-      </ActionIcon>
-    );
-  else
-    return (
-      <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
+      <Popover withinPortal withArrow shadow="md" position="bottom">
         <Popover.Target>
           <ActionIcon
             size="sm"
@@ -136,14 +155,63 @@ export function DescriptionCell({ value }) {
             color={primaryColor}
             variant="light"
           >
-            <IconInfoCircle size={18} />
+            <IconFileAlert size={14} stroke={1.5} />
           </ActionIcon>
         </Popover.Target>
         <Popover.Dropdown p={8}>
-          <ExpenseDescription color="dimmed">{value}</ExpenseDescription>
+          <>
+            {data.linked && (
+              <Text
+                sx={{ display: "flex", alignItems: "center" }}
+                color="dimmed"
+              >
+                <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+                  <IconCalendarCode size={14} stroke={1.5} />
+                </ThemeIcon>
+                <Text component="span" size="xs" color="dimmed" ml={8}>
+                  {page === "budget"
+                    ? "Created in a plan."
+                    : "Copied to Budget."}
+                </Text>
+              </Text>
+            )}
+            {!data.amount && (
+              <Text
+                sx={{ display: "flex", alignItems: "center" }}
+                color="dimmed"
+                mt={6}
+              >
+                <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+                  <IconBookmark size={14} stroke={1.5} />
+                </ThemeIcon>
+                <Text component="span" size="xs" color="dimmed" ml={8}>
+                  Created to keep record; no money spent.
+                </Text>
+              </Text>
+            )}
+          </>
         </Popover.Dropdown>
       </Popover>
     );
+
+  return null;
+}
+
+export function DescriptionCell({ value }) {
+  if (!value) return null;
+
+  return (
+    <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
+      <Popover.Target>
+        <ActionIcon size="sm" radius="xl" color={primaryColor} variant="light">
+          <IconInfoCircle size={18} />
+        </ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown p={8}>
+        <ExpenseDescription color="dimmed">{value}</ExpenseDescription>
+      </Popover.Dropdown>
+    </Popover>
+  );
 }
 
 export function RowMenuCell({
@@ -236,36 +304,6 @@ export function NoDataOverlay(props) {
       >
         {props.message}
       </Text>
-    </Box>
-  );
-}
-
-export function ExpenseTitleCell({ value, data }) {
-  return (
-    <Box sx={{ display: "flex", height: "100%", alignItems: "center" }}>
-      {data.linked && (
-        <Tooltip
-          label={
-            <Text component="span" fw="normal" size="sm">
-              Created in a plan.
-            </Text>
-          }
-          color="dark"
-          position="right"
-          events={{ touch: true }}
-        >
-          <ThemeIcon
-            size="sm"
-            color="indigo"
-            variant="light"
-            radius="lg"
-            mr={6}
-          >
-            <IconCalendarCode size={14} stroke={1.5} />
-          </ThemeIcon>
-        </Tooltip>
-      )}
-      <Text>{value}</Text>
     </Box>
   );
 }

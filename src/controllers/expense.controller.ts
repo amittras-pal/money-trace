@@ -16,10 +16,10 @@ import { TypedRequest, TypedResponse } from "../types/requests";
 export const createExpense = routeHandler(
   async (req: TypedRequest<{}, IExpense>, res: TypedResponse) => {
     const { userId } = req;
-    const { title, amount, date, categoryId }: IExpense = req.body;
+    const { title, date, categoryId }: IExpense = req.body;
     const ex: IExpense = req.body;
 
-    if (!title || !amount || !date || !categoryId) {
+    if (!title || !date || !categoryId) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all required fields.");
     }
@@ -50,10 +50,10 @@ export const updateExpense = routeHandler(
     req: TypedRequest<{}, IExpense>,
     res: TypedResponse<IExpense | null>
   ) => {
-    const { title, amount, date, categoryId, _id }: IExpense = req.body;
+    const { title, date, categoryId, _id }: IExpense = req.body;
     const ex: IExpense = req.body;
 
-    if (!_id || !title || !amount || !date || !categoryId) {
+    if (!_id || !title || !date || !categoryId) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all required fields.");
     }

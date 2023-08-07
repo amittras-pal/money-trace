@@ -17,8 +17,9 @@ import AgGridMod from "../../components/ag-grid/AgGridMod";
 import {
   CategoryCell,
   DescriptionCell,
-  DescriptionColumnHeader,
-  ExpenseTitleCell,
+  DescriptionHeader,
+  ExpenseMetaCell,
+  ExpenseMetaHeader,
   RowCount,
   RowMenuCell,
 } from "../../components/ag-grid/plugins/components";
@@ -151,7 +152,23 @@ export default function Expenses() {
           field: "description",
           maxWidth: 50,
           cellRenderer: DescriptionCell,
-          headerComponent: DescriptionColumnHeader,
+          headerComponent: DescriptionHeader,
+          headerClass: "no-pad",
+          cellStyle: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        },
+        {
+          headerName: "",
+          field: "_id",
+          maxWidth: 50,
+          cellRenderer: ExpenseMetaCell,
+          headerComponent: ExpenseMetaHeader,
+          cellRendererParams: { page: "budget" },
           headerClass: "no-pad",
           cellStyle: {
             paddingLeft: 0,
@@ -164,7 +181,6 @@ export default function Expenses() {
         {
           headerName: "Title",
           field: "title",
-          cellRenderer: ExpenseTitleCell,
           minWidth: isMobile ? 240 : 320,
         },
         {
