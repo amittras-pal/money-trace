@@ -27,7 +27,6 @@ import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { primaryColor } from "../../../constants/app";
 import ExpenseDescription from "../../ExpenseDescription";
-import { IconCalendarCode } from "@tabler/icons-react";
 
 function getNextSortOrder(current) {
   if (!current) return "asc";
