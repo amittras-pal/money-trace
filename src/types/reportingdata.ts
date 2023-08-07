@@ -7,11 +7,11 @@ export type ReportedExpense = Pick<
   "title" | "description" | "amount" | "date"
 > & {
   category: {
-    label: String | undefined;
-    group: String | undefined;
-    color: String | undefined;
+    label: string | undefined;
+    group: string | undefined;
+    color: string | undefined;
   };
-  categoryId: String | undefined;
+  categoryId: string | undefined;
 };
 
 export type IExpenseByMonth = {

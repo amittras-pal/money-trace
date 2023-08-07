@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { readFile } from "fs/promises";
 import { groupBy, pick } from "lodash";
 import { IExpenseByMonth, ReportedExpense } from "../types/reportingdata";
 import { IUser } from "../types/user";
+import { colorMap } from "./colormap";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -121,7 +122,7 @@ export function writeMonthHeader(
     .text(`Total Spent: ${formatCurrency(month.total)}`, {
       continued: true,
     })
-    .fillColor(getSeverityColor(month.total, month.budget))
+    .fillColor(colorMap[getSeverityColor(month.total, month.budget)][8])
     .text(` (${getPercentage(month.total, month.budget).toFixed(2)} %)`);
 }
 
@@ -171,23 +172,17 @@ export function writeMonthSummary(
     doc
       .moveDown(1)
       .fontSize(16)
-      .fillColor("black")
+      .fillColor(colorMap[g.color][8])
       .text(`${g.group}: ${formatCurrency(g.total)}`);
     Object.entries(g.bySubCategory).forEach(([cat, list]) => {
       doc
-        .fillColor("black", 0.5)
+        .fillColor(colorMap[g.color][6])
         .fontSize(14)
         .text(`•  ${cat}: `, { continued: true, indent: 16 })
         .fillColor("black", 1)
         .text(`${formatCurrency(getTotalAmount(list))}`);
     });
   });
-  doc.moveDown(1);
-  doc
-    .moveTo(xPos, doc.y)
-    .lineTo(doc.page.width - xPos, doc.y)
-    .strokeOpacity(0.7)
-    .strokeColor("black", 0.75);
   doc.moveDown(1);
 }
 
@@ -217,6 +212,7 @@ function generateSummary(expenses: any[]) {
       bySubCategory: groupBy(list, "category.label"),
       list,
       total: getTotalAmount(list),
+      color: list[0].category.color,
     };
   });
 }

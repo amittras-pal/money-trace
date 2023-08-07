@@ -9,7 +9,10 @@ import { buildPDF } from "../utils/reportGenerator";
 
 export const generateReport = routeHandler(
   async (
-    req: TypedRequest<{ startDate: string; endDate: string }, {}>,
+    req: TypedRequest<
+      { startDate: string; endDate: string; includeList: string },
+      {}
+    >,
     res: any
   ) => {
     const user = await User.findById(req.userId);
@@ -74,6 +77,7 @@ export const generateReport = routeHandler(
     buildPDF(
       req.query.startDate,
       req.query.endDate,
+      req.query.includeList,
       expensesData,
       budgetsData,
       user,
