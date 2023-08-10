@@ -7,15 +7,14 @@ import {
   Popover,
   Text,
   ThemeIcon,
-  Tooltip,
 } from "@mantine/core";
 import {
   IconArrowsSort,
   IconBookmark,
   IconCalendarCode,
+  IconCopy,
   IconDotsVertical,
   IconEdit,
-  IconFileAlert,
   IconFilter,
   IconInfoCircle,
   IconSortAscending,
@@ -76,7 +75,7 @@ export function ColumnHeader(props) {
   );
 }
 
-export function RowCount({ api }) {
+export function RowCountHeader({ api }) {
   return (
     <Text component="span" mx="auto" color="red" fw="bold">
       {api.getDisplayedRowCount()}
@@ -84,7 +83,7 @@ export function RowCount({ api }) {
   );
 }
 
-export function DescriptionHeader() {
+export function MetaHeader() {
   return (
     <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
       <Popover.Target>
@@ -107,24 +106,46 @@ export function DescriptionHeader() {
   );
 }
 
-export function ExpenseMetaHeader() {
+export function MetaCell({ data, page }) {
+  if (!data.description && !data.linked && data.amount > 0) return null;
   return (
     <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
       <Popover.Target>
-        <ActionIcon
-          size="sm"
-          radius="xl"
-          color="orange"
-          mx="auto"
-          variant="light"
-        >
-          <IconFileAlert size={18} />
+        <ActionIcon size="sm" radius="xl" color={primaryColor} variant="light">
+          <IconInfoCircle size={18} />
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown p={8}>
-        <Text color="dimmed" fz="xs">
-          Expense Metadata
-        </Text>
+        {data.description && (
+          <Group spacing={6} sx={{ alignItems: "flex-start" }}>
+            <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+              <IconInfoCircle size={14} stroke={1.5} />
+            </ThemeIcon>
+            <ExpenseDescription color="dimmed" mt={4}>
+              {data.description}
+            </ExpenseDescription>
+          </Group>
+        )}
+        {data.linked && (
+          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+            <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+              <IconCalendarCode size={14} stroke={1.5} />
+            </ThemeIcon>
+            <Text component="span" fz="xs" color="dimmed" mt={4}>
+              {page === "budget" ? "Created in a plan." : "Copied to Budget."}
+            </Text>
+          </Group>
+        )}
+        {!data.amount && (
+          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+            <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+              <IconBookmark size={14} stroke={1.5} />
+            </ThemeIcon>
+            <Text component="span" size="xs" color="dimmed" mt={4}>
+              Created to keep record; no money spent.
+            </Text>
+          </Group>
+        )}
       </Popover.Dropdown>
     </Popover>
   );
@@ -140,76 +161,6 @@ export function CategoryCell({ data, value }) {
     >
       {value}
     </Badge>
-  );
-}
-
-export function ExpenseMetaCell({ data, page }) {
-  if (data.linked || !data.amount)
-    return (
-      <Popover withinPortal withArrow shadow="md" position="bottom">
-        <Popover.Target>
-          <ActionIcon
-            size="sm"
-            radius="xl"
-            color={primaryColor}
-            variant="light"
-          >
-            <IconFileAlert size={14} stroke={1.5} />
-          </ActionIcon>
-        </Popover.Target>
-        <Popover.Dropdown p={8}>
-          <>
-            {data.linked && (
-              <Text
-                sx={{ display: "flex", alignItems: "center" }}
-                color="dimmed"
-              >
-                <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
-                  <IconCalendarCode size={14} stroke={1.5} />
-                </ThemeIcon>
-                <Text component="span" size="xs" color="dimmed" ml={8}>
-                  {page === "budget"
-                    ? "Created in a plan."
-                    : "Copied to Budget."}
-                </Text>
-              </Text>
-            )}
-            {!data.amount && (
-              <Text
-                sx={{ display: "flex", alignItems: "center" }}
-                color="dimmed"
-                mt={6}
-              >
-                <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
-                  <IconBookmark size={14} stroke={1.5} />
-                </ThemeIcon>
-                <Text component="span" size="xs" color="dimmed" ml={8}>
-                  Created to keep record; no money spent.
-                </Text>
-              </Text>
-            )}
-          </>
-        </Popover.Dropdown>
-      </Popover>
-    );
-
-  return null;
-}
-
-export function DescriptionCell({ value }) {
-  if (!value) return null;
-
-  return (
-    <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
-      <Popover.Target>
-        <ActionIcon size="sm" radius="xl" color={primaryColor} variant="light">
-          <IconInfoCircle size={18} />
-        </ActionIcon>
-      </Popover.Target>
-      <Popover.Dropdown p={8}>
-        <ExpenseDescription color="dimmed">{value}</ExpenseDescription>
-      </Popover.Dropdown>
-    </Popover>
   );
 }
 

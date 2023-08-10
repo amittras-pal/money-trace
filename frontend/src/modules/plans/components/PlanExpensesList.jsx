@@ -4,11 +4,9 @@ import { useParams } from "react-router-dom";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
 import {
   CategoryCell,
-  DescriptionCell,
-  DescriptionHeader,
-  ExpenseMetaCell,
-  ExpenseMetaHeader,
-  RowCount,
+  MetaCell,
+  MetaHeader,
+  RowCountHeader,
   RowMenuCell,
 } from "../../../components/ag-grid/plugins/components";
 import {
@@ -51,7 +49,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
       return [
         {
           headerName: "",
-          headerComponent: RowCount,
+          headerComponent: RowCountHeader,
           cellRenderer: RowMenuCell,
           cellRendererParams: {
             onEditExpense: (data) => onExpenseAction(data, "edit"),
@@ -75,24 +73,9 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
           headerName: "Description",
           field: "description",
           maxWidth: 50,
-          cellRenderer: DescriptionCell,
-          headerComponent: DescriptionHeader,
-          headerClass: "no-pad",
-          cellStyle: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-        },
-        {
-          headerName: "",
-          field: "_id",
-          maxWidth: 50,
-          cellRenderer: ExpenseMetaCell,
-          headerComponent: ExpenseMetaHeader,
+          cellRenderer: MetaCell,
           cellRendererParams: { page: "plan" },
+          headerComponent: MetaHeader,
           headerClass: "no-pad",
           cellStyle: {
             paddingLeft: 0,
@@ -102,6 +85,22 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
             alignItems: "center",
           },
         },
+        // {
+        //   headerName: "",
+        //   field: "_id",
+        //   maxWidth: 50,
+        //   cellRenderer: ExpenseMetaCell,
+        //   headerComponent: ExpenseMetaHeader,
+        //   cellRendererParams: { page: "plan" },
+        //   headerClass: "no-pad",
+        //   cellStyle: {
+        //     paddingLeft: 0,
+        //     paddingRight: 0,
+        //     display: "flex",
+        //     justifyContent: "center",
+        //     alignItems: "center",
+        //   },
+        // },
         {
           headerName: "Title",
           field: "title",

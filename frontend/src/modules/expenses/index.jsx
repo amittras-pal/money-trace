@@ -16,11 +16,9 @@ import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
 import {
   CategoryCell,
-  DescriptionCell,
-  DescriptionHeader,
-  ExpenseMetaCell,
-  ExpenseMetaHeader,
-  RowCount,
+  MetaCell,
+  MetaHeader,
+  RowCountHeader,
   RowMenuCell,
 } from "../../components/ag-grid/plugins/components";
 import {
@@ -129,7 +127,7 @@ export default function Expenses() {
       return [
         {
           headerName: "",
-          headerComponent: RowCount,
+          headerComponent: RowCountHeader,
           cellRenderer: RowMenuCell,
           cellRendererParams: {
             onEditExpense: editExpense,
@@ -151,24 +149,9 @@ export default function Expenses() {
           headerName: "Description",
           field: "description",
           maxWidth: 50,
-          cellRenderer: DescriptionCell,
-          headerComponent: DescriptionHeader,
-          headerClass: "no-pad",
-          cellStyle: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-        },
-        {
-          headerName: "",
-          field: "_id",
-          maxWidth: 50,
-          cellRenderer: ExpenseMetaCell,
-          headerComponent: ExpenseMetaHeader,
+          cellRenderer: MetaCell,
           cellRendererParams: { page: "budget" },
+          headerComponent: MetaHeader,
           headerClass: "no-pad",
           cellStyle: {
             paddingLeft: 0,
@@ -178,6 +161,22 @@ export default function Expenses() {
             alignItems: "center",
           },
         },
+        // {
+        //   headerName: "",
+        //   field: "_id",
+        //   maxWidth: 50,
+        //   cellRenderer: ExpenseMetaCell,
+        //   headerComponent: ExpenseMetaHeader,
+        //   cellRendererParams: { page: "budget" },
+        //   headerClass: "no-pad",
+        //   cellStyle: {
+        //     paddingLeft: 0,
+        //     paddingRight: 0,
+        //     display: "flex",
+        //     justifyContent: "center",
+        //     alignItems: "center",
+        //   },
+        // },
         {
           headerName: "Title",
           field: "title",
