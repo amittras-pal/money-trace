@@ -90,7 +90,6 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
           hide: plan.open,
           pinned: "left",
           headerClass: "no-pad",
-          // cellClass: "no-pad",
           cellStyle: {
             paddingLeft: 0,
             paddingRight: 0,
@@ -218,7 +217,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
                 </Text>
                 {!isMobile && <br />}
                 <Text size="xs" color="red" component="span">
-                  Copied expenses cannot be modified/deleted!
+                  Copied expenses cannot be modified!
                 </Text>
               </Text>
               <Box>

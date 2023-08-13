@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Alert,
   Box,
   Button,
   Divider,
@@ -84,8 +85,18 @@ export default function Plans() {
           closeOnCancel: true,
           centered: true,
           withCloseButton: false,
-          children:
-            "Once closed, no more expenses can be added to the plan and existing expenses cannot be modified.",
+          children: (
+            <>
+              <Text color="red">
+                Once closed, no more expenses can be added to the plan and
+                existing expenses cannot be modified.
+              </Text>
+              <Alert title="Copying Expense" color="indigo" p="sm" mt={6}>
+                After closing the plan will be able to select and copy expenses
+                from this plan into your monthly budget.
+              </Alert>
+            </>
+          ),
           labels: {
             confirm: "Close",
             cancel: "Cancel",
