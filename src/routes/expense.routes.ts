@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  cloneExpense,
   createExpense,
   deleteExpense,
   getMonthSummary,
@@ -13,8 +12,6 @@ const expenseRoutes = Router();
 
 expenseRoutes.get("/summary", authenticate, getMonthSummary);
 expenseRoutes.post("/list", authenticate, listExpenses);
-expenseRoutes.put("/clone", authenticate, cloneExpense);
-
 expenseRoutes
   .route("/")
   .post(authenticate, createExpense)

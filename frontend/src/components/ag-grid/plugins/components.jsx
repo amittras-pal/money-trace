@@ -12,7 +12,6 @@ import {
   IconArrowsSort,
   IconBookmark,
   IconCalendarCode,
-  IconCopy,
   IconDotsVertical,
   IconEdit,
   IconFilter,
@@ -118,30 +117,30 @@ export function MetaCell({ data, page }) {
       <Popover.Dropdown p={8}>
         {data.description && (
           <Group spacing={6} sx={{ alignItems: "flex-start" }}>
-            <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
               <IconInfoCircle size={14} stroke={1.5} />
             </ThemeIcon>
-            <ExpenseDescription color="dimmed" mt={4}>
+            <ExpenseDescription color="dimmed">
               {data.description}
             </ExpenseDescription>
           </Group>
         )}
         {data.linked && (
           <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
-            <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
               <IconCalendarCode size={14} stroke={1.5} />
             </ThemeIcon>
-            <Text component="span" fz="xs" color="dimmed" mt={4}>
+            <Text component="span" fz="xs" color="dimmed">
               {page === "budget" ? "Created in a plan." : "Copied to Budget."}
             </Text>
           </Group>
         )}
         {!data.amount && (
           <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
-            <ThemeIcon radius="lg" size="md" color="indigo" variant="light">
+            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
               <IconBookmark size={14} stroke={1.5} />
             </ThemeIcon>
-            <Text component="span" size="xs" color="dimmed" mt={4}>
+            <Text component="span" size="xs" color="dimmed">
               Created to keep record; no money spent.
             </Text>
           </Group>
@@ -168,14 +167,12 @@ export function RowMenuCell({
   data,
   onEditExpense,
   onDeleteExpense,
-  onCopyToBudget,
   rowIndex,
   plan,
 }) {
   const availableActions = useMemo(() => {
     const actions = [];
     if (plan) {
-      actions.push("copy");
       if (plan.open && dayjs(data.date) >= dayjs().subtract(7, "days"))
         actions.push("edit", "delete");
     } else if (dayjs(data.date) >= dayjs().subtract(7, "days"))
@@ -204,18 +201,9 @@ export function RowMenuCell({
           <Menu.Item
             icon={<IconEdit size={14} />}
             onClick={() => onEditExpense(data, rowIndex)}
-            disabled={data.copied}
-          >
-            {data.copied ? "Copied Expense" : "Edit"}
-          </Menu.Item>
-        )}
-        {availableActions.includes("copy") && (
-          <Menu.Item
-            icon={<IconCopy size={14} />}
             disabled={data.linked}
-            onClick={() => onCopyToBudget(data)}
           >
-            {data.linked ? "Copied!" : "Copy to Budget"}
+            {data.linked ? "Linked Expense" : "Edit"}
           </Menu.Item>
         )}
         {availableActions.includes("delete") && (

@@ -106,10 +106,9 @@ function ExpenseCard({
                   <Menu.Item
                     icon={<IconEdit size={14} />}
                     onClick={() => onEditExpense(data)}
-                    // disabled={data.copied}
+                    disabled={data.linked}
                   >
-                    {/* {data.copied ? "Copied Expense" : "Edit"} */}
-                    Edit
+                    {data.linked ? "LInked Expense" : "Edit"}
                   </Menu.Item>
                 )}
                 {isEditable && (

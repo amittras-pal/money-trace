@@ -1,5 +1,6 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
+import omit from "lodash/omit";
 import { Types } from "mongoose";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
@@ -113,6 +114,39 @@ export const deletePlan = routeHandler(
 
     res.json({
       message: `Expense plan deleted! ${result.deletedCount} Expenses deleted`,
+    });
+  }
+);
+
+/**
+ * @description Copy a list of expenses to the general budget
+ * @method POST /api/expense-plan/copy-to-budget
+ * @access protected
+ */
+export const copyExpensesToBudget = routeHandler(
+  async (req: TypedRequest<{}, { expenses: string[] }>, res: TypedResponse) => {
+    const selectedExpenses = await Expense.find({
+      _id: { $in: req.body.expenses },
+    });
+
+    // Create new expenses with linked value populated
+    const budgetsForExpenses = selectedExpenses.map((ex) => ({
+      ...omit(ex, ["_id", "plan"]),
+      linked: ex._id,
+    }));
+    const created = await Expense.insertMany(budgetsForExpenses);
+
+    // Update the original expenses with linked values from the new ones.
+    selectedExpenses.forEach((oldEx) => {
+      oldEx.linked = new Types.ObjectId(
+        created.find((newEx) => newEx.linked === oldEx._id)?._id
+      );
+      oldEx.save();
+    });
+
+    res.json({
+      message: `${req.body.expenses.length} expenses successfullly copied to budget.`,
+      response: created,
     });
   }
 );

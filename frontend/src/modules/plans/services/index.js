@@ -51,6 +51,15 @@ export function useExpensePlans(open, options) {
 
 /**
  *
+ * @param {Object} data
+ * @param {string[]} expenses
+ */
+function copyExpensesToBudget(data) {
+  return axios.post(ENDPOINTS.copyExpenses, data);
+}
+
+/**
+ *
  * @param {string} _id
  * @param {import("@tanstack/react-query").UseQueryOptions} options
  * @returns
@@ -65,4 +74,12 @@ export function usePlanDetails(_id, options) {
  */
 export function useDeletePlan(options) {
   return useMutation(deletePlan, options);
+}
+
+/**
+ *
+ * @param {import("@tanstack/react-query").UseMutationOptions} options
+ */
+export function useCopyToBudget(options) {
+  return useMutation(copyExpensesToBudget, options);
 }

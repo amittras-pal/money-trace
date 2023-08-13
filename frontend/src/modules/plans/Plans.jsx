@@ -121,78 +121,112 @@ export default function Plans() {
 
   if (!plansList.active.length && !plansList.closed.length)
     return (
-      <Box
-        sx={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <IconChecklist size={80} />
-        <Text my="sm" align="center">
-          No plans have been created!
-        </Text>
-        <Text size="sm" align="center" color="dimmed" mb="sm">
-          Plans help you organize expenses which need to be tracked outside of
-          your general monthly budget.
-        </Text>
-        <Button size="sm" mt="sm" leftIcon={<IconPlus size={16} />}>
-          Create a plan
-        </Button>
-      </Box>
+      <>
+        <Box
+          sx={{
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <IconChecklist size={80} />
+          <Text my="sm" align="center">
+            No plans have been created!
+          </Text>
+          <Text size="sm" align="center" color="dimmed" mb="sm">
+            Plans help you organize expenses which need to be tracked outside of
+            your general monthly budget.
+          </Text>
+          <Button
+            size="sm"
+            mt="sm"
+            leftIcon={<IconPlus size={16} />}
+            onClick={() => {
+              console.log("This is executed");
+              formModal.open();
+            }}
+          >
+            Create a plan
+          </Button>
+        </Box>
+        <Modal
+          centered
+          withOverlay
+          opened={showForm || confirm}
+          withCloseButton={false}
+          onClose={handleModalClose}
+        >
+          {showForm && (
+            <ExpensePlanForm data={targetPlan} onComplete={handleModalClose} />
+          )}
+          {confirm && (
+            <DeletePlan data={targetPlan} onComplete={handleModalClose} />
+          )}
+        </Modal>
+      </>
     );
 
   return (
     <>
-      <Divider
-        labelPosition="center"
-        labelProps={{ color: "dimmed" }}
-        label={`Open Plans (${plansList.active.length})`}
-        mb="sm"
-        color="indigo"
-      />
-      <SimpleGrid
-        cols={2}
-        spacing="lg"
-        breakpoints={[
-          { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-          { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-        ]}
-      >
-        {plansList.active?.map((plan) => (
-          <ExpensePlan
-            data={plan}
-            key={plan._id}
-            onPlanAction={handlePlanAction}
+      {plansList.active?.length > 0 && (
+        <>
+          <Divider
+            labelPosition="center"
+            labelProps={{ color: "dimmed" }}
+            label={`Open Plans (${plansList.active.length})`}
+            mb="sm"
+            color="indigo"
           />
-        ))}
-      </SimpleGrid>
-      <Divider
-        labelPosition="center"
-        labelProps={{ color: "dimmed" }}
-        label={`Closed Plans (${plansList.closed.length})`}
-        my="sm"
-        color="red"
-      />
-      <SimpleGrid
-        cols={2}
-        spacing="lg"
-        breakpoints={[
-          { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
-          { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
-        ]}
-      >
-        {plansList.closed?.map((plan) => (
-          <ExpensePlan
-            data={plan}
-            key={plan._id}
-            onPlanAction={handlePlanAction}
+          <SimpleGrid
+            cols={2}
+            spacing="lg"
+            mb="sm"
+            breakpoints={[
+              { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
+              { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
+            ]}
+          >
+            {plansList.active?.map((plan) => (
+              <ExpensePlan
+                data={plan}
+                key={plan._id}
+                onPlanAction={handlePlanAction}
+              />
+            ))}
+          </SimpleGrid>
+        </>
+      )}
+      {plansList.closed?.length > 0 && (
+        <>
+          <Divider
+            labelPosition="center"
+            labelProps={{ color: "dimmed" }}
+            label={`Closed Plans (${plansList.closed.length})`}
+            mb="sm"
+            color="red"
           />
-        ))}
-      </SimpleGrid>
+          <SimpleGrid
+            cols={2}
+            spacing="lg"
+            mb="sm"
+            breakpoints={[
+              { maxWidth: "md", cols: 2, spacing: "sm", verticalSpacing: "sm" },
+              { maxWidth: "sm", cols: 1, spacing: "sm", verticalSpacing: "sm" },
+            ]}
+          >
+            {plansList.closed?.map((plan) => (
+              <ExpensePlan
+                data={plan}
+                key={plan._id}
+                onPlanAction={handlePlanAction}
+              />
+            ))}
+          </SimpleGrid>
+        </>
+      )}
       <ActionIcon
         size="xl"
         radius="xl"

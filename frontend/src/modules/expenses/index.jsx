@@ -161,22 +161,6 @@ export default function Expenses() {
             alignItems: "center",
           },
         },
-        // {
-        //   headerName: "",
-        //   field: "_id",
-        //   maxWidth: 50,
-        //   cellRenderer: ExpenseMetaCell,
-        //   headerComponent: ExpenseMetaHeader,
-        //   cellRendererParams: { page: "budget" },
-        //   headerClass: "no-pad",
-        //   cellStyle: {
-        //     paddingLeft: 0,
-        //     paddingRight: 0,
-        //     display: "flex",
-        //     justifyContent: "center",
-        //     alignItems: "center",
-        //   },
-        // },
         {
           headerName: "Title",
           field: "title",
@@ -204,7 +188,6 @@ export default function Expenses() {
           sortable: true,
           valueFormatter: ({ value }) => formatCurrency(value),
         },
-
         {
           headerName: "Date",
           field: "date",

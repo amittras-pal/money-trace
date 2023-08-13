@@ -30,7 +30,6 @@ export const generateReport = routeHandler(
       { $sort: { date: -1 } },
       {
         $group: {
-          //   _id: { year: { $year: "$date" }, month: { $month: "$date" } },
           _id: { $substrCP: ["$date", 0, 7] },
           expenses: { $push: "$$ROOT" },
           total: { $sum: "$amount" },
