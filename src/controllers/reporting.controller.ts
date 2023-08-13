@@ -9,7 +9,10 @@ import { buildPDF } from "../utils/reportGenerator";
 
 export const generateReport = routeHandler(
   async (
-    req: TypedRequest<{ startDate: string; endDate: string }, {}>,
+    req: TypedRequest<
+      { startDate: string; endDate: string; includeList: string },
+      {}
+    >,
     res: any
   ) => {
     const user = await User.findById(req.userId);
@@ -27,7 +30,6 @@ export const generateReport = routeHandler(
       { $sort: { date: -1 } },
       {
         $group: {
-          //   _id: { year: { $year: "$date" }, month: { $month: "$date" } },
           _id: { $substrCP: ["$date", 0, 7] },
           expenses: { $push: "$$ROOT" },
           total: { $sum: "$amount" },
@@ -74,6 +76,7 @@ export const generateReport = routeHandler(
     buildPDF(
       req.query.startDate,
       req.query.endDate,
+      req.query.includeList,
       expensesData,
       budgetsData,
       user,

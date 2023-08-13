@@ -20,9 +20,9 @@ export const expenseSchema = yup.object().shape({
     .max(dayjs().add(5, "minutes").toDate(), "Expense can't be in the future."),
   amount: yup
     .number()
-    .typeError("Amount has to be a number")
-    .required("Amount is required")
-    .min(1, "Amount value must be greater than 0"),
+    .nullable()
+    .notRequired()
+    .typeError("Amount has to be a number"),
   categoryId: yup.string().required("Category is required."),
   addToPlan: yup.boolean(),
   plan: yup.string().when("addToPlan", {

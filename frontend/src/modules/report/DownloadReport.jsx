@@ -1,4 +1,4 @@
-import { Button, Group, Text, createStyles } from "@mantine/core";
+import { Button, Checkbox, Group, Text, createStyles } from "@mantine/core";
 import { DatePicker, MonthPicker } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -14,6 +14,7 @@ import { useErrorHandler } from "../../hooks/useErrorHandler";
 export default function DownloadReport() {
   useDocumentTitle(`${APP_TITLE} | Download Report`);
   const [selection, setSelection] = useState([null, null]);
+  const [includeList, setIncludeList] = useState(false);
   const [view, setView] = useState("month");
 
   const { classes } = useStyles();
@@ -55,6 +56,7 @@ export default function DownloadReport() {
     download({
       startDate: dayjs(selection[0]).startOf(view).toDate(),
       endDate: dayjs(selection[1]).endOf(view).toDate(),
+      includeList,
     });
   };
 
@@ -79,6 +81,11 @@ export default function DownloadReport() {
           onChange={setSelection}
         />
       )}
+      <Checkbox
+        checked={includeList}
+        onChange={(e) => setIncludeList(e.currentTarget.checked)}
+        label="Include Expenses List"
+      />
       <Group spacing="sm">
         <Button
           disabled={!selection[0] || !selection[1]}

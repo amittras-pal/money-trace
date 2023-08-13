@@ -37,10 +37,12 @@ export default function DeleteExpense({ data, onComplete }) {
       </Text>
       <Divider my="sm" />
       <ExpenseCard hideMenu data={data} />
-      <Alert title="Linked Expense" color="red" mb="md">
-        This expense is linked to another expense, deleting it will also delete
-        the other one.
-      </Alert>
+      {data.linked && (
+        <Alert title="Linked Expense" color="red" mb="md">
+          This expense is linked to another expense, deleting it will also
+          delete the other one.
+        </Alert>
+      )}
       <Text color="red" fz="sm" fw="bold">
         This action cannot be undone!
       </Text>

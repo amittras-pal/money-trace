@@ -16,10 +16,9 @@ import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
 import {
   CategoryCell,
-  DescriptionCell,
-  DescriptionColumnHeader,
-  ExpenseTitleCell,
-  RowCount,
+  MetaCell,
+  MetaHeader,
+  RowCountHeader,
   RowMenuCell,
 } from "../../components/ag-grid/plugins/components";
 import {
@@ -128,7 +127,7 @@ export default function Expenses() {
       return [
         {
           headerName: "",
-          headerComponent: RowCount,
+          headerComponent: RowCountHeader,
           cellRenderer: RowMenuCell,
           cellRendererParams: {
             onEditExpense: editExpense,
@@ -150,8 +149,9 @@ export default function Expenses() {
           headerName: "Description",
           field: "description",
           maxWidth: 50,
-          cellRenderer: DescriptionCell,
-          headerComponent: DescriptionColumnHeader,
+          cellRenderer: MetaCell,
+          cellRendererParams: { page: "budget" },
+          headerComponent: MetaHeader,
           headerClass: "no-pad",
           cellStyle: {
             paddingLeft: 0,
@@ -164,7 +164,6 @@ export default function Expenses() {
         {
           headerName: "Title",
           field: "title",
-          cellRenderer: ExpenseTitleCell,
           minWidth: isMobile ? 240 : 320,
         },
         {
@@ -189,7 +188,6 @@ export default function Expenses() {
           sortable: true,
           valueFormatter: ({ value }) => formatCurrency(value),
         },
-
         {
           headerName: "Date",
           field: "date",

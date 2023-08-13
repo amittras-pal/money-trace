@@ -1,6 +1,5 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
-import omit from "lodash/omit";
 import { PipelineStage, Types } from "mongoose";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
@@ -8,18 +7,17 @@ import { IExpense } from "../types/expense";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
 /**
- * Save a new expense.
- * @description get expenses of a user
+ * @description Save a new expense.
  * @method POST /api/expenses
  * @access protected
  */
 export const createExpense = routeHandler(
   async (req: TypedRequest<{}, IExpense>, res: TypedResponse) => {
     const { userId } = req;
-    const { title, amount, date, categoryId }: IExpense = req.body;
+    const { title, date, categoryId }: IExpense = req.body;
     const ex: IExpense = req.body;
 
-    if (!title || !amount || !date || !categoryId) {
+    if (!title || !date || !categoryId) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all required fields.");
     }
@@ -50,16 +48,14 @@ export const updateExpense = routeHandler(
     req: TypedRequest<{}, IExpense>,
     res: TypedResponse<IExpense | null>
   ) => {
-    const { title, amount, date, categoryId, _id }: IExpense = req.body;
+    const { title, date, categoryId, _id }: IExpense = req.body;
     const ex: IExpense = req.body;
 
-    if (!_id || !title || !amount || !date || !categoryId) {
+    if (!_id || !title || !date || !categoryId) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all required fields.");
     }
 
-    // TODO: there is probably something wrong here.
-    // FIXME: check and fix.
     await Expense.findByIdAndUpdate(_id, { $set: ex });
     const update: IExpense | null = await Expense.findById(_id).populate(
       "categoryId"
@@ -68,19 +64,6 @@ export const updateExpense = routeHandler(
     if (update?.plan) {
       await ExpensePlan.findByIdAndUpdate(update.plan, {
         $set: { lastAction: "Expense Updated" },
-      });
-    }
-
-    // Update linked expense, if any.
-    if (update?.linked) {
-      if (!update.plan) {
-        const linkedExpenseInPlan = await Expense.findById(update.linked);
-        await ExpensePlan.findByIdAndUpdate(linkedExpenseInPlan?.plan, {
-          $set: { lastAction: "Expense Updated" },
-        });
-      }
-      await Expense.findByIdAndUpdate(update.linked, {
-        $set: omit(ex, ["_id", "plan", "linked"]),
       });
     }
 
@@ -97,25 +80,15 @@ export const deleteExpense = routeHandler(
   async (req: TypedRequest<{ id: "string" }, {}>, res: TypedResponse) => {
     const expense: IExpense | null = await Expense.findById(req.query.id);
 
-    // update plan state if expense was in a plan or expense was linked to a plan.
-    if (expense?.plan) {
-      await ExpensePlan.findByIdAndUpdate(expense.plan, {
-        $set: { lastAction: "Expense Removed" },
-      });
-    }
-
-    // delete linked expense, and update the plan if current/linked expense was in the plan.
+    // When a linked expense is deleted, break the link.
     if (expense?.linked) {
-      if (!expense.plan) {
-        const linkedExpenseInPlan = await Expense.findById(expense.linked);
-        await ExpensePlan.findByIdAndUpdate(linkedExpenseInPlan?.plan, {
-          $set: { lastAction: "Expense Removed" },
-        });
-      }
-      await Expense.deleteOne({
-        user: new Types.ObjectId(req.userId),
-        _id: new Types.ObjectId(expense.linked),
-      });
+      await Expense.findByIdAndUpdate(
+        {
+          user: new Types.ObjectId(req.userId),
+          _id: new Types.ObjectId(expense.linked),
+        },
+        { $set: { linked: null } }
+      );
     }
 
     // delete original
@@ -125,33 +98,6 @@ export const deleteExpense = routeHandler(
     });
 
     res.json({ message: "Expense deleted successfully." });
-  }
-);
-
-/**
- * @description Copies an expense to the regular budget.
- * @method PUT /api/expenses/clone
- * @access protected
- */
-export const cloneExpense = routeHandler(
-  async (req: TypedRequest<{}, { _id: string }>, res: TypedResponse) => {
-    const existing = await Expense.findById(req.body._id);
-    const newExpense = await Expense.create({
-      amount: existing?.amount,
-      categoryId: existing?.categoryId,
-      date: existing?.date,
-      description: existing?.description,
-      plan: null,
-      reverted: existing?.reverted,
-      title: existing?.title,
-      user: existing?.user,
-      linked: new Types.ObjectId(existing?._id),
-    });
-
-    existing?.set("linked", new Types.ObjectId(newExpense._id));
-    existing?.save();
-
-    res.json({ message: "Expense copied to budget successfully!" });
   }
 );
 

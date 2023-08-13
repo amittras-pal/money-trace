@@ -35,8 +35,9 @@ export const useStyles = createStyles((theme) => {
       border: "1px solid transparent",
       transition: `all 1s ease-out`,
       display: "flex",
-      flexDirection: "column",
-      gap: 4,
+      alignItems: "center",
+      width: "100%",
+      gap: 8,
     },
     badge: {
       display: "flex",

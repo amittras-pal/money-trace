@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  copyExpensesToBudget,
   createExpensePlan,
   deletePlan,
   getExpensePlans,
@@ -18,5 +19,6 @@ expensePlanRoutes
   .delete(authenticate, deletePlan);
 
 expensePlanRoutes.get("/details", authenticate, getPlanDetails);
+expensePlanRoutes.post("/copy-to-budget", authenticate, copyExpensesToBudget);
 
 export default expensePlanRoutes;

@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   Button,
   Divider,
@@ -8,18 +7,21 @@ import {
   Progress,
   ScrollArea,
   SimpleGrid,
+  Switch,
   Text,
+  ThemeIcon,
+  Tooltip,
 } from "@mantine/core";
 import {
-  IconAlertTriangleFilled,
   IconArrowRight,
   IconArrowUpRight,
   IconCash,
   IconChevronUp,
+  IconExclamationMark,
   IconPlus,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import BudgetItem from "../../../components/BudgetItem";
 import { useCurrentUser } from "../../../context/user";
@@ -34,6 +36,8 @@ import { useSummary } from "../services";
 import { useStyles } from "../styles";
 
 export default function BudgetBreakdown({ showForm, showRecent, recents }) {
+  const [showSelection, setShowSelection] = useState(false);
+  const [selection, setSelection] = useState([]);
   const { budget, userData } = useCurrentUser();
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
@@ -54,6 +58,11 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
     if (userData) refetch();
   }, [refetch, userData]);
 
+  const handleSelection = ({ currentTarget }) => {
+    if (currentTarget.checked) setSelection((v) => [...v, currentTarget.value]);
+    else setSelection((v) => v.filter((o) => o !== currentTarget.value));
+  };
+
   const { percColor, percSpent } = useMemo(
     () => ({
       percSpent: getPercentage(summary?.data?.response.total, budget),
@@ -61,6 +70,13 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
     }),
     [budget, summary?.data?.response.total]
   );
+
+  const selectionTotal = useMemo(() => {
+    return Object.entries(summary?.data?.response?.summary ?? []).reduce(
+      (sum, [key, data]) => (selection.includes(key) ? sum + data.total : sum),
+      0
+    );
+  }, [selection, summary?.data?.response]);
 
   if (!budget)
     return (
@@ -79,20 +95,33 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
   return (
     <Box ref={ref} className={classes.budgetWrapper}>
       <Group position="apart">
-        <Text fw="bold">{dayjs().format("MMM, 'YY")}</Text>
+        <Text fw="bold" mr="auto">
+          {dayjs().format("MMM, 'YY")}
+        </Text>
+        <Switch
+          labelPosition="left"
+          label={showSelection ? formatCurrency(selectionTotal) : "Select"}
+          size="sm"
+          checked={showSelection}
+          onChange={(e) => {
+            setShowSelection(e.currentTarget.checked);
+          }}
+        />
         {summary?.data?.response?.total > budget && (
-          <Badge
-            color="red"
-            variant="filled"
-            size="sm"
-            radius="sm"
-            leftSection={
-              <IconAlertTriangleFilled size={10} style={{ marginBottom: -1 }} />
+          <Tooltip
+            label={
+              <Text component="span" fw="normal" size="sm">
+                Budget Exceeded
+              </Text>
             }
+            color="dark"
+            position="bottom"
+            events={{ touch: true }}
           >
-            Budget Exceeded:{" "}
-            {formatCurrency(summary?.data?.response?.total - budget)}
-          </Badge>
+            <ThemeIcon radius="lg" size="sm" color="red">
+              <IconExclamationMark size={14} />
+            </ThemeIcon>
+          </Tooltip>
         )}
       </Group>
       <Divider my="xs" />
@@ -105,6 +134,9 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
                 subCategories={data.subCategories}
                 total={data.total}
                 key={category}
+                showSelection={showSelection}
+                selection={selection}
+                onSelectionChange={handleSelection}
               />
             )
           )}

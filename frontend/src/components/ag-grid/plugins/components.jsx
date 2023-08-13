@@ -7,11 +7,11 @@ import {
   Popover,
   Text,
   ThemeIcon,
-  Tooltip,
 } from "@mantine/core";
 import {
   IconArrowsSort,
-  IconCopy,
+  IconBookmark,
+  IconCalendarCode,
   IconDotsVertical,
   IconEdit,
   IconFilter,
@@ -25,7 +25,6 @@ import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { primaryColor } from "../../../constants/app";
 import ExpenseDescription from "../../ExpenseDescription";
-import { IconCalendarCode } from "@tabler/icons-react";
 
 function getNextSortOrder(current) {
   if (!current) return "asc";
@@ -75,7 +74,7 @@ export function ColumnHeader(props) {
   );
 }
 
-export function RowCount({ api }) {
+export function RowCountHeader({ api }) {
   return (
     <Text component="span" mx="auto" color="red" fw="bold">
       {api.getDisplayedRowCount()}
@@ -83,7 +82,7 @@ export function RowCount({ api }) {
   );
 }
 
-export function DescriptionColumnHeader() {
+export function MetaHeader() {
   return (
     <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
       <Popover.Target>
@@ -106,6 +105,51 @@ export function DescriptionColumnHeader() {
   );
 }
 
+export function MetaCell({ data, page }) {
+  if (!data.description && !data.linked && data.amount > 0) return null;
+  return (
+    <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
+      <Popover.Target>
+        <ActionIcon size="sm" radius="xl" color={primaryColor} variant="light">
+          <IconInfoCircle size={18} />
+        </ActionIcon>
+      </Popover.Target>
+      <Popover.Dropdown p={8}>
+        {data.description && (
+          <Group spacing={6} sx={{ alignItems: "flex-start" }}>
+            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
+              <IconInfoCircle size={14} stroke={1.5} />
+            </ThemeIcon>
+            <ExpenseDescription color="dimmed">
+              {data.description}
+            </ExpenseDescription>
+          </Group>
+        )}
+        {data.linked && (
+          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
+              <IconCalendarCode size={14} stroke={1.5} />
+            </ThemeIcon>
+            <Text component="span" fz="xs" color="dimmed">
+              {page === "budget" ? "Created in a plan." : "Copied to Budget."}
+            </Text>
+          </Group>
+        )}
+        {!data.amount && (
+          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
+              <IconBookmark size={14} stroke={1.5} />
+            </ThemeIcon>
+            <Text component="span" size="xs" color="dimmed">
+              Created to keep record; no money spent.
+            </Text>
+          </Group>
+        )}
+      </Popover.Dropdown>
+    </Popover>
+  );
+}
+
 export function CategoryCell({ data, value }) {
   return (
     <Badge
@@ -119,45 +163,16 @@ export function CategoryCell({ data, value }) {
   );
 }
 
-export function DescriptionCell({ value }) {
-  if (!value)
-    return (
-      <ActionIcon size="sm" radius="xl" disabled>
-        <IconInfoCircle size={18} />
-      </ActionIcon>
-    );
-  else
-    return (
-      <Popover withinPortal withArrow shadow="md" width={280} position="bottom">
-        <Popover.Target>
-          <ActionIcon
-            size="sm"
-            radius="xl"
-            color={primaryColor}
-            variant="light"
-          >
-            <IconInfoCircle size={18} />
-          </ActionIcon>
-        </Popover.Target>
-        <Popover.Dropdown p={8}>
-          <ExpenseDescription color="dimmed">{value}</ExpenseDescription>
-        </Popover.Dropdown>
-      </Popover>
-    );
-}
-
 export function RowMenuCell({
   data,
   onEditExpense,
   onDeleteExpense,
-  onCopyToBudget,
   rowIndex,
   plan,
 }) {
   const availableActions = useMemo(() => {
     const actions = [];
     if (plan) {
-      actions.push("copy");
       if (plan.open && dayjs(data.date) >= dayjs().subtract(7, "days"))
         actions.push("edit", "delete");
     } else if (dayjs(data.date) >= dayjs().subtract(7, "days"))
@@ -186,18 +201,9 @@ export function RowMenuCell({
           <Menu.Item
             icon={<IconEdit size={14} />}
             onClick={() => onEditExpense(data, rowIndex)}
-            disabled={data.copied}
-          >
-            {data.copied ? "Copied Expense" : "Edit"}
-          </Menu.Item>
-        )}
-        {availableActions.includes("copy") && (
-          <Menu.Item
-            icon={<IconCopy size={14} />}
             disabled={data.linked}
-            onClick={() => onCopyToBudget(data)}
           >
-            {data.linked ? "Copied!" : "Copy to Budget"}
+            {data.linked ? "Linked Expense" : "Edit"}
           </Menu.Item>
         )}
         {availableActions.includes("delete") && (
@@ -236,36 +242,6 @@ export function NoDataOverlay(props) {
       >
         {props.message}
       </Text>
-    </Box>
-  );
-}
-
-export function ExpenseTitleCell({ value, data }) {
-  return (
-    <Box sx={{ display: "flex", height: "100%", alignItems: "center" }}>
-      {data.linked && (
-        <Tooltip
-          label={
-            <Text component="span" fw="normal" size="sm">
-              Created in a plan.
-            </Text>
-          }
-          color="dark"
-          position="right"
-          events={{ touch: true }}
-        >
-          <ThemeIcon
-            size="sm"
-            color="indigo"
-            variant="light"
-            radius="lg"
-            mr={6}
-          >
-            <IconCalendarCode size={14} stroke={1.5} />
-          </ThemeIcon>
-        </Tooltip>
-      )}
-      <Text>{value}</Text>
     </Box>
   );
 }

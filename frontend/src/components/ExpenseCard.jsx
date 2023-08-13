@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import {
+  IconBookmark,
   IconCalendarCode,
   IconCalendarTime,
   IconChevronRight,
@@ -84,9 +85,11 @@ function ExpenseCard({
                 ? dayjs(data.date).format("DD MMM 'YY hh:mm a")
                 : dayjs(data.date).fromNow()}
             </Badge>
-            <Text fz="lg" fw="bold" mt="auto">
-              {formatCurrency(data.amount)}
-            </Text>
+            {data.amount && (
+              <Text fz="lg" fw="bold" mt="auto">
+                {formatCurrency(data.amount)}
+              </Text>
+            )}
           </Group>
         </Group>
         <Group sx={{ flexDirection: "column" }} spacing={6}>
@@ -103,10 +106,9 @@ function ExpenseCard({
                   <Menu.Item
                     icon={<IconEdit size={14} />}
                     onClick={() => onEditExpense(data)}
-                    // disabled={data.copied}
+                    disabled={data.linked}
                   >
-                    {/* {data.copied ? "Copied Expense" : "Edit"} */}
-                    Edit
+                    {data.linked ? "LInked Expense" : "Edit"}
                   </Menu.Item>
                 )}
                 {isEditable && (
@@ -150,6 +152,22 @@ function ExpenseCard({
             >
               <ThemeIcon radius="lg" size="sm" color="indigo" variant="light">
                 <IconCalendarCode size={14} stroke={1.5} />
+              </ThemeIcon>
+            </Tooltip>
+          )}
+          {!data.amount && (
+            <Tooltip
+              label={
+                <Text component="span" fw="normal" size="sm">
+                  Created to keep record; no money spent.
+                </Text>
+              }
+              color="dark"
+              position="right"
+              events={{ touch: true }}
+            >
+              <ThemeIcon radius="lg" size="sm" color="indigo" variant="light">
+                <IconBookmark size={14} stroke={1.5} />
               </ThemeIcon>
             </Tooltip>
           )}

@@ -7,6 +7,5 @@ budgetRoutes
   .route("/")
   .get(authenticate, getBudget)
   .post(authenticate, createBudget);
-// .put(authenticate, updateBudget);
 
 export default budgetRoutes;

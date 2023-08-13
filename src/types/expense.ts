@@ -12,7 +12,7 @@ export type IExpense = {
   categoryId: Types.ObjectId | string;
   user: Types.ObjectId;
   plan?: Types.ObjectId | null;
-  amount: Number;
-  reverted: Boolean;
+  amount: number;
+  reverted: boolean;
   linked: Types.ObjectId | string;
 };
