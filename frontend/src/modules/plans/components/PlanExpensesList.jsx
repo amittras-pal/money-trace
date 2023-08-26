@@ -8,11 +8,13 @@ import {
   Text,
   createStyles,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconCheck, IconCopy, IconX } from "@tabler/icons-react";
 import React, { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AgGridMod from "../../../components/ag-grid/AgGridMod";
 import {
+  AmountCell,
   CategoryCell,
   MetaCell,
   MetaHeader,
@@ -26,10 +28,8 @@ import {
 import { dateFormatter } from "../../../components/ag-grid/plugins/formatters";
 import { useErrorHandler } from "../../../hooks/useErrorHandler";
 import { useMediaMatch } from "../../../hooks/useMediaMatch";
-import { formatCurrency } from "../../../utils";
 import { useExpenseList } from "../../expenses/services";
 import { useCopyToBudget } from "../services";
-import { notifications } from "@mantine/notifications";
 
 export default function PlanExpensesList({ onExpenseAction, plan }) {
   const { onError } = useErrorHandler();
@@ -163,7 +163,7 @@ export default function PlanExpensesList({ onExpenseAction, plan }) {
           field: "amount",
           minWidth: 140,
           sortable: true,
-          valueFormatter: ({ value }) => formatCurrency(value),
+          cellRenderer: AmountCell,
         },
         {
           headerName: "Date",
