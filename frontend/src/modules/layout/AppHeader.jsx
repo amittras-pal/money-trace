@@ -1,23 +1,32 @@
 import {
   ActionIcon,
   Burger,
+  Divider,
   Header,
   Image,
+  Kbd,
   MediaQuery,
+  Modal,
   Text,
   ThemeIcon,
   Tooltip,
   useMantineTheme,
 } from "@mantine/core";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconChevronRight, IconLogout, IconPower } from "@tabler/icons-react";
+import {
+  IconChevronRight,
+  IconExclamationMark,
+  IconLogout,
+  IconPower,
+} from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_TITLE } from "../../constants/app";
+import { useMediaMatch } from "../../hooks/useMediaMatch";
 import logo from "../../resources/app-logo.svg";
 import { useAppStyles } from "./styles";
-import { useMediaMatch } from "../../hooks/useMediaMatch";
 
 export default function AppHeader({ open, setOpen }) {
   const { classes } = useAppStyles();
@@ -26,6 +35,8 @@ export default function AppHeader({ open, setOpen }) {
   const navigate = useNavigate();
   const [title, setTitle] = useState([APP_TITLE, ""]);
   const isMobile = useMediaMatch();
+  const [showShortcuts, shortcuts] = useDisclosure(false);
+  useHotkeys([["i", shortcuts.open]]);
 
   const titleHandler = useCallback((entries) => {
     const title = entries[0]?.addedNodes?.[0]?.data
@@ -70,54 +81,117 @@ export default function AppHeader({ open, setOpen }) {
     });
 
   return (
-    <Header height={60} className={classes.header}>
-      <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-        <Burger
-          opened={open}
-          onClick={() => setOpen((o) => !o)}
-          size="sm"
-          color={theme.colors.gray[6]}
-          mr="md"
-        />
-      </MediaQuery>
-      <ThemeIcon
-        color="gray"
-        mr={8}
-        size={28}
-        variant="outline"
-        sx={(theme) => ({ borderColor: theme.colors.dark[4] })}
-      >
-        <Image src={logo} />
-      </ThemeIcon>
-      <Text
-        fz="lg"
-        fw="bold"
-        mr={4}
-        component={Link}
-        to="/"
-        sx={{ whiteSpace: "nowrap" }}
-      >
-        {title[0]} <IconChevronRight size={14} />
-      </Text>
-      <Tooltip
-        label={title[1]}
-        disabled={!isMobile}
-        color="dark"
-        events={{ touch: true }}
-      >
-        <Text fz="sm" fw={400} color="dimmed" lineClamp={1}>
-          {title[1]}
+    <>
+      <Header height={60} className={classes.header}>
+        <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+          <Burger
+            opened={open}
+            onClick={() => setOpen((o) => !o)}
+            size="sm"
+            color={theme.colors.gray[6]}
+            mr="md"
+          />
+        </MediaQuery>
+        <ThemeIcon
+          color="gray"
+          mr={8}
+          size={28}
+          variant="outline"
+          sx={(theme) => ({ borderColor: theme.colors.dark[4] })}
+        >
+          <Image src={logo} />
+        </ThemeIcon>
+        <Text
+          fz="lg"
+          fw="bold"
+          mr={4}
+          component={Link}
+          to="/"
+          sx={{ whiteSpace: "nowrap" }}
+        >
+          {title[0]} <IconChevronRight size={14} />
         </Text>
-      </Tooltip>
-      <ActionIcon
-        ml="auto"
-        size="md"
-        variant="subtle"
-        color="red"
-        onClick={confirmLogout}
+        <Tooltip
+          label={title[1]}
+          disabled={!isMobile}
+          color="dark"
+          events={{ touch: true }}
+        >
+          <Text fz="sm" fw={400} color="dimmed" lineClamp={1}>
+            {title[1]}
+          </Text>
+        </Tooltip>
+        <Tooltip
+          label={
+            <Text>
+              Keyboard Shortcuts <Kbd mb="xs">i</Kbd>
+            </Text>
+          }
+          position="bottom"
+          color="dark"
+          withArrow
+        >
+          <ActionIcon
+            ml="auto"
+            mr="xs"
+            size="md"
+            variant="default"
+            radius="lg"
+            color="indigo"
+            onClick={shortcuts.open}
+          >
+            <IconExclamationMark size={18} />
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="Log Out" position="bottom" withArrow color="dark">
+          <ActionIcon
+            size="md"
+            variant="default"
+            radius="lg"
+            color="red"
+            onClick={confirmLogout}
+          >
+            <IconPower size={18} />
+          </ActionIcon>
+        </Tooltip>
+      </Header>
+      <Modal
+        centered
+        title="Keyboard Shortcuts"
+        opened={showShortcuts}
+        onClose={shortcuts.close}
       >
-        <IconPower size={18} />
-      </ActionIcon>
-    </Header>
+        <Text fz="lg" fw="bold" mb="sm">
+          Global
+        </Text>
+        <Text fz="sm" mb="xs">
+          <Kbd>I</Kbd> - Open Keyboard Shortcuts.
+        </Text>
+        <Divider my="sm" />
+        <Text fz="lg" fw="bold" mb="sm">
+          Dashboard
+        </Text>
+        <Text fz="sm" mb="xs">
+          <Kbd>N</Kbd> - Create New Expense.
+        </Text>
+        <Text fz="sm" mb="xs">
+          <Kbd>Shift+S</Kbd> - Toggle category selection
+        </Text>
+        <Divider my="sm" />
+        <Text fz="lg" fw="bold" mb="sm">
+          Plans List
+        </Text>
+        <Text fz="sm" mb="xs">
+          <Kbd>N</Kbd> - Create New Plan.
+        </Text>
+        <Divider my="sm" />
+        <Text fz="lg" fw="bold" mb="sm">
+          Plan Details
+        </Text>
+        <Text fz="sm" mb="xs">
+          <Kbd>N</Kbd> - Add New Expense to plan.
+        </Text>
+      </Modal>
+    </>
   );
 }

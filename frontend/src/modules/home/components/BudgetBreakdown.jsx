@@ -34,6 +34,7 @@ import {
 } from "../../../utils";
 import { useSummary } from "../services";
 import { useStyles } from "../styles";
+import { useHotkeys } from "@mantine/hooks";
 
 export default function BudgetBreakdown({ showForm, showRecent, recents }) {
   const [showSelection, setShowSelection] = useState(false);
@@ -42,6 +43,18 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
   const { onError } = useErrorHandler();
   const isMobile = useMediaMatch();
   const { classes } = useStyles();
+  const selectionToggle = useRef();
+
+  useHotkeys([
+    ["n", showForm],
+    [
+      "shift+s",
+      () => {
+        setShowSelection((v) => !v);
+        selectionToggle.current.focus();
+      },
+    ],
+  ]);
 
   const {
     data: summary,
@@ -102,6 +115,7 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
           labelPosition="left"
           label={showSelection ? formatCurrency(selectionTotal) : "Select"}
           size="sm"
+          ref={selectionToggle}
           checked={showSelection}
           onChange={(e) => {
             setShowSelection(e.currentTarget.checked);
@@ -184,6 +198,7 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
             leftIcon={<IconPlus size={18} />}
             size="xs"
             onClick={showForm}
+            autoFocus
           >
             Add New
           </Button>

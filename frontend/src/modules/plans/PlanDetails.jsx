@@ -1,5 +1,5 @@
 import { ActionIcon, Modal, Tabs } from "@mantine/core";
-import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
@@ -68,6 +68,8 @@ export default function PlanDetails() {
     setTargetExpense({ plan: params.id });
     formModal.open();
   };
+
+  useHotkeys([["N", openCreateForm]]);
 
   return (
     <>

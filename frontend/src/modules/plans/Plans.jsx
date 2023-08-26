@@ -14,7 +14,7 @@ import ExpensePlan from "./components/ExpensePlan";
 import { useExpensePlans, useUpdatePlan } from "./services";
 import { IconCheck, IconChecklist, IconPlus, IconX } from "@tabler/icons-react";
 import { APP_TITLE, primaryColor } from "../../constants/app";
-import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import ExpensePlanForm from "./components/ExpensePlanForm";
 import DeletePlan from "./components/DeletePlan";
 import { useState } from "react";
@@ -41,6 +41,7 @@ export default function Plans() {
 
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
+  useHotkeys([["N", formModal.open]]);
 
   const [targetPlan, setTargetPlan] = useState(null);
 
