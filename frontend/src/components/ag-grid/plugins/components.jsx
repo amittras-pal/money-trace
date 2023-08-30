@@ -25,6 +25,7 @@ import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { primaryColor } from "../../../constants/app";
 import ExpenseDescription from "../../ExpenseDescription";
+import { formatCurrency } from "../../../utils";
 
 function getNextSortOrder(current) {
   if (!current) return "asc";
@@ -217,6 +218,18 @@ export function RowMenuCell({
         )}
       </Menu.Dropdown>
     </Menu>
+  );
+}
+
+export function AmountCell({ value }) {
+  return (
+    <Text
+      sx={{ height: "100%", display: "flex", alignItems: "center" }}
+      color={!value ? "dimmed" : ""}
+      td={!value ? "line-through" : ""}
+    >
+      {formatCurrency(value)}
+    </Text>
   );
 }
 

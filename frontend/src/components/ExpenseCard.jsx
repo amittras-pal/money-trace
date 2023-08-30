@@ -31,7 +31,6 @@ function ExpenseCard({
   onEditExpense,
   onDeleteExpense,
   hideMenu = false,
-  showAbsoluteDate = false,
 }) {
   const { classes } = useExpenseStyles();
 
@@ -80,16 +79,25 @@ function ExpenseCard({
             {data.category.label}
           </Badge>
           <Group position="apart" align="center" mt={4}>
-            <Badge color="dark" size="sm" variant="filled">
-              {showAbsoluteDate
-                ? dayjs(data.date).format("DD MMM 'YY hh:mm a")
-                : dayjs(data.date).fromNow()}
-            </Badge>
-            {data.amount && (
-              <Text fz="lg" fw="bold" mt="auto">
-                {formatCurrency(data.amount)}
-              </Text>
-            )}
+            <Tooltip
+              position="top"
+              disabled={hideMenu}
+              events={{ touch: true }}
+              label={
+                <Text fz="xs">
+                  {dayjs(data.date).format("DD MMM 'YY hh:mm a")}
+                </Text>
+              }
+            >
+              <Badge color="dark" size="sm" variant="filled">
+                {hideMenu
+                  ? dayjs(data.date).format("DD MMM 'YY hh:mm a")
+                  : dayjs(data.date).fromNow()}
+              </Badge>
+            </Tooltip>
+            <Text fz="lg" fw="bold" mt="auto">
+              {formatCurrency(data.amount)}
+            </Text>
           </Group>
         </Group>
         <Group sx={{ flexDirection: "column" }} spacing={6}>
@@ -125,14 +133,13 @@ function ExpenseCard({
           )}
           {dayjs(data.date).month() !== dayjs().month() && (
             <Tooltip
+              position="left"
+              events={{ touch: true }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   From {dayjs().subtract(1, "month").format("MMMM")}.
                 </Text>
               }
-              color="dark"
-              position="right"
-              events={{ touch: true }}
             >
               <ThemeIcon radius="lg" size="sm" color="orange" variant="light">
                 <IconCalendarTime size={14} stroke={1.5} />
@@ -141,14 +148,13 @@ function ExpenseCard({
           )}
           {data.linked && (
             <Tooltip
+              position="left"
+              events={{ touch: true }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created in a plan.
                 </Text>
               }
-              color="dark"
-              position="right"
-              events={{ touch: true }}
             >
               <ThemeIcon radius="lg" size="sm" color="indigo" variant="light">
                 <IconCalendarCode size={14} stroke={1.5} />
@@ -157,14 +163,13 @@ function ExpenseCard({
           )}
           {!data.amount && (
             <Tooltip
+              position="left"
+              events={{ touch: true }}
               label={
                 <Text component="span" fw="normal" size="sm">
                   Created to keep record; no money spent.
                 </Text>
               }
-              color="dark"
-              position="right"
-              events={{ touch: true }}
             >
               <ThemeIcon radius="lg" size="sm" color="indigo" variant="light">
                 <IconBookmark size={14} stroke={1.5} />

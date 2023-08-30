@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconCurrencyRupee } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -64,7 +64,7 @@ export default function ExpenseForm({ data, onComplete }) {
       plan: data?.plan ?? "",
       linked: data?.linked ?? null,
     },
-    resolver: yupResolver(expenseSchema),
+    resolver: yupResolver(expenseSchema()),
   });
 
   const setFieldValue = (name, value) => {
@@ -146,6 +146,7 @@ export default function ExpenseForm({ data, onComplete }) {
           placeholder="Amount"
           label="Amount"
           inputMode="numeric"
+          icon={<IconCurrencyRupee size={18} />}
           onBlur={(e) => {
             if (!e.target.value)
               setValue("amount", 0, {

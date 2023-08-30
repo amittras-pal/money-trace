@@ -15,6 +15,7 @@ import DeleteExpense from "../../components/DeleteExpense";
 import ExpenseForm from "../../components/ExpenseForm";
 import AgGridMod from "../../components/ag-grid/AgGridMod";
 import {
+  AmountCell,
   CategoryCell,
   MetaCell,
   MetaHeader,
@@ -186,7 +187,7 @@ export default function Expenses() {
           field: "amount",
           minWidth: 140,
           sortable: true,
-          valueFormatter: ({ value }) => formatCurrency(value),
+          cellRenderer: AmountCell,
         },
         {
           headerName: "Date",
