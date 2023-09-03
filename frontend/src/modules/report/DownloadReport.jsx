@@ -1,15 +1,21 @@
-import { Button, Checkbox, Group, Text, createStyles } from "@mantine/core";
+import {
+  Button,
+  Checkbox,
+  Group,
+  SegmentedControl,
+  createStyles,
+} from "@mantine/core";
 import { DatePicker, MonthPicker } from "@mantine/dates";
 import { useDocumentTitle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconDownload } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React, { useMemo, useState } from "react";
-import { APP_TITLE } from "../../constants/app";
+import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useDownloadReport } from "./services";
 import { downloadFile } from "./utils/downloadFile";
-import { useErrorHandler } from "../../hooks/useErrorHandler";
 
 export default function DownloadReport() {
   useDocumentTitle(`${APP_TITLE} | Download Report`);
@@ -60,43 +66,46 @@ export default function DownloadReport() {
     });
   };
 
-  const handleViewChange = () => {
-    setView((v) => (v === "month" ? "day" : "month"));
-    setSelection([null, null]);
-  };
-
   return (
-    <Group position="center" sx={{ flexDirection: "column" }}>
-      <Text>Select {view}s range to download report.</Text>
-      {view === "day" ? (
-        <DatePicker
-          {...pickerProps}
-          value={selection}
-          onChange={setSelection}
+    <Group position="center">
+      <Group position="center" sx={{ maxWidth: 290, flexDirection: "column" }}>
+        <SegmentedControl
+          size="sm"
+          value={view}
+          color={primaryColor}
+          onChange={setView}
+          sx={{ width: "100%" }}
+          data={[
+            { label: "Dates Range", value: "day" },
+            { label: "Months Range", value: "month" },
+          ]}
         />
-      ) : (
-        <MonthPicker
-          {...pickerProps}
-          value={selection}
-          onChange={setSelection}
+        {view === "day" ? (
+          <DatePicker
+            {...pickerProps}
+            value={selection}
+            onChange={setSelection}
+          />
+        ) : (
+          <MonthPicker
+            {...pickerProps}
+            value={selection}
+            onChange={setSelection}
+          />
+        )}
+        <Checkbox
+          checked={includeList}
+          onChange={(e) => setIncludeList(e.currentTarget.checked)}
+          label="Include Expenses List"
         />
-      )}
-      <Checkbox
-        checked={includeList}
-        onChange={(e) => setIncludeList(e.currentTarget.checked)}
-        label="Include Expenses List"
-      />
-      <Group spacing="sm">
         <Button
+          fullWidth
           disabled={!selection[0] || !selection[1]}
           leftIcon={<IconDownload size={16} />}
           onClick={handleDownload}
           loading={isLoading}
         >
           Download
-        </Button>
-        <Button onClick={handleViewChange} variant="outline">
-          Select {view === "day" ? "month" : "day"}s
         </Button>
       </Group>
     </Group>
