@@ -26,7 +26,7 @@ function NavLink({ onChange, ...route }) {
   }, [route, pathname]);
 
   const navigateViaShortcut = () => {
-    if (!isMobile) ref.current.click();
+    if (!active && !isMobile) ref.current.click();
   };
   useHotkeys([[`shift+${route.shortcut}`, navigateViaShortcut]]);
 

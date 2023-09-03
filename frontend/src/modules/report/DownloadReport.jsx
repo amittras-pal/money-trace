@@ -53,7 +53,7 @@ export default function DownloadReport() {
         color: "green",
         icon: <IconDownload size={16} />,
       });
-      setSelection([null, null]);
+      // setSelection([null, null]);
     },
     onError,
   });
