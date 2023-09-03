@@ -137,7 +137,7 @@ export default function AppHeader({ open, setOpen }) {
             size="md"
             variant="default"
             radius="lg"
-            color="indigo"
+              color={primaryColor}
             onClick={shortcuts.open}
           >
             <IconExclamationMark size={18} />

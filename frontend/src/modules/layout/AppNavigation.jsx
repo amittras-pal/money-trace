@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 import { useAppStyles } from "./styles";
+import { primaryColor } from "../../constants/app";
 
 function NavLink({ icon, label, path, disabled, exactMatch, onChange }) {
   const { pathname } = useLocation();
@@ -36,7 +37,7 @@ function NavLink({ icon, label, path, disabled, exactMatch, onChange }) {
       })}
     >
       <Group>
-        <ThemeIcon color="indigo" variant={matching ? "filled" : "light"}>
+        <ThemeIcon color={primaryColor} variant={matching ? "filled" : "light"}>
           {icon}
         </ThemeIcon>
         <Text size="sm">{label}</Text>
