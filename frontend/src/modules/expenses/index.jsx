@@ -7,7 +7,7 @@ import {
   Text,
 } from "@mantine/core";
 import { MonthPickerInput } from "@mantine/dates";
-import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle, useHotkeys } from "@mantine/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import React, { useCallback, useMemo, useRef, useState } from "react";
@@ -39,12 +39,15 @@ export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
   const { userData } = useCurrentUser();
   const { onError } = useErrorHandler();
+
   const isMobile = useMediaMatch();
+
   const client = useQueryClient();
+
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
-  const [targetExpense, setTargetExpense] = useState(null);
 
+  const [targetExpense, setTargetExpense] = useState(null);
   const [filterTotal, setFilterTotal] = useState(0);
   const [grid, setGrid] = useState(null);
   const [payload, setPayload] = useState({
@@ -53,12 +56,18 @@ export default function Expenses() {
     sort: { date: -1 },
   });
 
+  const clearFilters = () => {
+    grid?.api.destroyFilter("category.group");
+    grid?.api.destroyFilter("category._id");
+  };
+
+  useHotkeys([["x", clearFilters]]);
+
   const ref = useRef();
   const { data: listRes, isLoading: loadingList } = useExpenseList(payload, {
     refetchOnWindowFocus: false,
     onSuccess: (res) => {
-      grid?.api.destroyFilter("category.group");
-      grid?.api.destroyFilter("category._id");
+      clearFilters();
       setFilterTotal(
         res.data?.response
           ?.reduce((sum, item) => sum + item.amount, 0)

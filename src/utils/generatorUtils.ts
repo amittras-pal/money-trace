@@ -36,7 +36,7 @@ export function mergeBudgetsInExpense(expensesData: any, budgetsData: any) {
               ["label", "color", "group"]
             ),
           },
-          ["title", "description", "date", "amount", "category"]
+          ["title", "description", "date", "amount", "category", "linked"]
         )
       ),
     };

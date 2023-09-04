@@ -1,7 +1,6 @@
 import {
   ActionIcon,
   Burger,
-  Divider,
   Header,
   Image,
   Kbd,
@@ -23,9 +22,10 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { APP_TITLE } from "../../constants/app";
+import { APP_TITLE, primaryColor } from "../../constants/app";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
 import logo from "../../resources/app-logo.svg";
+import ShortcutsList from "./ShortcutsList";
 import { useAppStyles } from "./styles";
 
 export default function AppHeader({ open, setOpen }) {
@@ -117,32 +117,33 @@ export default function AppHeader({ open, setOpen }) {
           color="dark"
           events={{ touch: true }}
         >
-          <Text fz="sm" fw={400} color="dimmed" lineClamp={1}>
+          <Text fz="sm" fw={400} color="dimmed" mr="auto" lineClamp={1}>
             {title[1]}
           </Text>
         </Tooltip>
-        <Tooltip
-          label={
-            <Text>
-              Keyboard Shortcuts <Kbd mb="xs">i</Kbd>
-            </Text>
-          }
-          position="bottom"
-          color="dark"
-          withArrow
-        >
-          <ActionIcon
-            ml="auto"
-            mr="xs"
-            size="md"
-            variant="default"
-            radius="lg"
-            color="indigo"
-            onClick={shortcuts.open}
+        {!isMobile && (
+          <Tooltip
+            label={
+              <Text>
+                Keyboard Shortcuts <Kbd mb="xs">i</Kbd>
+              </Text>
+            }
+            position="bottom"
+            color="dark"
+            withArrow
           >
-            <IconExclamationMark size={18} />
-          </ActionIcon>
-        </Tooltip>
+            <ActionIcon
+              mr="xs"
+              size="md"
+              variant="default"
+              radius="lg"
+              color={primaryColor}
+              onClick={shortcuts.open}
+            >
+              <IconExclamationMark size={18} />
+            </ActionIcon>
+          </Tooltip>
+        )}
         <Tooltip label="Log Out" position="bottom" withArrow color="dark">
           <ActionIcon
             size="md"
@@ -157,40 +158,12 @@ export default function AppHeader({ open, setOpen }) {
       </Header>
       <Modal
         centered
+        size="lg"
         title="Keyboard Shortcuts"
         opened={showShortcuts}
         onClose={shortcuts.close}
       >
-        <Text fz="lg" fw="bold" mb="sm">
-          Global
-        </Text>
-        <Text fz="sm" mb="xs">
-          <Kbd>I</Kbd> - Open Keyboard Shortcuts.
-        </Text>
-        <Divider my="sm" />
-        <Text fz="lg" fw="bold" mb="sm">
-          Dashboard
-        </Text>
-        <Text fz="sm" mb="xs">
-          <Kbd>N</Kbd> - Create New Expense.
-        </Text>
-        <Text fz="sm" mb="xs">
-          <Kbd>Shift+S</Kbd> - Toggle category selection
-        </Text>
-        <Divider my="sm" />
-        <Text fz="lg" fw="bold" mb="sm">
-          Plans List
-        </Text>
-        <Text fz="sm" mb="xs">
-          <Kbd>N</Kbd> - Create New Plan.
-        </Text>
-        <Divider my="sm" />
-        <Text fz="lg" fw="bold" mb="sm">
-          Plan Details
-        </Text>
-        <Text fz="sm" mb="xs">
-          <Kbd>N</Kbd> - Add New Expense to plan.
-        </Text>
+        <ShortcutsList />
       </Modal>
     </>
   );

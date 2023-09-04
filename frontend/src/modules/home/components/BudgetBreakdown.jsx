@@ -111,16 +111,18 @@ export default function BudgetBreakdown({ showForm, showRecent, recents }) {
         <Text fw="bold" mr="auto">
           {dayjs().format("MMM, 'YY")}
         </Text>
-        <Switch
-          labelPosition="left"
-          label={showSelection ? formatCurrency(selectionTotal) : "Select"}
-          size="sm"
-          ref={selectionToggle}
-          checked={showSelection}
-          onChange={(e) => {
-            setShowSelection(e.currentTarget.checked);
-          }}
-        />
+        {Object.entries(summary?.data?.response.summary ?? {})?.length > 1 && (
+          <Switch
+            labelPosition="left"
+            label={showSelection ? formatCurrency(selectionTotal) : "Select"}
+            size="sm"
+            ref={selectionToggle}
+            checked={showSelection}
+            onChange={(e) => {
+              setShowSelection(e.currentTarget.checked);
+            }}
+          />
+        )}
         {summary?.data?.response?.total > budget && (
           <Tooltip
             label={

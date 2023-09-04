@@ -118,7 +118,12 @@ export function MetaCell({ data, page }) {
       <Popover.Dropdown p={8}>
         {data.description && (
           <Group spacing={6} sx={{ alignItems: "flex-start" }}>
-            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
+            <ThemeIcon
+              radius="sm"
+              size="sm"
+              color={primaryColor}
+              variant="filled"
+            >
               <IconInfoCircle size={14} stroke={1.5} />
             </ThemeIcon>
             <ExpenseDescription color="dimmed">
@@ -128,7 +133,12 @@ export function MetaCell({ data, page }) {
         )}
         {data.linked && (
           <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
-            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
+            <ThemeIcon
+              radius="sm"
+              size="sm"
+              color={primaryColor}
+              variant="filled"
+            >
               <IconCalendarCode size={14} stroke={1.5} />
             </ThemeIcon>
             <Text component="span" fz="xs" color="dimmed">
@@ -138,7 +148,12 @@ export function MetaCell({ data, page }) {
         )}
         {!data.amount && (
           <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
-            <ThemeIcon radius="sm" size="sm" color="indigo" variant="filled">
+            <ThemeIcon
+              radius="sm"
+              size="sm"
+              color={primaryColor}
+              variant="filled"
+            >
               <IconBookmark size={14} stroke={1.5} />
             </ThemeIcon>
             <Text component="span" size="xs" color="dimmed">

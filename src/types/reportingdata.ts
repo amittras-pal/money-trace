@@ -4,7 +4,7 @@ import { IExpense } from "./expense";
 
 export type ReportedExpense = Pick<
   IExpense,
-  "title" | "description" | "amount" | "date"
+  "title" | "description" | "amount" | "date" | "linked"
 > & {
   category: {
     label: string | undefined;

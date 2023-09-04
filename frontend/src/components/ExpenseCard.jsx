@@ -24,6 +24,7 @@ import { memo, useMemo } from "react";
 import { Icons } from "../constants/categories";
 import { formatCurrency } from "../utils";
 import ExpenseDescription from "./ExpenseDescription";
+import { primaryColor } from "../constants/app";
 dayjs.extend(relativeTime);
 
 function ExpenseCard({
@@ -116,7 +117,7 @@ function ExpenseCard({
                     onClick={() => onEditExpense(data)}
                     disabled={data.linked}
                   >
-                    {data.linked ? "LInked Expense" : "Edit"}
+                    {data.linked ? "Linked Expense" : "Edit"}
                   </Menu.Item>
                 )}
                 {isEditable && (
@@ -156,7 +157,12 @@ function ExpenseCard({
                 </Text>
               }
             >
-              <ThemeIcon radius="lg" size="sm" color="indigo" variant="light">
+              <ThemeIcon
+                radius="lg"
+                size="sm"
+                color={primaryColor}
+                variant="light"
+              >
                 <IconCalendarCode size={14} stroke={1.5} />
               </ThemeIcon>
             </Tooltip>
@@ -171,7 +177,12 @@ function ExpenseCard({
                 </Text>
               }
             >
-              <ThemeIcon radius="lg" size="sm" color="indigo" variant="light">
+              <ThemeIcon
+                radius="lg"
+                size="sm"
+                color={primaryColor}
+                variant="light"
+              >
                 <IconBookmark size={14} stroke={1.5} />
               </ThemeIcon>
             </Tooltip>

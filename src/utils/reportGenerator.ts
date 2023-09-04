@@ -80,6 +80,8 @@ export async function buildPDF(
         id: "title",
         header: "Title",
         width: percent(doc.page.width - xPos * 2, 25),
+        renderer: (_, data) =>
+          data.linked ? "[Created in a plan]\n" + data.title : data.title,
       },
       {
         id: "description",
@@ -103,7 +105,7 @@ export async function buildPDF(
         header: "Date",
         width: percent(doc.page.width - xPos * 2, 20),
         renderer: (_, data) => {
-          return dayjs(data.date).tz(user.timeZone).format("DD-MM hh:mm a");
+          return dayjs(data.date).tz(user.timeZone).format("DD MMM hh:mm a");
         },
       },
     ]);
@@ -155,10 +157,12 @@ export async function buildPDF(
         .strokeOpacity(0.7)
         .stroke("gray");
 
-      doc.fontSize(14);
+      doc.fontSize(12);
       const data = month.expenses.map((ex) => ({
         title: ex.title,
         description: ex.description,
+        // plan: ex.plan?.toString(),
+        linked: ex.linked?.toString(),
         amount: ex.amount.toString(),
         date: ex.date.toISOString(),
         category: JSON.stringify(ex.category),

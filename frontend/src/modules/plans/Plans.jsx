@@ -92,7 +92,7 @@ export default function Plans() {
                 Once closed, no more expenses can be added to the plan and
                 existing expenses cannot be modified.
               </Text>
-              <Alert title="Copying Expense" color="indigo" p="sm" mt={6}>
+              <Alert title="Copying Expense" color={primaryColor} p="sm" mt={6}>
                 After closing the plan will be able to select and copy expenses
                 from this plan into your monthly budget.
               </Alert>
@@ -190,7 +190,7 @@ export default function Plans() {
             labelProps={{ color: "dimmed" }}
             label={`Open Plans (${plansList.active.length})`}
             mb="sm"
-            color="indigo"
+            color={primaryColor}
           />
           <SimpleGrid
             cols={2}
