@@ -13,6 +13,6 @@ export type IExpense = {
   user: Types.ObjectId;
   plan?: Types.ObjectId | null;
   amount: number;
-  reverted: boolean;
+  reverted: string | boolean;
   linked: Types.ObjectId | string;
 };

@@ -4,6 +4,7 @@ import {
   deleteExpense,
   getMonthSummary,
   listExpenses,
+  revertExpense,
   updateExpense,
 } from "../controllers/expense.controller";
 import authenticate from "../middlewares/auth.middleware";
@@ -16,6 +17,7 @@ expenseRoutes
   .route("/")
   .post(authenticate, createExpense)
   .put(authenticate, updateExpense)
+  .patch(authenticate, revertExpense)
   .delete(authenticate, deleteExpense);
 
 export default expenseRoutes;

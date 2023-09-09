@@ -72,6 +72,32 @@ export const updateExpense = routeHandler(
 );
 
 /**
+ * @description Mark an expense as reverted with the reverting message.
+ * @method PATCH /api/expenses
+ * @access protected
+ */
+export const revertExpense = routeHandler(
+  async (
+    req: TypedRequest<{}, { id: string; revertMsg: string }>,
+    res: TypedResponse<IExpense | null>
+  ) => {
+    const expense = await Expense.findById(req.body.id);
+    if (!expense) {
+      res.status(StatusCodes.NOT_FOUND);
+      throw new Error("Expense Not Found");
+    }
+
+    expense.set("reverted", req.body.revertMsg);
+    await expense.save();
+
+    const updated = await await Expense.findById(req.body.id).populate(
+      "categoryId"
+    );
+    res.json({ message: "Expense Reverted successfully", response: updated });
+  }
+);
+
+/**
  * @description Delete a single expense by a user, also deletes linked expense, if any
  * @method DELETE /api/expenses
  * @access protected
