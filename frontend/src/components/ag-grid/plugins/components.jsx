@@ -9,6 +9,7 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import {
+  IconArrowBackUp,
   IconArrowsSort,
   IconBookmark,
   IconCalendarCode,
@@ -23,7 +24,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
-import { primaryColor } from "../../../constants/app";
+import { ACTIONS, primaryColor } from "../../../constants/app";
 import ExpenseDescription from "../../ExpenseDescription";
 import { formatCurrency } from "../../../utils";
 
@@ -117,7 +118,7 @@ export function MetaCell({ data, page }) {
       </Popover.Target>
       <Popover.Dropdown p={8}>
         {data.description && (
-          <Group spacing={6} sx={{ alignItems: "flex-start" }}>
+          <Group spacing={6} noWrap sx={{ alignItems: "flex-start" }}>
             <ThemeIcon
               radius="sm"
               size="sm"
@@ -132,7 +133,7 @@ export function MetaCell({ data, page }) {
           </Group>
         )}
         {data.linked && (
-          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+          <Group noWrap spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
             <ThemeIcon
               radius="sm"
               size="sm"
@@ -147,7 +148,7 @@ export function MetaCell({ data, page }) {
           </Group>
         )}
         {!data.amount && (
-          <Group spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+          <Group noWrap spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
             <ThemeIcon
               radius="sm"
               size="sm"
@@ -158,6 +159,21 @@ export function MetaCell({ data, page }) {
             </ThemeIcon>
             <Text component="span" size="xs" color="dimmed">
               Created to keep record; no money spent.
+            </Text>
+          </Group>
+        )}
+        {data.reverted && (
+          <Group noWrap spacing={6} sx={{ alignItems: "flex-start" }} mt={6}>
+            <ThemeIcon
+              radius="sm"
+              size="sm"
+              color={primaryColor}
+              variant="filled"
+            >
+              <IconArrowBackUp size={14} stroke={1.5} />
+            </ThemeIcon>
+            <Text component="span" size="xs" color="dimmed">
+              Reverted: {data.reverted}
             </Text>
           </Group>
         )}
@@ -179,23 +195,19 @@ export function CategoryCell({ data, value }) {
   );
 }
 
-export function RowMenuCell({
-  data,
-  onEditExpense,
-  onDeleteExpense,
-  rowIndex,
-  plan,
-}) {
+export function RowMenuCell({ data, handleExpenseAction, rowIndex, plan }) {
   const availableActions = useMemo(() => {
     const actions = [];
     if (plan) {
       if (plan.open && dayjs(data.date) >= dayjs().subtract(7, "days"))
-        actions.push("edit", "delete");
+        actions.push(ACTIONS.edit, ACTIONS.delete);
     } else if (dayjs(data.date) >= dayjs().subtract(7, "days"))
-      actions.push("edit", "delete");
+      actions.push(ACTIONS.edit, ACTIONS.delete);
+    else if (dayjs(data.date) < dayjs().subtract(7, "days") && !data.reverted)
+      actions.push(ACTIONS.revert);
 
     return actions;
-  }, [data.date, plan]);
+  }, [data, plan]);
 
   if (!availableActions.length) return null;
 
@@ -213,22 +225,31 @@ export function RowMenuCell({
       </Menu.Target>
 
       <Menu.Dropdown>
-        {availableActions.includes("edit") && (
+        {availableActions.includes(ACTIONS.edit) && (
           <Menu.Item
             icon={<IconEdit size={14} />}
-            onClick={() => onEditExpense(data, rowIndex)}
+            onClick={() => handleExpenseAction(data, ACTIONS.edit, rowIndex)}
             disabled={data.linked}
           >
             {data.linked ? "Linked Expense" : "Edit"}
           </Menu.Item>
         )}
-        {availableActions.includes("delete") && (
+        {availableActions.includes(ACTIONS.delete) && (
           <Menu.Item
             color="red"
             icon={<IconTrash size={14} />}
-            onClick={() => onDeleteExpense(data)}
+            onClick={() => handleExpenseAction(data, ACTIONS.delete)}
           >
             Delete
+          </Menu.Item>
+        )}
+        {availableActions.includes(ACTIONS.revert) && (
+          <Menu.Item
+            color="red"
+            icon={<IconArrowBackUp size={14} />}
+            onClick={() => handleExpenseAction(data, ACTIONS.revert)}
+          >
+            Revert
           </Menu.Item>
         )}
       </Menu.Dropdown>
@@ -236,12 +257,24 @@ export function RowMenuCell({
   );
 }
 
-export function AmountCell({ value }) {
+export function TitleCell({ data }) {
   return (
     <Text
       sx={{ height: "100%", display: "flex", alignItems: "center" }}
-      color={!value ? "dimmed" : ""}
-      td={!value ? "line-through" : ""}
+      color={data.reverted ? "dimmed" : ""}
+      td={data.reverted ? "line-through" : ""}
+    >
+      {data.title}
+    </Text>
+  );
+}
+
+export function AmountCell({ value, data }) {
+  return (
+    <Text
+      sx={{ height: "100%", display: "flex", alignItems: "center" }}
+      color={!value || data.reverted ? "dimmed" : ""}
+      td={!value || data.reverted ? "line-through" : ""}
     >
       {formatCurrency(value)}
     </Text>

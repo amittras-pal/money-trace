@@ -15,6 +15,10 @@ function deleteExpense(id) {
   return axios.delete(ENDPOINTS.expenses, { params: { id } });
 }
 
+function revertExpense(payload) {
+  return axios.patch(ENDPOINTS.expenses, payload);
+}
+
 function getSummary(plan = null) {
   return axios.get(ENDPOINTS.summary, {
     params: {
@@ -55,6 +59,14 @@ export function useEditExpense(options) {
  */
 export function useDeleteExpense(options) {
   return useMutation(deleteExpense, options);
+}
+
+/**
+ *
+ * @param {import("@tanstack/react-query").UseMutationOptions} options
+ */
+export function useRevertExpense(options) {
+  return useMutation(revertExpense, options);
 }
 
 /**

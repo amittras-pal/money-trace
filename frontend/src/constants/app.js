@@ -3,3 +3,9 @@ export const primaryColor = "indigo";
 export const planDetailsPath = /\/plans\/\w+/;
 export const urlMatcher =
   /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+
+export const ACTIONS = {
+  edit: "exit",
+  revert: "revert",
+  delete: "delete",
+};

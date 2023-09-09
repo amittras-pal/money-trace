@@ -21,19 +21,21 @@ import {
   MetaHeader,
   RowCountHeader,
   RowMenuCell,
+  TitleCell,
 } from "../../components/ag-grid/plugins/components";
 import {
   CategoryFilter,
   SubCategoryFilter,
 } from "../../components/ag-grid/plugins/filters";
 import { dateFormatter } from "../../components/ag-grid/plugins/formatters";
-import { APP_TITLE } from "../../constants/app";
+import { APP_TITLE, ACTIONS } from "../../constants/app";
 import { useCurrentUser } from "../../context/user";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useMediaMatch } from "../../hooks/useMediaMatch";
 import { formatCurrency } from "../../utils";
 import { useBudget } from "../budgetMonitor/services";
 import { useExpenseList } from "./services";
+import RevertExpense from "../../components/RevertExpense";
 
 export default function Expenses() {
   useDocumentTitle(`${APP_TITLE} | Transactions`);
@@ -46,6 +48,7 @@ export default function Expenses() {
 
   const [showForm, formModal] = useDisclosure(false);
   const [confirm, deleteModal] = useDisclosure(false);
+  const [revert, revertModal] = useDisclosure(false);
 
   const [targetExpense, setTargetExpense] = useState(null);
   const [filterTotal, setFilterTotal] = useState(0);
@@ -70,7 +73,7 @@ export default function Expenses() {
       clearFilters();
       setFilterTotal(
         res.data?.response
-          ?.reduce((sum, item) => sum + item.amount, 0)
+          ?.reduce((sum, item) => sum + (!item.reverted ? item.amount : 0), 0)
           .toFixed(2)
       );
     },
@@ -85,6 +88,7 @@ export default function Expenses() {
   const handleClose = (refreshData) => {
     if (showForm) formModal.close();
     if (confirm) deleteModal.close();
+    if (revert) revertModal.close();
     if (refreshData && typeof refreshData === "object") {
       const update = {
         ...refreshData,
@@ -106,7 +110,8 @@ export default function Expenses() {
         []
       );
       node.setData(update);
-      grid.api.flashCells({ rowNodes: [node], columns: updatedKeys });
+      grid.api?.flashCells({ rowNodes: [node], columns: updatedKeys });
+      updateFilterTotal(grid);
     } else if (refreshData && typeof refreshData === "boolean") {
       client.invalidateQueries(["list", payload]);
     }
@@ -115,20 +120,26 @@ export default function Expenses() {
     }, 1000);
   };
 
-  const editExpense = useCallback(
-    (target, index) => {
-      setTargetExpense({ ...target, index });
-      formModal.open();
+  const handleExpenseAction = useCallback(
+    (target, action, index) => {
+      setTargetExpense(
+        typeof index === "number" ? { ...target, index } : target
+      );
+      switch (action) {
+        case ACTIONS.edit:
+          formModal.open();
+          break;
+        case ACTIONS.delete:
+          deleteModal.open();
+          break;
+        case ACTIONS.revert:
+          revertModal.open();
+          break;
+        default:
+          break;
+      }
     },
-    [formModal]
-  );
-
-  const deleteExpense = useCallback(
-    (target) => {
-      setTargetExpense(target);
-      deleteModal.open();
-    },
-    [deleteModal]
+    [deleteModal, formModal, revertModal]
   );
 
   const columns = useMemo(
@@ -139,10 +150,7 @@ export default function Expenses() {
           headerName: "",
           headerComponent: RowCountHeader,
           cellRenderer: RowMenuCell,
-          cellRendererParams: {
-            onEditExpense: editExpense,
-            onDeleteExpense: deleteExpense,
-          },
+          cellRendererParams: { handleExpenseAction },
           field: "_id",
           pinned: "left",
           maxWidth: 50,
@@ -175,6 +183,7 @@ export default function Expenses() {
           headerName: "Title",
           field: "title",
           minWidth: isMobile ? 240 : 320,
+          cellRenderer: TitleCell,
         },
         {
           headerName: "Category",
@@ -208,13 +217,13 @@ export default function Expenses() {
         },
       ];
     },
-    [isMobile, deleteExpense, editExpense]
+    [handleExpenseAction, isMobile]
   );
 
   const updateFilterTotal = (grid) => {
     let total = 0;
     grid.api.forEachNodeAfterFilter((node) => {
-      total += node.data.amount;
+      if (!node.data.reverted) total += node.data.amount;
     });
     setFilterTotal(total);
   };
@@ -277,7 +286,7 @@ export default function Expenses() {
       </Group>
       <Modal
         centered
-        opened={showForm || confirm}
+        opened={showForm || confirm || revert}
         withCloseButton={false}
         onClose={handleClose}
         withOverlay
@@ -287,6 +296,9 @@ export default function Expenses() {
         )}
         {confirm && (
           <DeleteExpense data={targetExpense} onComplete={handleClose} />
+        )}
+        {revert && (
+          <RevertExpense data={targetExpense} onComplete={handleClose} />
         )}
       </Modal>
       <LoadingOverlay visible={loadingBudget || loadingList} />
