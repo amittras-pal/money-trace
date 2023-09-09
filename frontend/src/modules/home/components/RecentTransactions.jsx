@@ -49,5 +49,5 @@ function ItemList({ list, onEditExpense, onDeleteExpense }) {
           onDeleteExpense={onDeleteExpense}
         />
       ))
-    : "No Expenses";
+    : "No Expenses in the last 7 days.";
 }
