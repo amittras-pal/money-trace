@@ -1,8 +1,9 @@
 import axios from "axios";
 import { getAuthToken } from "../utils";
+import { getBaseURL } from "../environment";
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API ? `${process.env.REACT_APP_API}` : "/",
+  baseURL: getBaseURL(),
 });
 
 instance.interceptors.request.use((ctx) => {

@@ -1,6 +1,5 @@
 import cors from "cors";
 import express, { Application, json, urlencoded } from "express";
-import path from "path";
 import errorHandler from "./middlewares/error.middleware";
 import budgetRoutes from "./routes/budget.routes";
 import categoryRoutes from "./routes/category.routes";
@@ -22,12 +21,9 @@ app.use("/api/expense-plan", expensePlanRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/reports", reportingRoutes);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("frontend/build"));
-  app.get("*", (_req, res) => {
-    res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
-  });
-}
+app.get("*", (_req, res) => {
+  res.redirect("https://expensary.web.app");
+});
 
 app.use(errorHandler);
 
