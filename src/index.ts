@@ -9,8 +9,12 @@ import reportingRoutes from "./routes/reporting.routes";
 import userRoutes from "./routes/user.routes";
 
 const app: Application = express();
+const whitelist: string[] = [
+  "https://expensary.web.app",
+  "http://localhost:3000",
+];
 
-app.use(cors());
+app.use(cors({ origin: whitelist }));
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
