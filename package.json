@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon start",
-    "build": "npm i && npx tsc",
+    "render-postbuild": "npm i && npx tsc",
     "start": "node ./prod.js"
   },
   "keywords": [],
