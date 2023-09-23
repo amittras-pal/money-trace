@@ -25,6 +25,12 @@ app.use("/api/expense-plan", expensePlanRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/reports", reportingRoutes);
 
+// This is required since server is hosted on an ephemeral container, which takes time to come up;
+// This allows the FE to show an animation state and not load the rest of the app until the server is ready.
+app.get("/api/wake", (_req, res) => {
+  res.json({ message: "Server Ready!" });
+});
+
 app.get("*", (_req, res) => {
   res.redirect("https://expensary.web.app");
 });
