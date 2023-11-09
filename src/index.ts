@@ -32,7 +32,13 @@ app.get("/api/wake", (_req, res) => {
 });
 
 app.get("*", (_req, res) => {
-  res.redirect("https://expensary.web.app");
+  if (process.env.NODE_ENV !== "development")
+    return res.redirect("https://expensary.web.app");
+  else
+    return res.json({
+      message:
+        "This is an API server, please launch the corresponding frontend app.",
+    });
 });
 
 app.use(errorHandler);
