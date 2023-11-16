@@ -5,7 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon start",
+    "dev": "nodemon ./dev.ts",
+    "probe": "nodemon ./probe.ts",
     "render-postbuild": "npm i && npx tsc",
     "start": "node ./prod.js"
   },
