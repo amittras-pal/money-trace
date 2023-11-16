@@ -49,5 +49,8 @@
   "explorer.compactFolders": false,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.preferences.importModuleSpecifier": "relative",
-  "javascript.preferences.importModuleSpecifier": "relative"
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }

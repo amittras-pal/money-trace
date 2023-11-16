@@ -1,0 +1,244 @@
+{
+  "categories": [
+    {
+      "label": "Corporate Activities",
+      "color": "yellow",
+      "group": "Entertainment",
+      "icon": "IconTie"
+    },
+    {
+      "label": "Movies",
+      "color": "yellow",
+      "group": "Entertainment",
+      "icon": "IconStereoGlasses"
+    },
+    {
+      "label": "Music",
+      "color": "yellow",
+      "group": "Entertainment",
+      "icon": "IconHeadphones"
+    },
+    {
+      "label": "Sports",
+      "color": "yellow",
+      "group": "Entertainment",
+      "icon": "IconPingPong"
+    },
+    {
+      "label": "Other",
+      "color": "yellow",
+      "group": "Entertainment",
+      "icon": "IconCategory"
+    },
+    {
+      "label": "Dining Out",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconToolsKitchen2"
+    },
+    {
+      "label": "Groceries",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconBasket"
+    },
+    {
+      "label": "Liquor",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconGlassFull"
+    },
+    {
+      "label": "Snacks",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconCookie"
+    },
+    {
+      "label": "Other",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconCategory"
+    },
+    {
+      "label": "Household Supplies",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconHandSanitizer"
+    },
+    {
+      "label": "Maintenance & Services",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconHomeCog"
+    },
+    {
+      "label": "Rent or Mortgage",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconHomeDollar"
+    },
+    {
+      "label": "Electricity",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconHomeBolt"
+    },
+    {
+      "label": "Heat & Gas",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconFlame"
+    },
+    {
+      "label": "TV, Phone & Internet",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconRouter"
+    },
+    {
+      "label": "Trash",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconTrash"
+    },
+    {
+      "label": "Household Aid",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconHomeHand"
+    },
+    {
+      "label": "Other",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconCategory"
+    },
+    {
+      "label": "Water",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconDroplet"
+    },
+    {
+      "label": "General",
+      "color": "gray",
+      "group": "Uncategorized",
+      "icon": "IconApps"
+    },
+    {
+      "label": "Other",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconCategory"
+    },
+    {
+      "label": "Shopping",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconTags"
+    },
+    {
+      "label": "Gifts",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconGift"
+    },
+    {
+      "label": "Education",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconBook"
+    },
+    {
+      "label": "Investments",
+      "color": "orange",
+      "group": "Finance",
+      "icon": "IconCoins"
+    },
+    {
+      "label": "Insurance",
+      "color": "orange",
+      "group": "Finance",
+      "icon": "IconUserShield"
+    },
+    {
+      "label": "Pets",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconPaw"
+    },
+    {
+      "label": "Personal",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconUserStar"
+    },
+    {
+      "label": "Medical",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconHeartbeat"
+    },
+    {
+      "label": "Other",
+      "color": "cyan",
+      "group": "Travel/Transportation",
+      "icon": "IconCategory"
+    },
+    {
+      "label": "Public Transport",
+      "color": "cyan",
+      "group": "Travel/Transportation",
+      "icon": "IconTrain"
+    },
+    {
+      "label": "Fuel",
+      "color": "cyan",
+      "group": "Travel/Transportation",
+      "icon": "IconGasStation"
+    },
+    {
+      "label": "Hotel",
+      "color": "cyan",
+      "group": "Travel/Transportation",
+      "icon": "IconHotelService"
+    },
+    {
+      "label": "Parking",
+      "color": "cyan",
+      "group": "Travel/Transportation",
+      "icon": "IconParking"
+    },
+    {
+      "label": "Fruits & Vegetables",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconCherry"
+    },
+    {
+      "label": "Grooming & Hygiene",
+      "group": "Lifestyle",
+      "color": "red",
+      "icon": "IconScissors"
+    },
+    {
+      "label": "Furniture",
+      "group": "House & Utilities",
+      "color": "grape",
+      "icon": "IconArmchair2"
+    },
+    {
+      "label": "Bills & EMIs",
+      "color": "orange",
+      "group": "Finance",
+      "icon": "IconReceipt2"
+    },
+    {
+      "label": "Other",
+      "color": "orange",
+      "group": "Finance",
+      "icon": "IconCategory"
+    }
+  ]
+}
