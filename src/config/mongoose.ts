@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { seedCategoriesIfNotPresent } from "../utils/categorySeeder";
 
 // From Mongoose official docs: https://mongoosejs.com/docs/lambda.html
 let conn: any = null;
@@ -9,7 +10,10 @@ export const connectMongo = async (URI: string) => {
       .connect(URI, {
         serverSelectionTimeoutMS: 5000,
       })
-      .then(() => mongoose)
+      .then(() => {
+        seedCategoriesIfNotPresent();
+        return mongoose;
+      })
       .catch((e) => console.error(e));
 
     // awaiting connection after assigning to the "conn" variable
