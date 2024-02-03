@@ -7,6 +7,7 @@ const userSchema = new Schema<IUser>(
     email: { type: "string", required: true, trim: true, unique: true },
     pin: { type: "string", required: true },
     timeZone: { type: "string", required: true },
+    editWindow: { type: "number", required: true, default: 7 },
   },
   { timestamps: true }
 );
