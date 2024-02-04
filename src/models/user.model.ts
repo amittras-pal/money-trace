@@ -8,6 +8,7 @@ const userSchema = new Schema<IUser>(
     pin: { type: "string", required: true },
     timeZone: { type: "string", required: true },
     editWindow: { type: "number", required: true, default: 7 },
+    color: { type: "string", required: false },
   },
   { timestamps: true }
 );

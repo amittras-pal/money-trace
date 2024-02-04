@@ -7,4 +7,5 @@ export type IUser = {
   pin?: string;
   timeZone: string;
   editWindow: number;
+  color?: string;
 };
