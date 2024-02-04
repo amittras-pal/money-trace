@@ -129,3 +129,46 @@ export const updateUserDetails = routeHandler(
     res.json({ message: "User details updated", response: update });
   }
 );
+
+export const changePassword = routeHandler(
+  async (
+    req: TypedRequest<
+      {},
+      {
+        email: string;
+        currentPin: number;
+        newPin: number;
+        confirmNewPin: number;
+      }
+    >,
+    res: TypedResponse
+  ) => {
+    const { currentPin, newPin, confirmNewPin, email } = req.body;
+
+    if (!currentPin || !newPin || !confirmNewPin) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("Please add all required fields.");
+    }
+
+    if (newPin !== confirmNewPin) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("New passwords don't match.");
+    }
+
+    const user: IUser | null = await User.findById(req.userId);
+    if (!user) {
+      res.status(StatusCodes.NOT_FOUND);
+      throw new Error("Email ID is not registered");
+    } else if (await compare(email + currentPin, user.pin ?? "")) {
+      const salt: string = await genSalt();
+      const newEncryptedPin: string = await hash(email + newPin, salt);
+      await User.findByIdAndUpdate(req.userId, {
+        $set: { pin: newEncryptedPin },
+      });
+      res.json({ message: "Pin Changed Successfully!!" });
+    } else {
+      res.status(StatusCodes.FORBIDDEN);
+      throw new Error("Current Pin Invalid.");
+    }
+  }
+);

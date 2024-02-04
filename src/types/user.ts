@@ -6,4 +6,6 @@ export type IUser = {
   email: string;
   pin?: string;
   timeZone: string;
+  editWindow: number;
+  color?: string;
 };
