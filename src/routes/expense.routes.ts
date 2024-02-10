@@ -4,6 +4,7 @@ import {
   deleteExpense,
   getMonthSummary,
   listExpenses,
+  searchExpense,
   updateExpense,
 } from "../controllers/expense.controller";
 import authenticate from "../middlewares/auth.middleware";
@@ -11,6 +12,7 @@ import authenticate from "../middlewares/auth.middleware";
 const expenseRoutes = Router();
 
 expenseRoutes.get("/summary", authenticate, getMonthSummary);
+expenseRoutes.post("/search", authenticate, searchExpense);
 expenseRoutes.post("/list", authenticate, listExpenses);
 expenseRoutes
   .route("/")
