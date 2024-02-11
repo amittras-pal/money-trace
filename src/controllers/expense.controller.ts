@@ -1,10 +1,20 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
-import { PipelineStage, Types } from "mongoose";
+import { Types } from "mongoose";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
 import { IExpense } from "../types/expense";
 import { TypedRequest, TypedResponse } from "../types/requests";
+import {
+  IListReqBody,
+  ISearchReqBody,
+  ISummaryReqParams,
+} from "../types/utility";
+import {
+  SummaryAggregator,
+  listAggregator,
+  searchAggregator,
+} from "../utils/aggregators";
 
 /**
  * @description Save a new expense.
@@ -109,69 +119,12 @@ export const deleteExpense = routeHandler(
  */
 export const getMonthSummary = routeHandler(
   async (
-    req: TypedRequest<
-      {
-        firstDay: string | undefined;
-        lastDay: string | undefined;
-        plan: string | undefined;
-      },
-      {}
-    >,
+    req: TypedRequest<ISummaryReqParams, {}>,
     res: TypedResponse<{ summary: Array<any>; total: Number }>
   ) => {
-    const { firstDay, lastDay, plan } = req.query;
-    const matcher: PipelineStage.Match = {
-      $match: {
-        user: new Types.ObjectId(req.userId),
-        reverted: false,
-      },
-    };
-
-    if (firstDay?.length && lastDay?.length)
-      matcher.$match.date = {
-        $gte: new Date(firstDay),
-        $lte: new Date(lastDay),
-      };
-
-    if (plan?.length) matcher.$match.plan = new Types.ObjectId(plan);
-    else matcher.$match.plan = null;
-
-    const summary = await Expense.aggregate([
-      matcher,
-      {
-        $group: {
-          _id: "$categoryId",
-          value: { $sum: "$amount" },
-        },
-      },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "_id",
-          foreignField: "_id",
-          as: "category",
-        },
-      },
-      { $sort: { value: -1 } },
-      { $unwind: "$category" },
-      {
-        $project: {
-          _id: false,
-          amounts: false,
-          "category._id": false,
-          "category.__v": false,
-        },
-      },
-      {
-        $project: {
-          value: "$value",
-          label: "$category.label",
-          color: "$category.color",
-          group: "$category.group",
-          icon: "$category.icon",
-        },
-      },
-    ]);
+    const query = SummaryAggregator(req.query, req.userId ?? "");
+    // Create a type for this response.
+    const summary = await Expense.aggregate(query);
 
     res.json({
       message: "Summary for the current month retrieved successfully.",
@@ -203,53 +156,24 @@ export const getMonthSummary = routeHandler(
  */
 export const listExpenses = routeHandler(
   async (
-    req: TypedRequest<
-      {},
-      {
-        startDate: string | undefined;
-        endDate: string | undefined;
-        plan: string | undefined;
-        sort: Record<string, 1 | -1>;
-      }
-    >,
+    req: TypedRequest<{}, IListReqBody>,
     res: TypedResponse<IExpense[]>
   ) => {
-    const { startDate, endDate, plan, sort } = req.body;
-
-    const matchPhase: PipelineStage.Match = {
-      $match: { user: new Types.ObjectId(req.userId) },
-    };
-
-    const sortPhase: PipelineStage.Sort = {
-      $sort: sort,
-    };
-
-    const lookupPhase: PipelineStage.Lookup = {
-      $lookup: {
-        from: "categories",
-        localField: "categoryId",
-        foreignField: "_id",
-        as: "category",
-      },
-    };
-
-    const unwindPhase: PipelineStage.Unwind = { $unwind: "$category" };
-
-    // Add start/end date and plan if available.
-    if (startDate?.length && endDate?.length)
-      matchPhase.$match.date = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      };
-
-    if (plan) matchPhase.$match.plan = new Types.ObjectId(plan);
-    else matchPhase.$match.plan = null;
-
-    const expenses = await (<IExpense[]>(
-      (<unknown>(
-        Expense.aggregate([matchPhase, lookupPhase, unwindPhase, sortPhase])
-      ))
-    ));
+    const query = listAggregator(req.body, req.userId ?? "");
+    const expenses = await (<IExpense[]>(<unknown>Expense.aggregate(query)));
     res.json({ message: "List Retrieved.", response: expenses });
+  }
+);
+
+/**
+ * @description Implements a global search for all expenses.
+ * @method POST /api/expenses/search
+ * @access protected
+ */
+export const searchExpense = routeHandler(
+  async (req: TypedRequest<{}, ISearchReqBody>, res: TypedResponse) => {
+    const query = searchAggregator(req.body, req.userId ?? "");
+    const expenses = await (<IExpense[]>(<unknown>Expense.aggregate(query)));
+    res.json({ message: "Results retrieved.", response: expenses });
   }
 );

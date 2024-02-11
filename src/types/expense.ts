@@ -16,3 +16,11 @@ export type IExpense = {
   reverted: boolean;
   linked: Types.ObjectId | string;
 };
+
+export type SummarizedCategory = {
+  value: number;
+  label: string;
+  color: string;
+  group: string;
+  icon: string;
+};
