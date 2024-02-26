@@ -8,6 +8,7 @@ interface IEnv {
   DB_URI?: string;
   JWT_SECRET?: string;
   NODE_ENV?: string;
+  ORIGINS?: string[];
 }
 
 export function getEnv(): IEnv {
@@ -17,5 +18,6 @@ export function getEnv(): IEnv {
     DB_URI: process.env.DB_URI ?? "",
     JWT_SECRET: process.env.JWT_SECRET ?? "",
     NODE_ENV: process.env.NODE_ENV,
+    ORIGINS: process.env.ORIGINS?.split(",") ?? ["http://localhost:3000"],
   };
 }
