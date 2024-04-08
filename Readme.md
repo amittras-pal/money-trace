@@ -9,11 +9,15 @@ The back end application for the **Mtrace Expense Tracker** application.
 - `MongoDB`
 - Language: `TypeScript`
 
+## Corressponding frontend"
+
+The Corressponding Frontend built on ReactJS can be found [here](https://github.com/amittras-pal/expensary).
+
 ## Local setup for development
 
 ### Prerequisites:
 
-- `Node.JS` version 16.X or higher
+- `Node.JS` version 18.X or higher
 - `Git` version 2.30.X or higher
 - Preferred Code Editor or IDE _(Suggested: **Visual Studio Code**)_
 
@@ -25,12 +29,16 @@ The back end application for the **Mtrace Expense Tracker** application.
 
 ```
 PORT=6400
-DB_URI=
+# PROBE_PORT
 NODE_ENV=development
 JWT_SECRET=
+DB_URI=
+ORIGINS=http://localhost:5173
 ```
 
-**Note:** _The values for `DB_URI` & `JWT_SECRET` variables will be provided separately._
+**Note 1:** _The values for `DB_URI` & `JWT_SECRET` variables will be provided separately._
+
+**Note 2:** _The option `PROBE_PORT` is optional, as it is for a feature which is not yet planned._
 
 - Run `npm run dev` to start the development server on `http://localhost:6400`
 
