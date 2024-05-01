@@ -8,7 +8,7 @@ interface IEnv {
   DB_URI?: string;
   JWT_SECRET?: string;
   NODE_ENV?: string;
-  ORIGINS?: string[];
+  ORIGINS?: (string | RegExp)[];
 }
 
 export function getEnv(): IEnv {
@@ -18,6 +18,13 @@ export function getEnv(): IEnv {
     DB_URI: process.env.DB_URI ?? "",
     JWT_SECRET: process.env.JWT_SECRET ?? "",
     NODE_ENV: process.env.NODE_ENV,
-    ORIGINS: process.env.ORIGINS?.split(",") ?? ["http://localhost:3000"],
+    ORIGINS: transformOrigins(process.env.ORIGINS?.split(",")),
   };
+}
+
+function transformOrigins(origins?: string[]) {
+  if (!origins) return ["http://localhost:3000"];
+  return origins.map((o) =>
+    o.startsWith("/") ? new RegExp(o.slice(1), "gi") : o
+  );
 }
