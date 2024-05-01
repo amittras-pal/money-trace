@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, { Application, json, urlencoded } from "express";
+import morgan from "morgan";
 import { getEnv } from "./env/config";
 import errorHandler from "./middlewares/error.middleware";
 import budgetRoutes from "./routes/budget.routes";
@@ -10,11 +11,12 @@ import reportingRoutes from "./routes/reporting.routes";
 import userRoutes from "./routes/user.routes";
 
 const app: Application = express();
-const { ORIGINS } = getEnv();
+const { ORIGINS, NODE_ENV } = getEnv();
 
 app.use(cors({ origin: ORIGINS }));
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use(morgan(NODE_ENV === "development" ? "dev" : "tiny"));
 
 app.use("/api/user", userRoutes);
 app.use("/api/expenses", expenseRoutes);
