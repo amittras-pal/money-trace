@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { RichText, Workbook } from "exceljs";
+import { Workbook } from "exceljs";
 import routeHandler from "express-async-handler";
 import Budget from "../models/budget.model";
 import Expense from "../models/expense.model";
@@ -13,19 +13,20 @@ import {
 } from "../utils/aggregators";
 import {
   contentTypeXLSX,
-  currentcyFormat,
+  currencyFormat,
   dataColumns,
   dataRowBorder,
+  generateSummary,
   getColor,
-  getDataDataRowFont,
-  getDataRowFill,
-  getRangeCaps,
+  getDataFill,
+  getDataFont,
+  getIncompleteNotice,
   getSeverityColor,
+  getTotalAmount,
   getZonedTime,
   headerBg,
   headerBorder,
   mergeBudgetsInExpense,
-  percentageFormat,
   summaryColumns,
 } from "../utils/excelUtils";
 
@@ -50,96 +51,113 @@ export const generateReport = routeHandler(
       // Create new Sheet for every month
       const sheet = book.addWorksheet(dayjs(month._id).format("MMM YYYY"));
 
-      // Write Expense List.
-      sheet.columns = dataColumns;
-      month.expenses.forEach((expense: ReportedExpense) => {
-        const row = sheet.addRow({
-          ...expense,
-          categoryName: expense.category.group,
-          subCategoryName: expense.category.label,
-          date: getZonedTime(user, expense.date, true),
+      // Write Expense List [if requested]
+      if (req.query.includeList === "true") {
+        sheet.columns = dataColumns;
+        month.expenses.forEach((expense: ReportedExpense) => {
+          const row = sheet.addRow({
+            ...expense,
+            categoryName: expense.category.group,
+            subCategoryName: expense.category.label,
+            date: getZonedTime(user, expense.date, true),
+          });
+          row.eachCell({ includeEmpty: false }, (cell, col) => {
+            cell.border = dataRowBorder;
+            cell.fill = getDataFill(expense.category.color!);
+            cell.font = getDataFont(expense.category.color!, col === 3);
+          });
         });
-        row.eachCell({ includeEmpty: false }, (cell, col) => {
-          cell.border = dataRowBorder;
-          cell.fill = getDataRowFill(expense);
-          cell.font = getDataDataRowFont(expense, col === 3);
+
+        // Style the header.
+        const dataHeader = sheet.getRow(1);
+        dataHeader.eachCell((cell) => {
+          cell.font = { bold: true, size: 14 };
+          cell.border = headerBorder;
+          cell.fill = headerBg;
         });
-      });
-
-      // Format the amount and date columns.
-      sheet.getColumn("amount").numFmt = currentcyFormat;
-
-      // Style the header.
-      const dataHeader = sheet.getRow(1);
-      dataHeader.eachCell((cell) => {
-        cell.font = { bold: true, size: 14 };
-        cell.border = headerBorder;
-        cell.fill = headerBg;
-      });
+      }
 
       // Add empty rows at the top of the sheet, for Summary content.
-      sheet.insertRows(0, Array.from({ length: 4 }).fill({}));
+      sheet.insertRows(0, Array.from({ length: 5 }).fill({}));
 
-      // Write Summary.
+      // Write amount Summary.
       sheet.columns = summaryColumns;
       const summaryRow = sheet.insertRow(2, month);
-      summaryRow.eachCell((cell, col) => {
+      summaryRow.eachCell({ includeEmpty: false }, (cell, col) => {
         const percColor = getSeverityColor(month.total, month.budget);
         const percColorCode = getColor(percColor, 6);
         cell.border = dataRowBorder;
-        cell.numFmt = col === 6 ? percentageFormat : currentcyFormat;
         cell.font = {
           bold: true,
-          color: { argb: col === 6 ? percColorCode.argb : "000" },
+          color: { argb: col === 3 ? percColorCode.argb : "000" },
         };
       });
-      // Style Summary
+
+      // Style amount Summary
       const summaryHeader = sheet.getRow(1);
-      summaryHeader.eachCell((cell) => {
+      summaryHeader.eachCell({ includeEmpty: false }, (cell) => {
         cell.font = { bold: true, size: 14 };
         cell.border = headerBorder;
         cell.fill = headerBg;
       });
 
-      // Detect completeness of the month by date range to add warning.
-      const monthCaps = getRangeCaps(
-        user,
-        month,
-        req.query.startDate,
-        req.query.endDate
-      );
       // Add notice if incomplete.
-      if (monthCaps.beginningMismatch || monthCaps.endingMismatch) {
-        const notice: RichText[] = [];
-        const noticeColor = getColor("red", 8);
-        notice.push({
-          text: "Summary Incomplete: ",
-          font: { bold: true, color: noticeColor },
-        });
-        if (monthCaps.beginningMismatch)
-          notice.push(
-            { text: "Starts On: ", font: { bold: true } },
-            {
-              text: getZonedTime(user, req.query.startDate),
-              font: { bold: true, color: noticeColor },
-            }
-          );
-        if (monthCaps.beginningMismatch && monthCaps.endingMismatch)
-          notice.push({ text: "  ||  ", font: { bold: true } });
-        if (monthCaps.endingMismatch)
-          notice.push(
-            { text: "Ends On: ", font: { bold: true } },
-            {
-              text: getZonedTime(user, req.query.endDate),
-              font: { bold: true, color: noticeColor },
-            }
-          );
-
-        sheet.mergeCells("D3:F3");
-        const noticeCell = sheet.getCell("D3:F3");
+      const notice = getIncompleteNotice(user, req.query, month);
+      if (notice.length > 0) {
+        const noticeRange = "A3:C3";
+        sheet.mergeCells(noticeRange);
+        const noticeCell = sheet.getCell(noticeRange);
         noticeCell.value = { richText: notice };
         noticeCell.border = dataRowBorder;
         noticeCell.alignment = { horizontal: "center", vertical: "middle" };
+        noticeCell.fill = getDataFill("red");
+      }
+
+      // Write Breakdown by category and subcategory.
+      let startRow = 5;
+      let endRow = 5;
+      const breakDownHeaderRange = `A${startRow}:C${startRow}`;
+      sheet.mergeCells(breakDownHeaderRange);
+      const breakdownCell = sheet.getCell(breakDownHeaderRange);
+      breakdownCell.value = "Breakdown by Category";
+      breakdownCell.fill = headerBg;
+      breakdownCell.border = headerBorder;
+      breakdownCell.font = { bold: true, size: 14 };
+      breakdownCell.alignment = { horizontal: "center" };
+      startRow++;
+      endRow++;
+
+      const summary = generateSummary(month.expenses);
+      for (const cat of summary) {
+        const cHead = sheet.insertRow(endRow, [cat.group, "", cat.total]);
+        cHead.eachCell({ includeEmpty: false }, (cell, col) => {
+          cell.font = { ...getDataFont(cat.color!, true), size: 12 };
+          cell.fill = getDataFill(cat.color!);
+          cell.numFmt = col === 3 ? currencyFormat : "";
+          cell.border = dataRowBorder;
+        });
+        endRow++;
+
+        const subCategories = Object.entries(cat.bySubCategory);
+        for (const [name, list] of subCategories) {
+          const amount = getTotalAmount(list);
+          const subCatEntry = sheet.insertRow(endRow, ["", name, amount]);
+          subCatEntry.eachCell({ includeEmpty: false }, (cell, col) => {
+            cell.font = { ...getDataFont(cat.color!, false) };
+            cell.fill = getDataFill(cat.color!);
+            cell.numFmt = col === 3 ? currencyFormat : "";
+            cell.border = dataRowBorder;
+          });
+          endRow++;
+        }
+
+        const categoryRange = `A${startRow}:A${endRow - 1}`;
+        startRow = endRow;
+        sheet.mergeCells(categoryRange);
+        sheet.getCell(categoryRange).alignment = {
+          vertical: "top",
+          horizontal: "right",
+        };
       }
     });
 
