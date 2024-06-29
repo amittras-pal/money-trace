@@ -4,7 +4,7 @@ import routeHandler from "express-async-handler";
 import Budget from "../models/budget.model";
 import Expense from "../models/expense.model";
 import User from "../models/user.model";
-import { IExportingBudget, ReportedExpense } from "../types/reportingdata";
+import { IExportingBudget } from "../types/reportingdata";
 import { TypedRequest, TypedResponse } from "../types/requests";
 import { IReportRequest } from "../types/utility";
 import {
@@ -54,7 +54,7 @@ export const generateReport = routeHandler(
       // Write Expense List [if requested]
       if (req.query.includeList === "true") {
         sheet.columns = dataColumns;
-        month.expenses.forEach((expense: ReportedExpense) => {
+        for (const expense of month.expenses) {
           const row = sheet.addRow({
             ...expense,
             categoryName: expense.category.group,
@@ -66,8 +66,7 @@ export const generateReport = routeHandler(
             cell.fill = getDataFill(expense.category.color!);
             cell.font = getDataFont(expense.category.color!, col === 3);
           });
-        });
-
+        }
         // Style the header.
         const dataHeader = sheet.getRow(1);
         dataHeader.eachCell((cell) => {
@@ -79,7 +78,6 @@ export const generateReport = routeHandler(
 
       // Add empty rows at the top of the sheet, for Summary content.
       sheet.insertRows(0, Array.from({ length: 5 }).fill({}));
-
       // Write amount Summary.
       sheet.columns = summaryColumns;
       const summaryRow = sheet.insertRow(2, month);
@@ -143,7 +141,7 @@ export const generateReport = routeHandler(
           const amount = getTotalAmount(list);
           const subCatEntry = sheet.insertRow(endRow, ["", name, amount]);
           subCatEntry.eachCell({ includeEmpty: false }, (cell, col) => {
-            cell.font = { ...getDataFont(cat.color!, false) };
+            cell.font = getDataFont(cat.color!, false);
             cell.fill = getDataFill(cat.color!);
             cell.numFmt = col === 3 ? currencyFormat : "";
             cell.border = dataRowBorder;

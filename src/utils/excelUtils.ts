@@ -7,13 +7,17 @@ import { IExpenseByMonth, ReportedExpense } from "../types/reportingdata";
 import { IReportRequest } from "../types/utility";
 import { colorMap } from "./colormap";
 
-// Extend Dayzs for sone calculations.
+// Extend DayJS for zone calculations.
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-// Column Structure for Data Items
+// Specific Constants
 export const currencyFormat = `"₹ "#,##0.00`;
 export const percentageFormat = `#,#0.00"%"`;
+export const contentTypeXLSX =
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+// Column Structure for Expenses
 export const dataColumns: Partial<Column>[] = [
   {
     header: "Expense Title",
@@ -74,10 +78,7 @@ export const summaryColumns: Partial<Column>[] = [
   { width: 20 },
 ];
 
-export const contentTypeXLSX =
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-// Styling for the headers.
+// Styling for Header Rows.
 export const headerBorder: Partial<Borders> = {
   bottom: { style: "thick", color: getColor("dark", 6) },
   right: { style: "thin", color: getColor("dark", 6) },
@@ -90,7 +91,7 @@ export const headerBg: Fill = {
   fgColor: getColor("gray", 3),
 };
 
-// Border Styling for data row.
+// Styling for Data Rows.
 export const dataRowBorder: Partial<Borders> = {
   bottom: { style: "thin", color: getColor("dark", 6) },
   right: { style: "thin", color: getColor("dark", 6) },
@@ -98,7 +99,7 @@ export const dataRowBorder: Partial<Borders> = {
   top: { style: "thin", color: getColor("dark", 6) },
 };
 
-// Expense based coloring for data rows.
+// Category Based color fill for Data Rows.
 export function getDataFill(color: string): Fill {
   return {
     type: "pattern",
@@ -107,11 +108,12 @@ export function getDataFill(color: string): Fill {
   };
 }
 
+// Category Based text color for Data Rows.
 export function getDataFont(color: string, bold: boolean): Partial<Font> {
   return { color: getColor(color, 8), bold };
 }
 
-// format datetime in user time zone.
+// Format datetime in user's time zone.
 export function getZonedTime(
   user: any,
   date: string | Date,
@@ -122,8 +124,8 @@ export function getZonedTime(
     .format(includeTime ? "DD-MM, hh:mm a" : "DD MMM");
 }
 
-// determine whether the selected range of dates includes the beginning and ending of the month.
-// Provide notice if report is generated for incompolete month.
+// Determine whether the selected range of dates includes the beginning and ending of the month.
+// Utilized to provide warning notice if report is generated for an incompolete month.
 function getRangeCaps(
   user: any,
   month: IExpenseByMonth,
@@ -143,7 +145,7 @@ function getRangeCaps(
   return { beginningMismatch, endingMismatch };
 }
 
-// Get a warning RTF formatted message if either end of a range is not covering the entire month.
+// Get an RTF formatted warning message if either end of a range is not covering the entire month.
 export function getIncompleteNotice(
   user: any,
   req: IReportRequest,
@@ -185,7 +187,7 @@ export function getIncompleteNotice(
   return notice;
 }
 
-// Merges budget info into the expenses list
+// Merges budget info into the expenses list.
 export function mergeBudgetsInExpense(expensesData: any, budgetsData: any) {
   const data: IExpenseByMonth[] = expensesData.map((month: any) => {
     const budget = budgetsData.find((b: any) => b._id === month._id)?.amount;
@@ -210,33 +212,7 @@ export function mergeBudgetsInExpense(expensesData: any, budgetsData: any) {
   return data;
 }
 
-// Get color for a range of values between 0-100
-export function getSeverityColor(amount: number, budget: number) {
-  const perc = getPercentage(amount, budget);
-  if (perc <= 45) return "green";
-  else if (perc > 45 && perc <= 70) return "yellow";
-  else if (perc > 70 && perc <= 90) return "orange";
-  else return "red";
-}
-
-// Generate color code
-export function getColor(color: string, shade: number): Partial<Color> {
-  return { argb: colorMap[color][shade] };
-}
-
-// Calculate percentage
-function getPercentage(amount: number, budget: number): number {
-  return (amount / budget) * 100;
-}
-
-// Extract category info for an expense
-function getCategory(month: any, ex: ReportedExpense) {
-  const category = month.categories?.find(
-    (cat: any) => cat._id?.toString() === ex.categoryId?.toString()
-  );
-  return pick(category, ["label", "color", "group"]);
-}
-
+// Generate summary breakdown by category and subcategory for a list of expenses.
 export function generateSummary(expenses: ReportedExpense[]) {
   const byCategory = groupBy(expenses, "category.group");
   return Object.entries(byCategory).map(([group, list]) => {
@@ -250,6 +226,33 @@ export function generateSummary(expenses: ReportedExpense[]) {
   });
 }
 
+// Extract category info for an expense
+function getCategory(month: any, ex: ReportedExpense) {
+  const category = month.categories?.find(
+    (cat: any) => cat._id?.toString() === ex.categoryId?.toString()
+  );
+  return pick(category, ["label", "color", "group"]);
+}
+
+// Get color for a range of values between 0-100.
+export function getSeverityColor(amount: number, budget: number) {
+  const perc = getPercentage(amount, budget);
+  if (perc <= 45) return "green";
+  else if (perc > 45 && perc <= 70) return "yellow";
+  else if (perc > 70 && perc <= 90) return "orange";
+  else return "red";
+}
+
+// Retrieve color code for a color and shade from the color map.
+export function getColor(color: string, shade: number): Partial<Color> {
+  return { argb: colorMap[color][shade] };
+}
+
+function getPercentage(amount: number, budget: number): number {
+  return (amount / budget) * 100;
+}
+
+// Sum total of expense amounts.
 export function getTotalAmount(list: ReportedExpense[]): number {
   return list.reduce((sum, curr) => sum + curr.amount, 0);
 }
