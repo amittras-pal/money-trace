@@ -1,6 +1,7 @@
 import { PipelineStage, Types } from "mongoose";
 import {
   IListReqBody,
+  IReportRequest,
   ISearchReqBody,
   ISummaryReqParams,
 } from "../types/utility";
@@ -147,4 +148,57 @@ export function SummaryAggregator(request: ISummaryReqParams, user: string) {
   ];
 
   return [filter, group, lookup, sort, unwind, ...projection];
+}
+
+export function reportExpenseAggregator(request: IReportRequest, user: string) {
+  const search: PipelineStage.Match = {
+    $match: {
+      user: new Types.ObjectId(user),
+      plan: null,
+      date: {
+        $gte: new Date(request.startDate),
+        $lte: new Date(request.endDate),
+      },
+    },
+  };
+  const dateSort: PipelineStage.Sort = { $sort: { date: 1 } };
+  const groupByMonth: PipelineStage.Group = {
+    $group: {
+      _id: { $substrCP: ["$date", 0, 7] },
+      expenses: { $push: "$$ROOT" },
+      total: { $sum: "$amount" },
+    },
+  };
+  const monthSort: PipelineStage.Sort = { $sort: { _id: 1 } };
+  const categoryLookup: PipelineStage.Lookup = {
+    $lookup: {
+      from: "categories",
+      localField: "expenses.categoryId",
+      foreignField: "_id",
+      as: "categories",
+    },
+  };
+
+  return [search, dateSort, groupByMonth, monthSort, categoryLookup];
+}
+
+export function budgetAggregator(request: IReportRequest, user: string) {
+  const search: PipelineStage.Match = {
+    $match: {
+      user: new Types.ObjectId(user),
+      month: {
+        $gte: new Date(request.startDate).getMonth() - 1,
+        $lte: new Date(request.endDate).getMonth() + 1,
+      },
+      year: {
+        $gte: new Date(request.startDate).getFullYear(),
+        $lte: new Date(request.endDate).getFullYear(),
+      },
+    },
+  };
+  const project: PipelineStage.Project = {
+    $project: { _id: false, user: false, __v: false },
+  };
+
+  return [search, project];
 }

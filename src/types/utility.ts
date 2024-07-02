@@ -18,3 +18,9 @@ export type ISummaryReqParams = {
   lastDay: string | undefined;
   plan: string | undefined;
 };
+
+export type IReportRequest = {
+  startDate: string;
+  endDate: string;
+  includeList: string;
+};
