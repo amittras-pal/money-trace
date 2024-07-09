@@ -5,6 +5,11 @@ import { getEnv } from "../env/config";
 import { ReleaseResponse } from "../types/changelog";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
+/**
+ * @description This method retrieves the list of releases from github for the repository using the GraphQL API.
+ * @method POST /api/app-info/changelog
+ * @access public
+ */
 export const getChangelog = routeHandler(
   async (_req: TypedRequest, res: TypedResponse<ReleaseResponse>) => {
     const { OCTO_PK, OCTO_APP_ID, OCTO_INST_ID } = getEnv();
