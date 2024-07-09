@@ -1,3 +1,4 @@
+// GQL query to retrieve latest releases.
 export const releasesQuery = `
 query {
   repository(owner:"amittras-pal", name:"expensary") {
@@ -19,3 +20,23 @@ query {
   }
 }
 `;
+
+// GQL query to retrieve user info.
+export const userQuery = (username: string) => `
+query {
+  user(login:"${username}") {
+    name,
+    avatarUrl,
+    bio,
+    createdAt,
+    company,
+    location,
+    socialAccounts(last:5){
+      nodes {
+        displayName,
+        provider
+      }
+    },
+    url,
+  }
+}`;

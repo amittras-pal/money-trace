@@ -1,8 +1,8 @@
 import routeHandler from "express-async-handler";
 import { App } from "octokit";
-import { releasesQuery } from "../constants/gql";
+import { releasesQuery, userQuery } from "../constants/gql";
 import { getEnv } from "../env/config";
-import { ReleaseResponse } from "../types/changelog";
+import { ContributorInfo, ReleaseResponse } from "../types/app-info";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
 /**
@@ -22,5 +22,29 @@ export const getChangelog = routeHandler(
       headers: { "X-GitHub-Api-Version": "2022-11-28" },
     });
     res.json({ message: "Releases Retrieved", response: ghRes });
+  }
+);
+
+/**
+ * @description This method retrieves contributor info from github using the GraphQL API.
+ * @method POST /api/app-info/contributor
+ * @access public
+ */
+export const getContributor = routeHandler(
+  async (
+    req: TypedRequest<{ username: string }>,
+    res: TypedResponse<ContributorInfo>
+  ) => {
+    const { OCTO_PK, OCTO_APP_ID, OCTO_INST_ID } = getEnv();
+    if (!OCTO_PK) throw new Error("Config Error");
+
+    const app = new App({ appId: OCTO_APP_ID, privateKey: OCTO_PK });
+    const octokit = await app.getInstallationOctokit(OCTO_INST_ID);
+
+    const ghRes = await octokit.graphql<ContributorInfo>(
+      userQuery(req.query.username),
+      { headers: { "X-GitHub-Api-Version": "2022-11-28" } }
+    );
+    res.json({ message: "contributor Retrieved", response: ghRes });
   }
 );
