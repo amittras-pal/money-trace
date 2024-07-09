@@ -2,6 +2,7 @@ import routeHandler from "express-async-handler";
 import { App } from "octokit";
 import { releasesQuery, userQuery } from "../constants/gql";
 import { getEnv } from "../env/config";
+import User from "../models/user.model";
 import { ContributorInfo, ReleaseResponse } from "../types/app-info";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
@@ -46,5 +47,22 @@ export const getContributor = routeHandler(
       { headers: { "X-GitHub-Api-Version": "2022-11-28" } }
     );
     res.json({ message: "contributor Retrieved", response: ghRes });
+  }
+);
+
+/**
+ * @description This method retrieves contributor info from github using the GraphQL API.
+ * @method POST /api/app-info/new-release
+ * @access public
+ */
+export const updateUsersOnNewRelease = routeHandler(
+  async (_req: TypedRequest, res: TypedResponse) => {
+    const result = await User.updateMany(
+      { seenChangelog: true },
+      { $set: { seenChangelog: false } }
+    );
+    console.log(result.modifiedCount);
+
+    res.json({ message: "Users Notified." });
   }
 );
