@@ -46,7 +46,7 @@ export const getContributor = routeHandler(
       userQuery(req.query.username),
       { headers: { "X-GitHub-Api-Version": "2022-11-28" } }
     );
-    res.json({ message: "contributor Retrieved", response: ghRes });
+    res.json({ message: "Contributor Details Retrieved", response: ghRes });
   }
 );
 
@@ -61,8 +61,8 @@ export const updateUsersOnNewRelease = routeHandler(
       { seenChangelog: true },
       { $set: { seenChangelog: false } }
     );
-    console.log(result.modifiedCount);
-
-    res.json({ message: "Users Notified." });
+    res.json({
+      message: `${result.modifiedCount} Users' Viewership Status is Updated.`,
+    });
   }
 );
