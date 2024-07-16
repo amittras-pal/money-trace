@@ -1,6 +1,6 @@
 import routeHandler from "express-async-handler";
 import { App } from "octokit";
-import { releasesQuery, userQuery } from "../constants/gql";
+import { releasesQuery, userQuery } from "../constants/git-queries";
 import { getEnv } from "../env/config";
 import User from "../models/user.model";
 import { ContributorInfo, ReleaseResponse } from "../types/app-info";
@@ -19,7 +19,7 @@ export const getChangelog = routeHandler(
     const app = new App({ appId: OCTO_APP_ID, privateKey: OCTO_PK });
     const octokit = await app.getInstallationOctokit(OCTO_INST_ID);
 
-    const ghRes = await octokit.graphql<ReleaseResponse>(releasesQuery, {
+    const ghRes = await octokit.graphql<ReleaseResponse>(releasesQuery(), {
       headers: { "X-GitHub-Api-Version": "2022-11-28" },
     });
     res.json({ message: "Releases Retrieved", response: ghRes });
@@ -29,7 +29,7 @@ export const getChangelog = routeHandler(
 /**
  * @description This method retrieves contributor info from github using the GraphQL API.
  * @method POST /api/app-info/contributor
- * @access public
+ * @access private
  */
 export const getContributor = routeHandler(
   async (

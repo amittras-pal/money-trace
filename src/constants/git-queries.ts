@@ -1,7 +1,11 @@
+import { getEnv } from "../env/config";
+
 // GQL query to retrieve latest releases.
-export const releasesQuery = `
+export const releasesQuery = () => {
+  const { GIT_REPO_NAME, GIT_REPO_OWNER } = getEnv();
+  return `
 query {
-  repository(owner:"amittras-pal", name:"expensary") {
+  repository(owner:"${GIT_REPO_OWNER}", name:"${GIT_REPO_NAME}") {
     releases(last:50){
       nodes{
         name,
@@ -20,6 +24,7 @@ query {
   }
 }
 `;
+};
 
 // GQL query to retrieve user info.
 export const userQuery = (username: string) => `
