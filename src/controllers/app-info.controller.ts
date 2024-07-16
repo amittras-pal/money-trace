@@ -29,7 +29,7 @@ export const getChangelog = routeHandler(
 /**
  * @description This method retrieves contributor info from github using the GraphQL API.
  * @method POST /api/app-info/contributor
- * @access private
+ * @access public
  */
 export const getContributor = routeHandler(
   async (
@@ -53,7 +53,7 @@ export const getContributor = routeHandler(
 /**
  * @description This method retrieves contributor info from github using the GraphQL API.
  * @method POST /api/app-info/new-release
- * @access public
+ * @access private
  */
 export const updateUsersOnNewRelease = routeHandler(
   async (_req: TypedRequest, res: TypedResponse) => {
@@ -62,7 +62,7 @@ export const updateUsersOnNewRelease = routeHandler(
       { $set: { seenChangelog: false } }
     );
     res.json({
-      message: `${result.modifiedCount} Users' Viewership Status is Updated.`,
+      message: `Changelog Viewership Status of ${result.modifiedCount} user(s) is Updated.`,
     });
   }
 );
