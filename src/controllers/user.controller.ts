@@ -38,7 +38,7 @@ export const register = routeHandler(
     });
 
     if (created)
-      res.status(StatusCodes.OK).json({
+      res.status(StatusCodes.CREATED).json({
         message:
           "You are successfully registerd. Please login with your new user account",
       });

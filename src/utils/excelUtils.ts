@@ -5,7 +5,7 @@ import { Borders, Color, Column, Fill, Font, RichText } from "exceljs";
 import { groupBy, pick } from "lodash";
 import { IExpenseByMonth, ReportedExpense } from "../types/reportingdata";
 import { IReportRequest } from "../types/utility";
-import { colorMap } from "./colormap";
+import { colorMap } from "../constants/colormap";
 
 // Extend DayJS for zone calculations.
 dayjs.extend(utc);
