@@ -9,6 +9,7 @@ const userSchema = new Schema<IUser>(
     timeZone: { type: "string", required: true },
     editWindow: { type: "number", required: true, default: 7 },
     color: { type: "string", required: false, default: "indigo" },
+    seenChangelog: { type: "boolean", required: true, default: false },
   },
   { timestamps: true }
 );

@@ -8,4 +8,5 @@ export type IUser = {
   timeZone: string;
   editWindow: number;
   color?: string;
+  seenChangelog: boolean;
 };

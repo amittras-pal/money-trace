@@ -5,6 +5,7 @@ import { getEnv } from "./env/config";
 import errorHandler from "./middlewares/error.middleware";
 import budgetRoutes from "./routes/budget.routes";
 import categoryRoutes from "./routes/category.routes";
+import appInfoRouter from "./routes/app-info.routes";
 import expenseRoutes from "./routes/expense.routes";
 import expensePlanRoutes from "./routes/expensePlan.routes";
 import reportingRoutes from "./routes/reporting.routes";
@@ -24,6 +25,7 @@ app.use("/api/budget", budgetRoutes);
 app.use("/api/expense-plan", expensePlanRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/reports", reportingRoutes);
+app.use("/api/app-info", appInfoRouter);
 
 // This is required since server is hosted on an ephemeral container, which takes time to come up;
 // This allows the FE to show an animation state and not load the rest of the app until the server is ready.
