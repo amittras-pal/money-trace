@@ -5,26 +5,33 @@ import { IBudget } from "../types/budget";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
 /**
- * @description This method is used to create the budget for a given month and year for a user
+ * @description This method is used to create a new budget for a given month and year for a user
  * @method POST /api/budget
  * @access protected
  */
 export const createBudget = routeHandler(
-  async (req: TypedRequest<{}, Partial<IBudget>>, res: TypedResponse) => {
+  async (
+    req: TypedRequest<{}, Pick<IBudget, "month" | "year" | "amount">>,
+    res: TypedResponse
+  ) => {
     const { userId } = req;
     const { month, year, amount } = req.body;
-    await Budget.create({
-      user: userId,
-      month,
-      year,
-      amount,
-    });
+    const existing = await Budget.findOne({ month, year, user: userId });
+
+    if (existing) {
+      res.status(StatusCodes.CONFLICT);
+      throw new Error(
+        "Budget is already created for the user for the given month."
+      );
+    }
+
+    await Budget.create({ user: userId, month, year, amount });
     res.status(StatusCodes.OK).json({ message: "Budget created successfully" });
   }
 );
 
 /**
- * @description Retrieve the budget by month & year
+ * @description Retrieve the budget by month & year for a user
  * @method GET /api/budget
  * @access protected
  */
