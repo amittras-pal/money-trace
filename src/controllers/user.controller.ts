@@ -56,7 +56,7 @@ export const register = routeHandler(
  */
 export const login = routeHandler(
   async (
-    req: TypedRequest<{}, Partial<IUser>>,
+    req: TypedRequest<{}, { email: string; pin: string }>,
     res: TypedResponse<{ user: IUser; token: string }>
   ) => {
     const { email, pin } = req.body;

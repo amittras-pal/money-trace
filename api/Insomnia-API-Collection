@@ -1,0 +1,1030 @@
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2024-09-01T05:54:27.760Z",
+    "__export_source": "insomnia.desktop.app:v2023.5.8",
+    "resources": [
+        {
+            "_id": "req_5240133d6efb4e7c908400a9af418e11",
+            "parentId": "fld_184ae22b6f52435dbfd4c5497340a849",
+            "modified": 1725169978921,
+            "created": 1725166974925,
+            "url": "{{ _.baseUrl }}/budget",
+            "name": "Create Budget",
+            "description": "### Description\n\n- Create a new budget for the logged in user.\n\n### Request Body\n\n```\n{\n\t\"month\": 0, // 0-11 corresponding to Jan-Dec\n\t\"year\": 0, // current year\n\t\"amount\": 0,\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n    \"month\": 0,\n    \"year\": 0,\n    \"amount\": 0\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725166974925,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_184ae22b6f52435dbfd4c5497340a849",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725166970902,
+            "created": 1725166970902,
+            "name": "Budget",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725166970902,
+            "_type": "request_group"
+        },
+        {
+            "_id": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "parentId": null,
+            "modified": 1725169803329,
+            "created": 1719560965274,
+            "name": "Expensary | Money Trace",
+            "description": "",
+            "scope": "collection",
+            "_type": "workspace"
+        },
+        {
+            "_id": "req_4e38bb4908fa401f83e9dae5283c0ebc",
+            "parentId": "fld_184ae22b6f52435dbfd4c5497340a849",
+            "modified": 1725169987359,
+            "created": 1725167323294,
+            "url": "{{ _.baseUrl }}/budget",
+            "name": "Get Budget",
+            "description": "### Description\n\n- Retrieve the bidget for a given month and year combo\n\n### Request Query Parameters\n\n- `month`: 0-11 corressponding to Jan-Dec.\n- `year`: Current year",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_c7933710d7074641b886557fd9d651a5",
+                    "name": "month",
+                    "value": "8",
+                    "description": ""
+                },
+                {
+                    "id": "pair_6fa2a285ab484fdf9647951bc80d7e66",
+                    "name": "year",
+                    "value": "2024",
+                    "description": ""
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725166934733.5,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_2c9f761b3a834949bc288394508ad591",
+            "parentId": "fld_2d3819716dd44ff88e52e4b5e32e28cd",
+            "modified": 1725170001916,
+            "created": 1725166894542,
+            "url": "{{ _.baseUrl }}/categories",
+            "name": "List Categories",
+            "description": "### Description\n\n- Retrieve a list of categories from the DB. ",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725166894542,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_2d3819716dd44ff88e52e4b5e32e28cd",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725166877569,
+            "created": 1725166877569,
+            "name": "Categories",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725166877569,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_1f7bdaa4448b47109e2a9991181f5100",
+            "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
+            "modified": 1725166701938,
+            "created": 1719560968574,
+            "url": "http://localhost:6400/api/app-info/new-release",
+            "name": "Notify Users on New Release",
+            "description": "### Description\n\n- Update the `seenChangelog` field of all users to `false` if it is `true`. \n- Requires admin priviledge via a system password provided in the header. \n- Password is compared against a hashed environment variable set in the server. \n\n### Request Headers\n\n- `x-sys-gate`: Admin Password for allowing bulk user modification.",
+            "method": "POST",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8",
+                    "id": "pair_7a23afb3a07c4a688c67e59f8003b958"
+                },
+                {
+                    "id": "pair_161393eef34246568b122051af986db0",
+                    "name": "x-sys-gate",
+                    "value": "",
+                    "description": "The password to allow modification."
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725166699739,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_6882873100ee4c1d9f8d8c48c69eb579",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725166492593,
+            "created": 1725166492593,
+            "name": "Application Info",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725166492594,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_713bf94746124c698456db6d4a89ecf6",
+            "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
+            "modified": 1725166816463,
+            "created": 1725166699639,
+            "url": "{{ _.baseUrl }}/changelog",
+            "name": "Version History",
+            "description": "### Description\n\n- Public API to get the version history of all releases created in the github repository. \n- System communicates to the GitHub API via their GraphQL service.",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725166699639,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_93ba32b7f7fb426eae126fc5c42a8d2f",
+            "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
+            "modified": 1725166851057,
+            "created": 1725166837379,
+            "url": "{{ _.baseUrl }}/changelog",
+            "name": "Contributor Info",
+            "description": "### Description\n\n- Public API to get the contributor profile details from github. \n- System communicates to the GitHub API via their GraphQL service.",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725142467712.5,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_0985658c7b3e49e98e00ba8b5b6fda2f",
+            "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
+            "modified": 1725119053280,
+            "created": 1725118235786,
+            "url": "{{ _.baseUrl }}/expenses",
+            "name": "Delete Expense",
+            "description": "### Description:\n\nDeletes an already present expense \n\n### Request Query Params: \n\n`id`: The string ID of the expense to delete.",
+            "method": "DELETE",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_f0800f5364b446ad9a755c9d1b64f863",
+                    "name": "id",
+                    "value": "",
+                    "description": "String ID of the expense to delete."
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725118235786,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_46489c6383554d31af23985e9a8dbfda",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725117933123,
+            "created": 1725117933123,
+            "name": "Expenses",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725117933123,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_3ea1b5a9f5474a4d80b47a928f685917",
+            "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
+            "modified": 1725165786303,
+            "created": 1725118308041,
+            "url": "{{ _.baseUrl }}/expenses/summary",
+            "name": "Summary of Expenses",
+            "description": "### Description\n\n- Get a summary of expenses across a date range or for a plan\n\n### Request Query Parameters\n\n- `firstDay`: ISO-8601 formatted timestamp. NOT Required if `plan` is provided.\n- `lastDay`: ISO-8601 formatted timestamp. NOT Required if `plan` is provided.\n- `plan`: String ID of a plan to get summary for. The other 2 params are nit required if this is provided. ",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_3d73776b99f84b22b62661099a812558",
+                    "name": "firstDay",
+                    "value": "",
+                    "description": "{% now 'iso-8601', '' %}"
+                },
+                {
+                    "id": "pair_fcfc05b33ee14b0ca67f915785fdc259",
+                    "name": "lastDay",
+                    "value": "",
+                    "description": "{% now 'iso-8601', '' %}"
+                },
+                {
+                    "id": "pair_76cf4b163d0f461d8ef10bcb2668fc4a",
+                    "name": "plan",
+                    "value": "",
+                    "description": "String ID of plan to get summary of expenses in a plan. Other 2 params are not needed if this is provided."
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725118087775.5,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_67459b34ccd44a1ba279d658ae5faac7",
+            "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
+            "modified": 1725166009789,
+            "created": 1725118451021,
+            "url": "{{ _.baseUrl }}/expenses",
+            "name": "List Expenses",
+            "description": "### Description:\n- Get a list of expenses\n\n### Request Body:\n\n```\n{\n\t\"startDate\": \"\", // ISO-8601 formatted timestamp\n\t\"endDate\": \"\", // ISO-8601 formatted timestamp\n\t\"plan\": null, // String ID of the plan to list expenses of. startDate and endDate not required if this is provided.\n\t\"sort\": { // can be any field of the expense object \n\t\t\"date\": -1 // +1 = 'Ascending'; -1 = 'Descending'\n\t}\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"startDate\": \"\",\n\t\"endDate\": \"\",\n\t\"plan\": null,\n\t\"sort\": {\n\t\t\"date\": -1\n\t}\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725118013770.25,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_e3ac517565664bb298e49f117fd38b30",
+            "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
+            "modified": 1725165872098,
+            "created": 1725118612023,
+            "url": "{{ _.baseUrl }}/expenses",
+            "name": "Search Expenses",
+            "description": "### Description:\n- Search expenses with text match / category / date range.\n- At least one of `q` / combination of `startDate + endDate` / `categories` must be provided.\n\n### Request Body:\n\n```\n{\n\t\"q\": \"\", // query string to match words.\n\t\"startDate\": \"\", // ISO-8601 formatted timestamp\n\t\"endDate\": \"\", // ISO-8601 formatted timestamp\n\t\"categories\": [\"\"], // list of category IDs to match against\n\t\"sort\": { // can be any field of the expense object \n\t\t\"date\": -1 // +1 = \"Ascending\"; -1 = \"Descending\"\n\t}\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"q\": \"\",\n\t\"startDate\": \"\",\n\t\"endDate\": \"\",\n\t\"plan\": null,\n\t\"categories\": [\"\"],\n\t\"sort\": {\n\t\t\"date\": -1\n\t}\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117976767.625,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_8931023e68254741820f2bb74f924905",
+            "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
+            "modified": 1725166237152,
+            "created": 1725117939765,
+            "url": "{{ _.baseUrl }}/expenses",
+            "name": "Create New Expense",
+            "description": "### Description\n\n- Create a new expense in the DB.\n\n### Request Body\n\n```\n{\n\t\"title\": \"\",\n\t\"description\": \"\",\n\t\"date\": \"\", // ISO-8601 formatted timestamp\n\t\"categoryId\": \"\", // String ID should be one of the IDs retrieved from /api/categories\n\t\"plan\": null, // String ID of plan if expense is added to a plan\n\t\"amount\": 0,\n\t\"reverted\": false, // not used as of now.\n\t\"linked\": false // system managed field if expense is copied from an expense plan to regular budget.\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"title\": \"\",\n\t\"description\": \"\",\n\t\"date\": \"\",\n\t\"categoryId\": \"\",\n\t\"plan\": null,\n\t\"amount\": 0,\n\t\"reverted\": false,\n\t\"linked\": false\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117939765,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_cbf3ec5979f643b5bab0b66bd72011f3",
+            "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
+            "modified": 1725166247548,
+            "created": 1725118185497,
+            "url": "{{ _.baseUrl }}/expenses",
+            "name": "Update Expense",
+            "description": "### Description\n\n- Update an existing expense in the DB.\n\n### Request Body\n\n```\n{\n    \"_id\": \"\", // string ID of the expense to update.\n\t\"title\": \"\",\n\t\"description\": \"\",\n\t\"date\": \"\", // ISO-8601 formatted timestamp\n\t\"categoryId\": \"\", // String ID should be one of the IDs retrieved from /api/categories\n\t\"plan\": null, // String ID of plan if expense is added to a plan\n\t\"amount\": 0,\n\t\"reverted\": false, // not used as of now.\n\t\"linked\": false // system managed field if expense is copied from an expense plan to regular budget.\n}\n```",
+            "method": "PUT",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"_id\": \"\",\n\t\"title\": \"\",\n\t\"description\": \"\",\n\t\"date\": \"\",\n\t\"categoryId\": \"\",\n\t\"plan\": null,\n\t\"amount\": 0,\n\t\"reverted\": false,\n\t\"linked\": false\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117858709.5,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_609deec9252b4ab397f03682f9fc9089",
+            "parentId": "fld_47be40cab122464c9c73082748d0aace",
+            "modified": 1725163862572,
+            "created": 1725117147748,
+            "url": "{{ _.baseUrl }}/expense-plan",
+            "name": "Create New Plan",
+            "description": "### Description\n\n- Create a new Expense Plan\n\n### Request Body\n\n```\n{\n\t\"name\": \"\",\n\t\"description\": \"\"\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"name\": \"\",\n\t\"description\": \"\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117777654,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_47be40cab122464c9c73082748d0aace",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725117138140,
+            "created": 1725117138140,
+            "name": "Expense Plans",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725117138140,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_1dc88c3d61a84b2fb0630c1894a62628",
+            "parentId": "fld_47be40cab122464c9c73082748d0aace",
+            "modified": 1725163932957,
+            "created": 1725117777554,
+            "url": "{{ _.baseUrl }}/expense-plan/copy-to-budget",
+            "name": "Copy Expenses to Budget",
+            "description": "### Description\n\n- Copy selected expenses from an expense plan into the regular budget. \n\n### Request Body\n\n```\n{\n\t\"expenses\": [\"\"] // list of string IDs for expenses to be copied.\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"expenses\": [\"\"]\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117777554,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_f1ece73c84184a2088494f010c6b36f2",
+            "parentId": "fld_47be40cab122464c9c73082748d0aace",
+            "modified": 1725163982693,
+            "created": 1725117671101,
+            "url": "{{ _.baseUrl }}/expense-plan",
+            "name": "Delete Plan",
+            "description": "### Description\n\n- Delete an expense plan.\n\n### Request Query Parameters\n\n- `_id`: String ID of the expense plan to delete.",
+            "method": "DELETE",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_95a55a08019945b1908533f17946e1fc",
+                    "name": "_id",
+                    "value": "",
+                    "description": "String ID of the plan to delete. "
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117671101,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_66a7be16379b4383aeee6dafc53e411e",
+            "parentId": "fld_47be40cab122464c9c73082748d0aace",
+            "modified": 1725164118395,
+            "created": 1725117555496,
+            "url": "{{ _.baseUrl }}/expense-plan",
+            "name": "Update Plan Details",
+            "description": "### Description\n\n- Update the details of an expense plan\n\n### Request Body\n\n```\n{\n\t\"_id\": \"\",\n\t\"name\": \"\",\n\t\"description\": \"\",\n\t\"open\": false // if set to false, the plan will be closed and no other expenses can be added to it.\n}\n```",
+            "method": "PUT",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"_id\": \"\",\n\t\"name\": \"\",\n\t\"description\": \"\",\n\t\"open\": false\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117555496,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_2d2237853df14640b9513d34a2831a32",
+            "parentId": "fld_47be40cab122464c9c73082748d0aace",
+            "modified": 1725165604029,
+            "created": 1725117305571,
+            "url": "{{ _.baseUrl }}/api/expense-plan/details",
+            "name": "Get Plan Details",
+            "description": "### Description\n\n- Get the expense plan details\n\n### Request Query Parameters\n\n- `_id`: String ID of the plan.",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_0178deece95f433ab860c60d49572539",
+                    "name": "_id",
+                    "value": "",
+                    "description": "String ID of the plan"
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": ""
+            },
+            "metaSortKey": -1725117305571,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_84dd75e20ccb4022abad365011ff4f39",
+            "parentId": "fld_47be40cab122464c9c73082748d0aace",
+            "modified": 1725165649459,
+            "created": 1725117241233,
+            "url": "{{ _.baseUrl }}/api/expense-plan",
+            "name": "List Plans",
+            "description": "### Description\n\n- Retrieve a list of plans\n\n### Request Query Parameters\n\n- `open`: Boolean; indicate whether to only retrieve the open plans or all plans",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_88949ab7580f4f37bf56f6cf328d4a74",
+                    "name": "open",
+                    "value": "false",
+                    "description": ""
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725117241233,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_8b71df5cb8804a148a7d9026e6dbc91d",
+            "parentId": "fld_46d95345fc2d4525b7c4003d32260e49",
+            "modified": 1725163779642,
+            "created": 1725116940370,
+            "url": "{{ _.baseUrl }}/reports",
+            "name": "Generate Report [xlsx]",
+            "description": "### Description\n\n- Download an excel format of expenses in a given date range. Expenses are organized into sheets per month.\n\n### Request Query Parameters\n\n- `startDate`: ISO-8601 formatted timestamp\n- `endDate`: ISO-8601 formatted timestamp\n- `includeList`: Boolean; whether to include list of expenses or only the summary.",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_af774b0fbc9a456792c10db4b046b31b",
+                    "name": "startDate",
+                    "value": "",
+                    "description": "{% now 'iso-8601', '' %}"
+                },
+                {
+                    "id": "pair_1ce1ffffac114177aca7e385a0de7b18",
+                    "name": "endDate",
+                    "value": "",
+                    "description": "{% now 'iso-8601', '' %}"
+                },
+                {
+                    "id": "pair_544b245e04184363b38c3e4eebc77214",
+                    "name": "inclideList",
+                    "value": "false",
+                    "description": "Boolean to include list in the report"
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725116940370,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_46d95345fc2d4525b7c4003d32260e49",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725116889355,
+            "created": 1725116889355,
+            "name": "Report Generation",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725116889355,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_4d1044e9de6544208c93a941ef65b812",
+            "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
+            "modified": 1725163370124,
+            "created": 1725116692381,
+            "url": "{{ _.baseUrl }}/user/change-password",
+            "name": "Change Password",
+            "description": "### Description\n\nChange the password of a logged in user. User needs to be logged in to make this request.\n\n### Request Body\n\n```\n{\n\t\"email\": \"\",\n\t\"currentPin\": \"\",\n\t\"newPin\": \"\",\n\t\"confirmNewPin\": \"\"\n}\n```\n",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"email\": \"\",\n\t\"currentPin\": \"\",\n\t\"newPin\": \"\",\n\t\"confirmNewPin\": \"\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725116692382,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_deb1a224d645401aae9219ae600ecef4",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725116418687,
+            "created": 1725109380417,
+            "name": "User & Auth",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725109380417,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_ce42ce69580d41069795c1ce0eca30d2",
+            "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
+            "modified": 1725163479392,
+            "created": 1725116521944,
+            "url": "{{ _.baseUrl }}/user/update",
+            "name": "Update User Details",
+            "description": "### Description\n\n- Change the details of a logged in user. \n- Any field can be modified for the user. \n- User needs to be logged in to make this request.\n\n### Request Body\n\n```\n{\n\t\"_id\": \"\", // Not necessary. \n\t\"userName\": \"\",\n\t\"email\": \"\",\n\t\"pin\": \"\",\n\t\"timeZone\": \"\",\n\t\"editWindow\": 0,\n\t\"color\": \"\",\n\t\"seenChangelog\": false\n}\n```",
+            "method": "PUT",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"_id\": \"\",\n\t\"userName\": \"\",\n\t\"email\": \"\",\n\t\"pin\": \"\",\n\t\"timeZone\": \"\",\n\t\"editWindow\": 0,\n\t\"color\": \"\",\n\t\"seenChangelog\": false\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725116521944,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_0e085c5f390e4e68961fbc02039205ed",
+            "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
+            "modified": 1725163515691,
+            "created": 1725116425481,
+            "url": "{{ _.baseUrl }}/user/details",
+            "name": "User Details (not used by FE)",
+            "description": "### Description\n\n- Retrieve the details of a logged in user.",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725116425481,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_091b783ba10946dcbb086a02021947ca",
+            "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
+            "modified": 1725163576933,
+            "created": 1725116301413,
+            "url": "{{ _.baseUrl }}/user/register",
+            "name": "Register",
+            "description": "### Description\n\n- Create a new user in the database.\n\n### Request Body\n\nAdditional details are set automatically by the BE.\n\n```\n{\n\t\"userName\": \"\",\n\t\"email\": \"\",\n\t\"pin\": \"\",\n\t\"timeZone\": \"\"\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"userName\": \"\",\n\t\"email\": \"\",\n\t\"pin\": \"\",\n\t\"timeZone\": \"\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725116301413,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_44335cd68bfa4860850a286bfa9a8943",
+            "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
+            "modified": 1725163633113,
+            "created": 1725109174423,
+            "url": "{{ _.baseUrl }}/user/login",
+            "name": "Login",
+            "description": "### Description\n\n- Login a registered user.\n\n### Request Body\n\n```\n{\n\t\"email\": \"\",\n\t\"pin\": \"\"\n}\n```",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"email\": \"\",\n\t\"pin\": \"\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725109386202,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "env_e28b4ce200755009410112466a7c616d9ef64b91",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1725109234400,
+            "created": 1719560965284,
+            "name": "Base Environment",
+            "data": {
+                "baseUrl": "http://localhost:6400/api"
+            },
+            "dataPropertyOrder": {
+                "&": [
+                    "baseUrl"
+                ]
+            },
+            "color": null,
+            "isPrivate": false,
+            "metaSortKey": 1719560965284,
+            "_type": "environment"
+        },
+        {
+            "_id": "jar_e28b4ce200755009410112466a7c616d9ef64b91",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1719560965288,
+            "created": 1719560965288,
+            "name": "Default Jar",
+            "cookies": [],
+            "_type": "cookie_jar"
+        }
+    ]
+}
