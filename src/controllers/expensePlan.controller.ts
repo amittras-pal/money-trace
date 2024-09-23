@@ -2,6 +2,7 @@ import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import omit from "lodash/omit";
 import { Types } from "mongoose";
+import { expensePlanMessages } from "../constants/apimessages";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
 import { IExpensePlan } from "../types/expensePlan";
@@ -23,12 +24,12 @@ export const createExpensePlan = routeHandler(
     });
     if (created) {
       res.status(StatusCodes.OK).json({
-        message: "Expense plan created successfully",
+        message: expensePlanMessages.expensePlanCreatedSuccessfully,
       });
     } else
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Something went wrong while creating expense plan" });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: expensePlanMessages.somethingWentWrongWhileCreatingExpensePlan,
+      });
   }
 );
 
@@ -46,7 +47,10 @@ export const getExpensePlans = routeHandler(
       user: new Types.ObjectId(req.userId),
     }).sort({ updatedAt: -1 });
 
-    res.json({ message: "Plans Retrieved", response: plans });
+    res.json({
+      message: expensePlanMessages.plansRetrieved,
+      response: plans,
+    });
   }
 );
 
@@ -66,7 +70,10 @@ export const getPlanDetails = routeHandler(
       throw new Error("Plan Not Found");
     }
 
-    res.json({ message: "Details Retrieved", response: plan });
+    res.json({
+      message: expensePlanMessages.detailsRetrieved,
+      response: plan,
+    });
   }
 );
 
@@ -91,7 +98,7 @@ export const updatePlan = routeHandler(
       { new: true }
     );
     res.json({
-      message: "Expense plan updated successfully",
+      message: expensePlanMessages.expensePlanUpdatedSuccessfully,
       response: update,
     });
   }
