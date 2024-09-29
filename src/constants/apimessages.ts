@@ -3,16 +3,16 @@ export const appInfoMessages: Record<string, string> = {
   contributorDetailsRetrieved: "Contributor Details Retrieved",
 };
 
-export const budgetMessages = {
+export const budgetMessages: Record<string, string> = {
   budgetCreatedSuccessfully: "Budget created successfully",
   budgetRetrievedSuccessfully: "Budget retrieved successfully",
 };
 
-export const categoryMessages = {
+export const categoryMessages: Record<string, string> = {
   categoriesRetrieved: "Categories Retrieved",
 };
 
-export const expenseMessages = {
+export const expenseMessages: Record<string, string> = {
   expenseSavedSuccessfully: "Expense saved successfully.",
   expenseUpdatedSuccessfully: "Expense updated successfully.",
   expenseDeletedSuccessfully: "Expense deleted successfully.",
@@ -22,7 +22,7 @@ export const expenseMessages = {
   resultsRetrieved: "Results retrieved.",
 };
 
-export const expensePlanMessages = {
+export const expensePlanMessages: Record<string, string> = {
   expensePlanCreatedSuccessfully: "Expense plan created successfully",
   somethingWentWrongWhileCreatingExpensePlan:
     "Something went wrong while creating expense plan",
@@ -31,7 +31,7 @@ export const expensePlanMessages = {
   expensePlanUpdatedSuccessfully: "Expense plan updated successfully",
 };
 
-export const userMessages = {
+export const userMessages: Record<string, string> = {
   successfullyRegisterd:
     "You are successfully registerd. Please login with your new user account",
   loginSuccessful: "Login Successful!!",
