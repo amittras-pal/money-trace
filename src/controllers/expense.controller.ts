@@ -1,6 +1,7 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { Types } from "mongoose";
+import { expenseMessages } from "../constants/apimessages";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
 import { IExpense } from "../types/expense";
@@ -44,7 +45,7 @@ export const createExpense = routeHandler(
     const expense = new Expense({ ...ex, user: userId });
     await expense.save();
 
-    res.json({ message: "Expense saved successfully." });
+    res.json({ message: expenseMessages.expenseSavedSuccessfully });
   }
 );
 
@@ -77,7 +78,10 @@ export const updateExpense = routeHandler(
       });
     }
 
-    res.json({ message: "Expense updated successfully.", response: update });
+    res.json({
+      message: expenseMessages.expenseUpdatedSuccessfully,
+      response: update,
+    });
   }
 );
 
@@ -107,7 +111,7 @@ export const deleteExpense = routeHandler(
       _id: new Types.ObjectId(req.query.id),
     });
 
-    res.json({ message: "Expense deleted successfully." });
+    res.json({ message: expenseMessages.expenseDeletedSuccessfully });
   }
 );
 
@@ -127,7 +131,7 @@ export const getMonthSummary = routeHandler(
     const summary = await Expense.aggregate(query);
 
     res.json({
-      message: "Summary for the current month retrieved successfully.",
+      message: expenseMessages.summaryForTheCurrentMonthRetrievedSuccessfully,
       response: {
         summary: summary.reduce((acc, ci) => {
           if (acc[ci.group]) {
@@ -161,7 +165,7 @@ export const listExpenses = routeHandler(
   ) => {
     const query = listAggregator(req.body, req.userId ?? "");
     const expenses = await (<IExpense[]>(<unknown>Expense.aggregate(query)));
-    res.json({ message: "List Retrieved.", response: expenses });
+    res.json({ message: expenseMessages.listRetrieved, response: expenses });
   }
 );
 
@@ -174,6 +178,9 @@ export const searchExpense = routeHandler(
   async (req: TypedRequest<{}, ISearchReqBody>, res: TypedResponse) => {
     const query = searchAggregator(req.body, req.userId ?? "");
     const expenses = await (<IExpense[]>(<unknown>Expense.aggregate(query)));
-    res.json({ message: "Results retrieved.", response: expenses });
+    res.json({
+      message: expenseMessages.resultsRetrieved,
+      response: expenses,
+    });
   }
 );

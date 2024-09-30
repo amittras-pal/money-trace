@@ -1,5 +1,6 @@
 import routeHandler from "express-async-handler";
 import { App } from "octokit";
+import { appInfoMessages } from "../constants/apimessages";
 import { releasesQuery, userQuery } from "../constants/git-queries";
 import { getEnv } from "../env/config";
 import User from "../models/user.model";
@@ -22,7 +23,7 @@ export const getChangelog = routeHandler(
     const ghRes = await octokit.graphql<ReleaseResponse>(releasesQuery(), {
       headers: { "X-GitHub-Api-Version": "2022-11-28" },
     });
-    res.json({ message: "Releases Retrieved", response: ghRes });
+    res.json({ message: appInfoMessages.releaseRetrieved, response: ghRes });
   }
 );
 
@@ -46,7 +47,10 @@ export const getContributor = routeHandler(
       userQuery(req.query.username),
       { headers: { "X-GitHub-Api-Version": "2022-11-28" } }
     );
-    res.json({ message: "Contributor Details Retrieved", response: ghRes });
+    res.json({
+      message: appInfoMessages.contributorDetailsRetrieved,
+      response: ghRes,
+    });
   }
 );
 
