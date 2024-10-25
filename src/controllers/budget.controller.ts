@@ -1,5 +1,6 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
+import { budgetMessages } from "../constants/apimessages";
 import Budget from "../models/budget.model";
 import { IBudget } from "../types/budget";
 import { TypedRequest, TypedResponse } from "../types/requests";
@@ -26,7 +27,9 @@ export const createBudget = routeHandler(
     }
 
     await Budget.create({ user: userId, month, year, amount });
-    res.status(StatusCodes.OK).json({ message: "Budget created successfully" });
+    res
+      .status(StatusCodes.OK)
+      .json({ message: budgetMessages.budgetCreatedSuccessfully });
   }
 );
 
@@ -58,7 +61,7 @@ export const getBudget = routeHandler(
     }
 
     res.json({
-      message: "Budget retrieved successfully",
+      message: budgetMessages.budgetRetrievedSuccessfully,
       response: budget,
     });
   }
