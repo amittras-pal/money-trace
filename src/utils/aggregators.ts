@@ -8,7 +8,7 @@ import {
 
 export function searchAggregator(request: ISearchReqBody, user: string) {
   const filter: PipelineStage.Match = {
-    $match: { $and: [{ user: new Types.ObjectId(user) }] },
+    $match: { $and: [{ user: new Types.ObjectId(user) }, { plan: null }] },
   };
 
   const unwindCategories: PipelineStage.Unwind = { $unwind: "$category" };
