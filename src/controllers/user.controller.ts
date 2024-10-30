@@ -2,6 +2,7 @@ import { compare, genSalt, hash } from "bcryptjs";
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { sign } from "jsonwebtoken";
+import { userMessages } from "../constants/apimessages";
 import { getEnv } from "../env/config";
 import User from "../models/user.model";
 import { TypedRequest, TypedResponse } from "../types/requests";
@@ -39,8 +40,7 @@ export const register = routeHandler(
 
     if (created)
       res.status(StatusCodes.CREATED).json({
-        message:
-          "You are successfully registerd. Please login with your new user account",
+        message: userMessages.successfullyRegisterd,
       });
     else {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -56,7 +56,7 @@ export const register = routeHandler(
  */
 export const login = routeHandler(
   async (
-    req: TypedRequest<{}, Partial<IUser>>,
+    req: TypedRequest<{}, { email: string; pin: string }>,
     res: TypedResponse<{ user: IUser; token: string }>
   ) => {
     const { email, pin } = req.body;
@@ -73,7 +73,7 @@ export const login = routeHandler(
       const { JWT_SECRET = "" } = getEnv();
       delete user.pin;
       res.json({
-        message: "Login Successful!!",
+        message: userMessages.loginSuccessful,
         response: {
           user,
           token: sign({ id: user._id } ?? "", JWT_SECRET, {
@@ -105,7 +105,7 @@ export const getUserDetails = routeHandler(
     }
 
     res.status(StatusCodes.OK).json({
-      message: "User Details Retrieved Successfully!",
+      message: userMessages.userDetailsRetrievedSuccessfully,
       response: user,
     });
   }
@@ -126,7 +126,7 @@ export const updateUserDetails = routeHandler(
     });
 
     const update = await User.findById(req.userId);
-    res.json({ message: "User details updated", response: update });
+    res.json({ message: userMessages.userDetailsUpdated, response: update });
   }
 );
 
