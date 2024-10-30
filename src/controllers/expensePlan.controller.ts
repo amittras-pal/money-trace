@@ -1,7 +1,7 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import omit from "lodash/omit";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { expensePlanMessages } from "../constants/apimessages";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
@@ -43,9 +43,15 @@ export const getExpensePlans = routeHandler(
     req: TypedRequest<{ open: string }>,
     res: TypedResponse<IExpensePlan[]>
   ) => {
-    const plans: IExpensePlan[] | null = await ExpensePlan.find({
+    const planFilter: FilterQuery<IExpensePlan> = {
       user: new Types.ObjectId(req.userId),
-    }).sort({ updatedAt: -1 });
+    };
+
+    if (req.query.open === "true") planFilter.open = true;
+
+    const plans: IExpensePlan[] | null = await ExpensePlan.find(
+      planFilter
+    ).sort({ updatedAt: -1 });
 
     res.json({
       message: expensePlanMessages.plansRetrieved,
