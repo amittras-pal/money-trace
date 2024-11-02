@@ -1,9 +1,12 @@
+import dayjs from "dayjs";
 import { PipelineStage, Types } from "mongoose";
+import { IUser } from "../types/user";
 import {
   IListReqBody,
   IReportRequest,
   ISearchReqBody,
   ISummaryReqParams,
+  YearTrendRequest,
 } from "../types/utility";
 
 export function searchAggregator(request: ISearchReqBody, user: string) {
@@ -201,4 +204,92 @@ export function budgetAggregator(request: IReportRequest, user: string) {
   };
 
   return [search, project];
+}
+
+export function yearTrendAggregator(req: YearTrendRequest, user: IUser | null) {
+  const prepareDocuments: PipelineStage[] = [
+    {
+      $match: {
+        $and: [
+          { user: new Types.ObjectId(req.userId) },
+          { plan: null },
+          { reverted: false },
+          {
+            date: {
+              $gte: dayjs(req.query.year).toDate(),
+              $lte: dayjs(req.query.year).endOf("year").toDate(),
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        month: { $month: { date: "$date", timezone: user?.timeZone } },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "categoryId",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    { $unwind: "$category" },
+  ];
+
+  const groupByCategory: PipelineStage[] = [
+    {
+      $group: {
+        _id: {
+          category: "$category.group",
+          color: "$category.color",
+          month: "$month",
+        },
+        amount: { $sum: "$amount" },
+        items: { $count: {} },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        amount: 1,
+        items: 1,
+        name: "$_id.category",
+        month: "$_id.month",
+        color: "$_id.color",
+      },
+    },
+  ];
+
+  const groupByMonth: PipelineStage[] = [
+    {
+      $group: {
+        _id: "$month",
+        total: { $sum: "$amount" },
+        categories: { $addToSet: "$$ROOT" },
+      },
+    },
+    { $project: { "categories.month": 0 } },
+  ];
+
+  const prepareOutput: PipelineStage[] = [
+    { $sort: { _id: 1 } },
+    {
+      $project: {
+        month: "$_id",
+        _id: 0,
+        total: 1,
+        categories: 1,
+      },
+    },
+  ];
+
+  return [
+    ...prepareDocuments,
+    ...groupByCategory,
+    ...groupByMonth,
+    ...prepareOutput,
+  ];
 }

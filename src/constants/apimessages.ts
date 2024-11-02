@@ -39,3 +39,7 @@ export const userMessages: Record<string, string> = {
   userDetailsUpdated: "User details updated",
   pinChangedSuccessfully: "Pin Changed Successfully!!",
 };
+
+export const statsMessages: Record<string, string> = {
+  yearStats: "Year stats summary retried successfylly.",
+};
