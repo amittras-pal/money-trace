@@ -42,4 +42,5 @@ export const userMessages: Record<string, string> = {
 
 export const statsMessages: Record<string, string> = {
   yearStats: "Year stats summary retried successfylly.",
+  monthStats: "Month stats summary retrieved successfully.",
 };

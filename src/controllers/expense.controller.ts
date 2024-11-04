@@ -12,8 +12,8 @@ import {
   ISummaryReqParams,
 } from "../types/utility";
 import {
-  SummaryAggregator,
   listAggregator,
+  monthSummaryAggregator,
   searchAggregator,
 } from "../utils/aggregators";
 
@@ -126,7 +126,7 @@ export const getMonthSummary = routeHandler(
     req: TypedRequest<ISummaryReqParams, {}>,
     res: TypedResponse<{ summary: Array<any>; total: Number }>
   ) => {
-    const query = SummaryAggregator(req.query, req.userId ?? "");
+    const query = monthSummaryAggregator(req.query, req.userId ?? "");
     // Create a type for this response.
     const summary = await Expense.aggregate(query);
 

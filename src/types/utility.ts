@@ -28,3 +28,5 @@ export type IReportRequest = {
 };
 
 export type YearTrendRequest = TypedRequest<{ year: string }>;
+
+export type MonthTrendRequest = TypedRequest<{ year: string; month: string }>;
