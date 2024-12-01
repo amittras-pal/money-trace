@@ -1,13 +1,13 @@
 {
     "_type": "export",
     "__export_format": 4,
-    "__export_date": "2024-09-01T05:54:27.760Z",
+    "__export_date": "2024-11-04T16:27:02.341Z",
     "__export_source": "insomnia.desktop.app:v2023.5.8",
     "resources": [
         {
             "_id": "req_5240133d6efb4e7c908400a9af418e11",
             "parentId": "fld_184ae22b6f52435dbfd4c5497340a849",
-            "modified": 1725169978921,
+            "modified": 1725170488760,
             "created": 1725166974925,
             "url": "{{ _.baseUrl }}/budget",
             "name": "Create Budget",
@@ -67,11 +67,11 @@
         {
             "_id": "req_4e38bb4908fa401f83e9dae5283c0ebc",
             "parentId": "fld_184ae22b6f52435dbfd4c5497340a849",
-            "modified": 1725169987359,
+            "modified": 1725170478577,
             "created": 1725167323294,
             "url": "{{ _.baseUrl }}/budget",
             "name": "Get Budget",
-            "description": "### Description\n\n- Retrieve the bidget for a given month and year combo\n\n### Request Query Parameters\n\n- `month`: 0-11 corressponding to Jan-Dec.\n- `year`: Current year",
+            "description": "### Description\n\n- Retrieve the budget for a given month and year combo\n\n### Request Query Parameters\n\n- `month`: 0-11 corressponding to Jan-Dec.\n- `year`: Current year",
             "method": "GET",
             "body": {},
             "parameters": [
@@ -395,15 +395,15 @@
         {
             "_id": "req_e3ac517565664bb298e49f117fd38b30",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1725165872098,
+            "modified": 1725173939066,
             "created": 1725118612023,
-            "url": "{{ _.baseUrl }}/expenses",
+            "url": "{{ _.baseUrl }}/expenses/search",
             "name": "Search Expenses",
             "description": "### Description:\n- Search expenses with text match / category / date range.\n- At least one of `q` / combination of `startDate + endDate` / `categories` must be provided.\n\n### Request Body:\n\n```\n{\n\t\"q\": \"\", // query string to match words.\n\t\"startDate\": \"\", // ISO-8601 formatted timestamp\n\t\"endDate\": \"\", // ISO-8601 formatted timestamp\n\t\"categories\": [\"\"], // list of category IDs to match against\n\t\"sort\": { // can be any field of the expense object \n\t\t\"date\": -1 // +1 = \"Ascending\"; -1 = \"Descending\"\n\t}\n}\n```",
             "method": "POST",
             "body": {
                 "mimeType": "application/json",
-                "text": "{\n\t\"q\": \"\",\n\t\"startDate\": \"\",\n\t\"endDate\": \"\",\n\t\"plan\": null,\n\t\"categories\": [\"\"],\n\t\"sort\": {\n\t\t\"date\": -1\n\t}\n}"
+                "text": "{\n\t\"q\": \"roots\",\n\t\"startDate\": \"\",\n\t\"endDate\": \"\",\n\t\"plan\": null,\n\t\"categories\": [],\n\t\"sort\": {\n\t\t\"date\": -1\n\t}\n}"
             },
             "parameters": [],
             "headers": [
@@ -418,7 +418,8 @@
             ],
             "authentication": {
                 "type": "bearer",
-                "prefix": "Bearer"
+                "prefix": "Bearer",
+                "token": ""
             },
             "metaSortKey": -1725117976767.625,
             "isPrivate": false,
@@ -999,9 +1000,106 @@
             "_type": "request"
         },
         {
+            "_id": "req_9ded21faf9d34e3983530568ab61d0d5",
+            "parentId": "fld_655da1fecca548f6b1d3c47decb7e69d",
+            "modified": 1730733228298,
+            "created": 1730731278514,
+            "url": "{{ _.baseUrl }}/statistics/month-stats",
+            "name": "Expense Count/Amount by day.",
+            "description": "",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_dcbd5702f21146a285b43f471daf47a5",
+                    "name": "year",
+                    "value": "2024",
+                    "description": ""
+                },
+                {
+                    "id": "pair_e3d448ce6ba84ec7af836ffc1519dcbc",
+                    "name": "month",
+                    "value": "2",
+                    "description": ""
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "token": "",
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1730731278514,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_655da1fecca548f6b1d3c47decb7e69d",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1730349002123,
+            "created": 1725109203461,
+            "name": "Statistics",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1725109203461,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_4225e8a2258c4d409f92c14f032e3351",
+            "parentId": "fld_655da1fecca548f6b1d3c47decb7e69d",
+            "modified": 1730356326710,
+            "created": 1721135548825,
+            "url": "{{ _.baseUrl }}/statistics/year-stats",
+            "name": "Categories Over Year",
+            "description": "",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_3d74990ad71d4d7f831a8fd6f74e9be4",
+                    "name": "year",
+                    "value": "2023",
+                    "description": ""
+                }
+            ],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "token": "",
+                "disabled": false,
+                "prefix": "Bearer"
+            },
+            "metaSortKey": -1725109207478,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
             "_id": "env_e28b4ce200755009410112466a7c616d9ef64b91",
             "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
-            "modified": 1725109234400,
+            "modified": 1730287466557,
             "created": 1719560965284,
             "name": "Base Environment",
             "data": {
