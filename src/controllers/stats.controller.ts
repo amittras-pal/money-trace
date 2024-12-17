@@ -31,7 +31,8 @@ export const yearStats = routeHandler(
 );
 
 /**
- * // TODO: unused by frontend as of now.
+ * // IMPLEMENT: Unused by frontend as of now!
+ *
  * @description Get the count and amount of expenses against day for a given month.
  * @method POST /api/statistics/month-stats
  * @access protected
