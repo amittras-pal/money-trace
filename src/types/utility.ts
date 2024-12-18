@@ -1,3 +1,5 @@
+import { TypedRequest } from "./requests";
+
 export type ISearchReqBody = {
   q?: string;
   startDate?: string;
@@ -24,3 +26,7 @@ export type IReportRequest = {
   endDate: string;
   includeList: string;
 };
+
+export type YearTrendRequest = TypedRequest<{ year: string }>;
+
+export type MonthTrendRequest = TypedRequest<{ year: string; month: string }>;

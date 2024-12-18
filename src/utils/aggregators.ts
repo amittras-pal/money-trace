@@ -1,9 +1,14 @@
+import dayjs from "dayjs";
+import { padStart } from "lodash";
 import { PipelineStage, Types } from "mongoose";
+import { IUser } from "../types/user";
 import {
   IListReqBody,
   IReportRequest,
   ISearchReqBody,
   ISummaryReqParams,
+  MonthTrendRequest,
+  YearTrendRequest,
 } from "../types/utility";
 
 export function searchAggregator(request: ISearchReqBody, user: string) {
@@ -93,7 +98,10 @@ export function listAggregator(request: IListReqBody, user: string) {
   return [matchPhase, lookupPhase, unwindPhase, sortPhase];
 }
 
-export function SummaryAggregator(request: ISummaryReqParams, user: string) {
+export function monthSummaryAggregator(
+  request: ISummaryReqParams,
+  user: string
+) {
   const filter: PipelineStage.Match = {
     $match: {
       $and: [
@@ -201,4 +209,153 @@ export function budgetAggregator(request: IReportRequest, user: string) {
   };
 
   return [search, project];
+}
+
+export function yearTrendAggregator(req: YearTrendRequest, user: IUser | null) {
+  const prepareDocuments: PipelineStage[] = [
+    {
+      $match: {
+        $and: [
+          { user: new Types.ObjectId(req.userId) },
+          { plan: null },
+          { reverted: false },
+          {
+            date: {
+              $gte: dayjs(req.query.year).toDate(),
+              $lte: dayjs(req.query.year).endOf("year").toDate(),
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        month: { $month: { date: "$date", timezone: user?.timeZone } },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "categoryId",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    { $unwind: "$category" },
+  ];
+
+  const groupByCategory: PipelineStage[] = [
+    {
+      $group: {
+        _id: {
+          category: "$category.group",
+          color: "$category.color",
+          month: "$month",
+        },
+        amount: { $sum: "$amount" },
+        items: { $count: {} },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        amount: 1,
+        items: 1,
+        name: "$_id.category",
+        month: "$_id.month",
+        color: "$_id.color",
+      },
+    },
+  ];
+
+  const groupByMonth: PipelineStage[] = [
+    {
+      $group: {
+        _id: "$month",
+        total: { $sum: "$amount" },
+        categories: { $addToSet: "$$ROOT" },
+      },
+    },
+    { $project: { "categories.month": 0 } },
+  ];
+
+  const prepareOutput: PipelineStage[] = [
+    { $sort: { _id: 1 } },
+    {
+      $project: {
+        month: "$_id",
+        _id: 0,
+        total: 1,
+        categories: 1,
+      },
+    },
+  ];
+
+  return [
+    ...prepareDocuments,
+    ...groupByCategory,
+    ...groupByMonth,
+    ...prepareOutput,
+  ];
+}
+
+export function monthTrendAggregator(
+  req: MonthTrendRequest,
+  user: IUser | null
+) {
+  const { month, year } = req.query;
+  const dateStr = `${year}-${padStart(month, 2, "0")}-01`;
+  const prepareDocuments: PipelineStage[] = [
+    {
+      $match: {
+        $and: [
+          { user: new Types.ObjectId(req.userId) },
+          { plan: null },
+          { reverted: false },
+          {
+            date: {
+              $gte: dayjs(dateStr).startOf("month").toDate(),
+              $lte: dayjs(dateStr).endOf("month").toDate(),
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        month: { $month: { date: "$date", timezone: user?.timeZone } },
+        dayOfMonth: {
+          $dayOfMonth: { date: "$date", timezone: user?.timeZone },
+        },
+      },
+    },
+  ];
+
+  const groupByDate: PipelineStage.Group = {
+    $group: {
+      _id: "$dayOfMonth",
+      amount: { $sum: "$amount" },
+      items: { $count: {} },
+    },
+  };
+
+  const prepareOutput: PipelineStage[] = [
+    { $project: { day: "$_id", amount: 1, items: 1, _id: 0 } },
+    { $sort: { day: 1 } },
+  ];
+
+  return [...prepareDocuments, groupByDate, ...prepareOutput];
+}
+
+export function budgetsOfYearAggregator(req: YearTrendRequest) {
+  return [
+    {
+      $match: {
+        user: new Types.ObjectId(req.userId),
+        year: parseInt(req.query.year),
+      },
+    },
+    { $addFields: { month: { $sum: ["$month", 1] } } },
+    { $project: { month: 1, amount: 1, _id: 0 } },
+  ];
 }
