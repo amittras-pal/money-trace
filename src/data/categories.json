@@ -25,6 +25,12 @@
       "icon": "IconPingPong"
     },
     {
+      "label": "Tickets",
+      "color": "yellow",
+      "group": "Entertainment",
+      "icon": "IconTicket"
+    },
+    {
       "label": "Other",
       "color": "yellow",
       "group": "Entertainment",
