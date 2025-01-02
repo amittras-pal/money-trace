@@ -27,6 +27,8 @@ export type IReportRequest = {
   includeList: string;
 };
 
+export type PlanExportRequest = TypedRequest<{ plan: string, includeList: string }>;
+
 export type YearTrendRequest = TypedRequest<{ year: string }>;
 
 export type MonthTrendRequest = TypedRequest<{ year: string; month: string }>;

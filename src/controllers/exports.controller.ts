@@ -1,12 +1,15 @@
 import dayjs from "dayjs";
 import { Workbook } from "exceljs";
 import routeHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
 import Budget from "../models/budget.model";
 import Expense from "../models/expense.model";
+import ExpensePlan from "../models/expensePlan.model";
 import User from "../models/user.model";
+import { IExpense } from "../types/expense";
 import { IExportingBudget } from "../types/reportingdata";
 import { TypedRequest, TypedResponse } from "../types/requests";
-import { IReportRequest } from "../types/utility";
+import { IReportRequest, PlanExportRequest } from "../types/utility";
 import {
   budgetAggregator,
   reportExpenseAggregator,
@@ -30,6 +33,11 @@ import {
   summaryColumns,
 } from "../utils/excelUtils";
 
+/**
+ * @description export expenses for a selected date range
+ * @method GET /api/reports/
+ * @access protected
+ */
 export const generateReport = routeHandler(
   async (req: TypedRequest<IReportRequest>, res: TypedResponse) => {
     // Download and format Data
@@ -165,3 +173,62 @@ export const generateReport = routeHandler(
     book.xlsx.write(res).then(() => res.end());
   }
 );
+
+/**
+ * @description export expenses for a plan
+ * @method GET /api/reports/plan
+ * @access protected
+ */
+export const generatePlanReport = routeHandler(async (req: PlanExportRequest, res: TypedResponse) => {
+  const user = await User.findById(req.userId);
+  const planDetails = await ExpensePlan.findById(req.query.includeList);
+
+  if (!planDetails) {
+    res.status(StatusCodes.NOT_FOUND);
+    throw new Error("Plan not found");
+  }
+
+  const book = new Workbook();
+  const sheet = book.addWorksheet("Plan Report: " + planDetails.name);
+  // write the plan details
+  sheet.addRow({ Plan: planDetails.name });
+  sheet.addRow({ Description: planDetails.description });
+  sheet.addRow({ Created: planDetails.createdAt });
+  sheet.addRow({ Updated: planDetails.updatedAt });
+  sheet.addRow({ User: user?.userName });
+  sheet.addRow({ Open: planDetails.open ? "Yes" : "No" });
+
+  // TODO: write the summary.
+
+
+  if (req.query.includeList === "true") {
+    let expenses: IExpense[] = [];
+    expenses = await Expense.find({ plan: req.query.plan }).sort({ date: -1 });
+    if (expenses.length === 0) {
+      res.status(StatusCodes.NOT_FOUND);
+      throw new Error("No expenses found for the plan");
+    }
+
+    // TODO: fix the code.
+    // write expenses list 
+    sheet.columns = dataColumns;
+    for (const expense of expenses) {
+      const row = sheet.addRow({
+        ...expense,
+        categoryName: expense.category.group,
+        subCategoryName: expense.category.label,
+        date: getZonedTime(user, expense.date, true),
+      });
+      row.eachCell({ includeEmpty: false }, (cell, col) => {
+        cell.border = dataRowBorder;
+        cell.fill = getDataFill(expense.category.color!);
+        cell.font = getDataFont(expense.category.color!, col === 3);
+      });
+    }
+  }
+
+  // send for download
+  res.setHeader("Content-Type", contentTypeXLSX);
+  res.setHeader("Content-Disposition", `attachment; filename=${planDetails.name}-data-export.xlsx`);
+  book.xlsx.write(res).then(() => res.end());
+});
