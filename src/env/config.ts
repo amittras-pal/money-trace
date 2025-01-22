@@ -15,6 +15,7 @@ interface IEnv {
   OCTO_INST_ID: number;
   GIT_REPO_OWNER?: string;
   GIT_REPO_NAME?: string;
+  TOKEN_TTL?: string;
 }
 
 export function getEnv(): IEnv {
@@ -31,6 +32,7 @@ export function getEnv(): IEnv {
     ORIGINS: transformOrigins(process.env.ORIGINS?.split(",")),
     GIT_REPO_OWNER: process.env.GIT_REPO_OWNER ?? "",
     GIT_REPO_NAME: process.env.GIT_REPO_NAME ?? "",
+    TOKEN_TTL: process.env.TOKEN_TTL ?? "",
   };
 }
 
