@@ -75,8 +75,8 @@ export const exportRangeReport = routeHandler(
           });
           row.eachCell({ includeEmpty: false }, (cell, col) => {
             cell.border = dataRowBorder;
-            cell.fill = getDataFill(expense.category.color!);
-            cell.font = getDataFont(expense.category.color!, col === 3);
+            cell.fill = getDataFill(expense.category.color);
+            cell.font = getDataFont(expense.category.color, col === 3);
           });
         }
         // Style the header.
@@ -141,8 +141,8 @@ export const exportRangeReport = routeHandler(
       for (const cat of summary) {
         const cHead = sheet.insertRow(endRow, [cat.group, "", cat.total]);
         cHead.eachCell({ includeEmpty: false }, (cell, col) => {
-          cell.font = { ...getDataFont(cat.color!, true), size: 12 };
-          cell.fill = getDataFill(cat.color!);
+          cell.font = { ...getDataFont(cat.color, true), size: 12 };
+          cell.fill = getDataFill(cat.color);
           cell.numFmt = col === 3 ? currencyFormat : "";
           cell.border = dataRowBorder;
         });
@@ -153,8 +153,8 @@ export const exportRangeReport = routeHandler(
           const amount = getTotalAmount(list);
           const subCatEntry = sheet.insertRow(endRow, ["", name, amount]);
           subCatEntry.eachCell({ includeEmpty: false }, (cell, col) => {
-            cell.font = getDataFont(cat.color!, false);
-            cell.fill = getDataFill(cat.color!);
+            cell.font = getDataFont(cat.color, false);
+            cell.fill = getDataFill(cat.color);
             cell.numFmt = col === 3 ? currencyFormat : "";
             cell.border = dataRowBorder;
           });
