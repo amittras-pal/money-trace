@@ -1,0 +1,3 @@
+## How to use the API docs...
+
+Please Import the `Insomnia-API-Collection` file into your local installation of [Insomnia API Client](https://insomnia.rest/download).
