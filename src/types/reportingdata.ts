@@ -22,4 +22,4 @@ export type IExpenseByMonth = {
   categories?: ICategory[];
 };
 
-export type IExportingBudget = Pick<IBudget, "amount"> & { _id: String };
+export type IExportingBudget = Pick<IBudget, "amount"> & { _id: string };

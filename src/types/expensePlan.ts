@@ -2,10 +2,10 @@ import { Types } from "mongoose";
 
 export type IExpensePlan = {
   _id?: Types.ObjectId;
-  name: String;
-  description: String;
+  name: string;
+  description: string;
   user: Types.ObjectId;
-  open: Boolean;
+  open: boolean;
   lastAction:
     | "Created"
     | "Updated"
