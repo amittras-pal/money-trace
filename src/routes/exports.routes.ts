@@ -1,9 +1,14 @@
 import { Router } from "express";
-import { generateReport } from "../controllers/exports.controller";
+import {
+  exportPlan,
+  exportRangeReport,
+} from "../controllers/exports.controller";
 import authenticate from "../middlewares/auth.middleware";
 
 const exportsRoutes = Router();
 
-exportsRoutes.get("/", authenticate, generateReport);
+exportsRoutes
+  .get("/range", authenticate, exportRangeReport)
+  .get("/plan", authenticate, exportPlan);
 
 export default exportsRoutes;

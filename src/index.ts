@@ -25,7 +25,7 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/budget", budgetRoutes);
 app.use("/api/expense-plan", expensePlanRoutes);
 app.use("/api/categories", categoryRoutes);
-app.use("/api/reports", exportsRoutes);
+app.use("/api/export", exportsRoutes);
 app.use("/api/app-info", appInfoRouter);
 app.use("/api/statistics", statsRoutes);
 
