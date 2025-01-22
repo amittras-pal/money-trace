@@ -39,7 +39,7 @@ import {
 
 /**
  * @description export expenses for a selected date range
- * @method GET /api/reports/
+ * @method GET /api/export/range
  * @access protected
  */
 export const exportRangeReport = routeHandler(
@@ -180,7 +180,7 @@ export const exportRangeReport = routeHandler(
 
 /**
  * @description export expenses for a plan
- * @method GET /api/reports/plan
+ * @method GET /api/export/plan
  * @access protected
  */
 export const exportPlan = routeHandler(
