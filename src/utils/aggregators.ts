@@ -221,8 +221,11 @@ export function yearTrendAggregator(req: YearTrendRequest, user: IUser | null) {
           { reverted: false },
           {
             date: {
-              $gte: dayjs(req.query.year).toDate(),
-              $lte: dayjs(req.query.year).endOf("year").toDate(),
+              $gte: dayjs(req.query.year).tz(user?.timeZone).toDate(),
+              $lte: dayjs(req.query.year)
+                .tz(user?.timeZone)
+                .endOf("year")
+                .toDate(),
             },
           },
         ],
