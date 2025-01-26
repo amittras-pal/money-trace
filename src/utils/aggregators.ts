@@ -111,11 +111,11 @@ export function monthSummaryAggregator(
       ],
     },
   };
-  if (request.firstDay?.length && request.lastDay?.length)
+  if (request.startDate?.length && request.endDate?.length)
     filter.$match.$and?.push({
       date: {
-        $gte: new Date(request.firstDay),
-        $lte: new Date(request.lastDay),
+        $gte: new Date(request.startDate),
+        $lte: new Date(request.endDate),
       },
     });
 

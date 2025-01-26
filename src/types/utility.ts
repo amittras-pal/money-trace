@@ -16,8 +16,8 @@ export type IListReqBody = {
 };
 
 export type ISummaryReqParams = {
-  firstDay: string | undefined;
-  lastDay: string | undefined;
+  startDate: string | undefined;
+  endDate: string | undefined;
   plan: string | undefined;
 };
 
