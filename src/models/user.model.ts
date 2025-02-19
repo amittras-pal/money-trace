@@ -10,6 +10,10 @@ const userSchema = new Schema<IUser>(
     editWindow: { type: "number", required: true, default: 7 },
     color: { type: "string", required: false, default: "indigo" },
     seenChangelog: { type: "boolean", required: true, default: false },
+    lastActive: { type: Date, default: null },
+    lastLogin: { type: Date, default: null },
+    recoveryChallenge: { type: "string", required: false },
+    recoveryAnswer: { type: "string", required: false },
   },
   { timestamps: true }
 );

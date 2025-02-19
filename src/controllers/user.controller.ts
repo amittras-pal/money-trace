@@ -15,8 +15,8 @@ import { IUser } from "../types/user";
  */
 export const register = routeHandler(
   async (req: TypedRequest<{}, Partial<IUser>>, res: TypedResponse) => {
-    const { userName, email, pin, timeZone } = req.body;
-    if (!userName || !email || !pin || !timeZone) {
+    const { userName, email, pin } = req.body;
+    if (!userName || !email || !pin || !req.body.timeZone) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Please provide all the required fields.");
     }
@@ -31,11 +31,17 @@ export const register = routeHandler(
 
     const salt: string = await genSalt();
     const encryptedPin: string = await hash(email + pin, salt);
+    let encryptedRecoveryAnswer = "";
+    if (req.body.recoveryAnswer)
+      encryptedRecoveryAnswer = await hash(req.body.recoveryAnswer, salt);
+
     const created = await User.create({
       userName,
       email,
       pin: encryptedPin,
-      timeZone,
+      timeZone: req.body.timeZone,
+      recoveryChallenge: req.body.recoveryChallenge ?? null,
+      recoveryAnswer: req.body.recoveryAnswer ? encryptedRecoveryAnswer : null,
     });
 
     if (created)
@@ -71,16 +77,30 @@ export const login = routeHandler(
       throw new Error("Email ID is not registered");
     } else if (await compare(email + pin, user.pin ?? "")) {
       const { JWT_SECRET = "" } = getEnv();
-      delete user.pin;
-      res.json({
-        message: userMessages.loginSuccessful,
-        response: {
-          user,
-          token: sign({ id: user._id } ?? "", JWT_SECRET, {
-            expiresIn: "7d",
-          }),
+      const update: IUser | null = await User.findByIdAndUpdate(
+        user._id,
+        {
+          lastActive: new Date(),
+          lastLogin: new Date(),
         },
-      });
+        { new: true }
+      );
+      if (update) {
+        delete update.pin;
+        delete update.recoveryAnswer;
+        res.json({
+          message: userMessages.loginSuccessful,
+          response: {
+            user: update,
+            token: sign({ id: update._id }, JWT_SECRET, {
+              expiresIn: "7d",
+            }),
+          },
+        });
+      } else {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+        throw new Error("Failed to register your login.");
+      }
     } else {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("Invalid Credentials!");
@@ -108,6 +128,23 @@ export const getUserDetails = routeHandler(
       message: userMessages.userDetailsRetrievedSuccessfully,
       response: user,
     });
+  }
+);
+
+/**
+ * @description checks if an email is registered in the database
+ * @method GET /api/user/exists
+ * @access public
+ */
+export const checkUserExists = routeHandler(
+  async (req: TypedRequest<{ email: string }, {}>, res: TypedResponse) => {
+    const exists = await User.exists({ email: req.query.email });
+    if (exists) {
+      res.status(StatusCodes.CONFLICT);
+      throw new Error("Email already registered.");
+    }
+
+    res.json({ message: "Email can be registered" });
   }
 );
 
