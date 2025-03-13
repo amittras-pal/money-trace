@@ -7,9 +7,9 @@ export type ReportedExpense = Pick<
   "title" | "description" | "amount" | "date" | "linked"
 > & {
   category: {
-    label: string | undefined;
-    group: string | undefined;
-    color: string | undefined;
+    label: string;
+    group: string;
+    color: string;
   };
   categoryId: string | undefined;
 };
@@ -22,4 +22,4 @@ export type IExpenseByMonth = {
   categories?: ICategory[];
 };
 
-export type IExportingBudget = Pick<IBudget, "amount"> & { _id: String };
+export type IExportingBudget = Pick<IBudget, "amount"> & { _id: string };
