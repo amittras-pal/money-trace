@@ -130,6 +130,11 @@ export const updateUserDetails = routeHandler(
   }
 );
 
+/**
+ * @description Update the login pin for the user.
+ * @method PUT /api/user/update-login-key
+ * @access public
+ */
 export const changePassword = routeHandler(
   async (
     req: TypedRequest<

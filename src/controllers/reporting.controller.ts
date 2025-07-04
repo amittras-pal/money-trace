@@ -30,6 +30,11 @@ import {
   summaryColumns,
 } from "../utils/excelUtils";
 
+/**
+ * @description Retrieve .xlsx formatted of report expenses with given parameters
+ * @method GET /api/reports
+ * @access protected
+ */
 export const generateReport = routeHandler(
   async (req: TypedRequest<IReportRequest>, res: TypedResponse) => {
     // Download and format Data

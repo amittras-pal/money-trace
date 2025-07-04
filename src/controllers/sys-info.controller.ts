@@ -79,7 +79,7 @@ export const updateUsersOnNewRelease = routeHandler(
  * @access private
  */
 export const dataBackup = routeHandler(
-  async (_req: TypedRequest, _res: TypedResponse) => {
+  async (_req: TypedRequest, res: TypedResponse) => {
     const { DB_URI } = getEnv();
     const url = new URL(DB_URI ?? "");
     url.searchParams.set("authSource", "admin");
@@ -104,9 +104,7 @@ export const dataBackup = routeHandler(
     const results = await Promise.all(
       collections.map((coll) => cloneCollection(prod, dev, coll))
     );
-
     await client.close();
-
-    _res.json({ message: "Data Cloned to 'dev' database", response: results });
+    res.json({ message: "Data Cloned to 'dev' database", response: results });
   }
 );
