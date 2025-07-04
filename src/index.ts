@@ -7,7 +7,7 @@ import budgetRoutes from "./routes/budget.routes";
 import categoryRoutes from "./routes/category.routes";
 import expenseRoutes from "./routes/expense.routes";
 import expensePlanRoutes from "./routes/expensePlan.routes";
-import reportingRoutes from "./routes/reporting.routes";
+import exportsRoutes from "./routes/exports.routes";
 import statsRoutes from "./routes/stats.routes";
 import systemRoutes from "./routes/sys-info.routes";
 import userRoutes from "./routes/user.routes";
@@ -25,7 +25,7 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/budget", budgetRoutes);
 app.use("/api/expense-plan", expensePlanRoutes);
 app.use("/api/categories", categoryRoutes);
-app.use("/api/reports", reportingRoutes);
+app.use("/api/export", exportsRoutes);
 app.use("/api/sys-info", systemRoutes);
 app.use("/api/statistics", statsRoutes);
 

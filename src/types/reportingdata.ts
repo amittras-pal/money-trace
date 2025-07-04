@@ -7,9 +7,9 @@ export type ReportedExpense = Pick<
   "title" | "description" | "amount" | "date" | "linked"
 > & {
   category: {
-    label: string | undefined;
-    group: string | undefined;
-    color: string | undefined;
+    label: string;
+    group: string;
+    color: string;
   };
   categoryId: string | undefined;
 };

@@ -5,7 +5,9 @@ export type IExpensePlan = {
   name: string;
   description: string;
   user: Types.ObjectId;
-  open: boolean;
+  open: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
   lastAction:
     | "Created"
     | "Updated"

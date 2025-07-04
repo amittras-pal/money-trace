@@ -1,12 +1,19 @@
 import dayjs from "dayjs";
 import { Workbook } from "exceljs";
 import routeHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { Types } from "mongoose";
 import Budget from "../models/budget.model";
 import Expense from "../models/expense.model";
+import ExpensePlan from "../models/expensePlan.model";
 import User from "../models/user.model";
 import { IExportingBudget } from "../types/reportingdata";
 import { TypedRequest, TypedResponse } from "../types/requests";
-import { IReportRequest } from "../types/utility";
+import {
+  IReportRequest,
+  PlanExportContent,
+  PlanExportRequest,
+} from "../types/utility";
 import {
   budgetAggregator,
   reportExpenseAggregator,
@@ -68,8 +75,8 @@ export const generateReport = routeHandler(
           });
           row.eachCell({ includeEmpty: false }, (cell, col) => {
             cell.border = dataRowBorder;
-            cell.fill = getDataFill(expense.category.color!);
-            cell.font = getDataFont(expense.category.color!, col === 3);
+            cell.fill = getDataFill(expense.category.color);
+            cell.font = getDataFont(expense.category.color, col === 3);
           });
         }
         // Style the header.
@@ -134,8 +141,8 @@ export const generateReport = routeHandler(
       for (const cat of summary) {
         const cHead = sheet.insertRow(endRow, [cat.group, "", cat.total]);
         cHead.eachCell({ includeEmpty: false }, (cell, col) => {
-          cell.font = { ...getDataFont(cat.color!, true), size: 12 };
-          cell.fill = getDataFill(cat.color!);
+          cell.font = { ...getDataFont(cat.color, true), size: 12 };
+          cell.fill = getDataFill(cat.color);
           cell.numFmt = col === 3 ? currencyFormat : "";
           cell.border = dataRowBorder;
         });
@@ -146,8 +153,8 @@ export const generateReport = routeHandler(
           const amount = getTotalAmount(list);
           const subCatEntry = sheet.insertRow(endRow, ["", name, amount]);
           subCatEntry.eachCell({ includeEmpty: false }, (cell, col) => {
-            cell.font = getDataFont(cat.color!, false);
-            cell.fill = getDataFill(cat.color!);
+            cell.font = getDataFont(cat.color, false);
+            cell.fill = getDataFill(cat.color);
             cell.numFmt = col === 3 ? currencyFormat : "";
             cell.border = dataRowBorder;
           });
@@ -167,6 +174,130 @@ export const generateReport = routeHandler(
     // Send for download.
     res.setHeader("Content-Type", contentTypeXLSX);
     res.setHeader("Content-Disposition", "attachment; filename=report.xlsx");
+    book.xlsx.write(res).then(() => res.end());
+  }
+);
+
+/**
+ * @description export expenses for a plan
+ * @method GET /api/export/plan
+ * @access protected
+ */
+export const exportPlan = routeHandler(
+  async (req: PlanExportRequest, res: TypedResponse) => {
+    const user = await User.findById(req.userId);
+    const planDetails = await ExpensePlan.findById(req.query.plan);
+
+    if (!planDetails) {
+      res.status(StatusCodes.NOT_FOUND);
+      throw new Error("Plan not found");
+    }
+
+    const expenses: PlanExportContent[] = await Expense.aggregate([
+      {
+        $match: {
+          plan: new Types.ObjectId(req.query.plan),
+          user: new Types.ObjectId(req.userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "categoryId",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $unwind: "$category" },
+      {
+        $project: {
+          "category._id": false,
+          "category.__v": false,
+          categoryId: false,
+        },
+      },
+    ]);
+
+    const totalSpent = expenses.reduce((total, ex) => {
+      return total + ex.amount;
+    }, 0);
+
+    const categoryGroup = expenses.reduce(
+      (coll: Record<string, { total: number; color: string }>, ex) => {
+        if (ex.category.group in coll) {
+          const groupTotal = coll[ex.category.group].total;
+          const groupColor = coll[ex.category.group].color;
+          return {
+            ...coll,
+            [ex.category.group]: {
+              total: groupTotal + ex.amount,
+              color: groupColor,
+            },
+          };
+        } else
+          return {
+            ...coll,
+            [ex.category.group]: { total: ex.amount, color: ex.category.color },
+          };
+      },
+      {}
+    );
+
+    const book = new Workbook();
+
+    const summary = book.addWorksheet("Plan Summary");
+    summary.columns = [
+      { width: 35, alignment: { vertical: "top" } },
+      { width: 35, alignment: { vertical: "top" } },
+    ];
+    // write the plan details
+    summary.addRow(["Plan Name", planDetails.name]);
+    summary.addRow(["Description", planDetails.description]);
+    summary.addRow(["Created On", planDetails.createdAt]);
+    summary.addRow(["Last Updated", planDetails.updatedAt]);
+    summary.addRow(["User", user?.userName]);
+    summary.addRow(["Plan is Active", planDetails.open ? "Yes" : "No"]);
+    summary.addRows(Array.from({ length: 2 }));
+    // Write Plan Expenses Summary
+    summary.addRow(["Category Breakdown"]);
+    Object.entries(categoryGroup).forEach((entry) => {
+      const row = summary.addRow([entry[0], entry[1].total]);
+      row.getCell("B").numFmt = currencyFormat;
+
+      row.eachCell({ includeEmpty: false }, (cell) => {
+        cell.fill = getDataFill(entry[1].color);
+        cell.font = getDataFont(entry[1].color, false);
+      });
+    });
+    summary.addRows(Array.from({ length: 1 }));
+    const totalRow = summary.addRow(["Total Spent", totalSpent]);
+    totalRow.getCell("A").font = { bold: true };
+    totalRow.getCell("B").numFmt = currencyFormat;
+
+    // Create new Sheet for expenses list.
+    const list = book.addWorksheet("Expenses List");
+    list.columns = dataColumns;
+    const listRows = list.addRows(
+      expenses.map((e) => ({
+        ...e,
+        categoryName: e.category.group,
+        subCategoryName: e.category.label,
+      }))
+    );
+    listRows.forEach((row, i) => {
+      row.eachCell({ includeEmpty: false }, (cell) => {
+        cell.fill = getDataFill(expenses[i].category.color);
+        cell.font = getDataFont(expenses[i].category.color, false);
+        cell.border = dataRowBorder;
+      });
+    });
+
+    // send for download
+    res.setHeader("Content-Type", contentTypeXLSX);
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=Plan-${planDetails._id}.xlsx`
+    );
     book.xlsx.write(res).then(() => res.end());
   }
 );
