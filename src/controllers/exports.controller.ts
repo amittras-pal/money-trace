@@ -38,11 +38,11 @@ import {
 } from "../utils/excelUtils";
 
 /**
- * @description Retrieve .xlsx formatted of report expenses with given parameters
- * @method GET /api/reports
+ * @description export expenses for a selected date range
+ * @method GET /api/export/range
  * @access protected
  */
-export const generateReport = routeHandler(
+export const exportRangeReport = routeHandler(
   async (req: TypedRequest<IReportRequest>, res: TypedResponse) => {
     // Download and format Data
     const user = await User.findById(req.userId);
