@@ -14,6 +14,6 @@ userRoutes.post("/register", register);
 userRoutes.post("/login", login);
 userRoutes.get("/details", authenticate, getUserDetails);
 userRoutes.put("/update", authenticate, updateUserDetails);
-userRoutes.post("/change-password", authenticate, changePassword);
+userRoutes.post("/update-login-key", authenticate, changePassword);
 
 export default userRoutes;
