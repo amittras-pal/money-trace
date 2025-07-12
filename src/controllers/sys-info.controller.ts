@@ -1,13 +1,12 @@
 import routeHandler from "express-async-handler";
-import { MongoClient } from "mongodb";
 import { App } from "octokit";
 import { appInfoMessages } from "../constants/apimessages";
 import { releasesQuery, userQuery } from "../constants/git-queries";
-import { getEnv } from "../env/config";
+import { getBackupEnv, getEnv } from "../env/config";
 import User from "../models/user.model";
 import { ContributorInfo, ReleaseResponse } from "../types/app-info";
 import { TypedRequest, TypedResponse } from "../types/requests";
-import { cloneCollection } from "../utils/system";
+import { cloneCollection, getDbClient } from "../utils/system";
 
 /**
  * @description This method retrieves the list of releases from github for the repository using the GraphQL API.
@@ -81,17 +80,15 @@ export const updateUsersOnNewRelease = routeHandler(
 export const dataBackup = routeHandler(
   async (_req: TypedRequest, res: TypedResponse) => {
     const { DB_URI } = getEnv();
-    const url = new URL(DB_URI ?? "");
-    url.searchParams.set("authSource", "admin");
-    const clientUrl = `${url.protocol}//${url.username}:${url.password}@${
-      url.hostname
-    }/?${url.searchParams.toString()}`;
+    const { BACKUP_CLUSTER_URL } = getBackupEnv();
 
-    const client = new MongoClient(clientUrl);
-    await client.connect();
+    const p_client = getDbClient(DB_URI ?? "");
+    const b_client = getDbClient(BACKUP_CLUSTER_URL ?? "");
+    await p_client.connect();
+    await b_client.connect();
 
-    const prod = client.db("ts-prod");
-    const dev = client.db("ts-dev");
+    const p_db = p_client.db("ts-prod");
+    const b_db = b_client.db("mtrace-dev");
 
     const collections = [
       "budgets",
@@ -102,9 +99,10 @@ export const dataBackup = routeHandler(
     ];
 
     const results = await Promise.all(
-      collections.map((coll) => cloneCollection(prod, dev, coll))
+      collections.map((coll) => cloneCollection(p_db, b_db, coll))
     );
-    await client.close();
+    await p_client.close();
+    await b_client.close();
     res.json({ message: "Data Cloned to 'dev' database", response: results });
   }
 );

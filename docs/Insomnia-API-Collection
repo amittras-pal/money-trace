@@ -1,7 +1,7 @@
 {
     "_type": "export",
     "__export_format": 4,
-    "__export_date": "2025-07-04T12:26:30.245Z",
+    "__export_date": "2025-07-12T05:21:17.508Z",
     "__export_source": "insomnia.desktop.app:v2023.5.8",
     "resources": [
         {
@@ -333,11 +333,11 @@
         {
             "_id": "req_cc8e8a2d49684cbbba01556a99f05436",
             "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
-            "modified": 1751631722194,
+            "modified": 1752297578157,
             "created": 1751555814187,
             "url": "{{ _.baseUrl }}/sys-info/backup",
             "name": "Clone Data to \"dev\" DB",
-            "description": "### Description\n\n- Copy data from the `prod` database to `dev` database. \n- Database name of prod DB should be `ts-prod`.\n- Database name of dev DB should be `ts-dev`.\n\nRequires admin password provided in the header. \n\n### Request Headers\n\n- `x-sys-gate`: Admin Password for allowing bulk user modification.",
+            "description": "### Description\n\n- Copy data from the `prod` database to `dev` database.\n- Config as per the setup of mongo db instance. \n\nRequires admin password provided in the header. \n\n### Request Headers\n\n- `x-sys-gate`: Admin Password for allowing bulk user modification.",
             "method": "POST",
             "body": {},
             "parameters": [],
@@ -474,7 +474,7 @@
         {
             "_id": "req_3ea1b5a9f5474a4d80b47a928f685917",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1725165786303,
+            "modified": 1752297605190,
             "created": 1725118308041,
             "url": "{{ _.baseUrl }}/expenses/summary",
             "name": "Summary of Expenses",
@@ -509,7 +509,8 @@
             ],
             "authentication": {
                 "type": "bearer",
-                "prefix": "Bearer"
+                "prefix": "Bearer",
+                "token": ""
             },
             "metaSortKey": -1725118087775.5,
             "isPrivate": false,

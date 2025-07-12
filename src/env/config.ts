@@ -18,6 +18,10 @@ interface IEnv {
   TOKEN_TTL?: string;
 }
 
+interface IBackupEnv {
+  BACKUP_CLUSTER_URL?: string;
+}
+
 export function getEnv(): IEnv {
   return {
     PORT: process.env.PORT ?? "6400",
@@ -29,16 +33,15 @@ export function getEnv(): IEnv {
     OCTO_PK: process.env.OCTO_PK,
     OCTO_APP_ID: parseInt(process.env.OCTO_APP_ID ?? ""),
     OCTO_INST_ID: parseInt(process.env.OCTO_INST_ID ?? ""),
-    ORIGINS: transformOrigins(process.env.ORIGINS?.split(",")),
+    ORIGINS: [process.env.ORIGINS ?? ""],
     GIT_REPO_OWNER: process.env.GIT_REPO_OWNER ?? "",
     GIT_REPO_NAME: process.env.GIT_REPO_NAME ?? "",
     TOKEN_TTL: process.env.TOKEN_TTL ?? "",
   };
 }
 
-function transformOrigins(origins?: string[]) {
-  if (!origins) return ["http://localhost:3000"];
-  return origins.map((o) =>
-    o.startsWith("/") ? new RegExp(o.slice(1), "gi") : o
-  );
+export function getBackupEnv(): IBackupEnv {
+  return {
+    BACKUP_CLUSTER_URL: process.env.BACKUP_CLUSTER_URL,
+  };
 }
