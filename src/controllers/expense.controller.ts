@@ -124,7 +124,7 @@ export const deleteExpense = routeHandler(
 export const getMonthSummary = routeHandler(
   async (
     req: TypedRequest<ISummaryReqParams, {}>,
-    res: TypedResponse<{ summary: Array<any>; total: Number }>
+    res: TypedResponse<{ summary: Array<any>; total: number }>
   ) => {
     const query = monthSummaryAggregator(req.query, req.userId ?? "");
     // Create a type for this response.

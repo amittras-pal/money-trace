@@ -1,9 +1,47 @@
 {
     "_type": "export",
     "__export_format": 4,
-    "__export_date": "2025-01-22T07:51:05.961Z",
+    "__export_date": "2025-07-12T05:21:17.508Z",
     "__export_source": "insomnia.desktop.app:v2023.5.8",
     "resources": [
+        {
+            "_id": "req_63bc3fb61a2440ffb0ae1578b5d74e3a",
+            "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "modified": 1751631616907,
+            "created": 1751629431236,
+            "url": "{{ _.baseUrl }}/wake",
+            "name": "Ping Server to Wake",
+            "description": "Wake up the server from an inactive state. \n\nRequired for deployments to ephemeral hosting providers like `render.com`",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1751629431236,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
+            "parentId": null,
+            "modified": 1725169803329,
+            "created": 1719560965274,
+            "name": "Expensary | Money Trace",
+            "description": "",
+            "scope": "collection",
+            "_type": "workspace"
+        },
         {
             "_id": "req_4a13187f46e340eca3fc673795ee9461",
             "parentId": "fld_971945777438457dbcf201dcfb8f3b1d",
@@ -54,16 +92,6 @@
             "environmentPropertyOrder": null,
             "metaSortKey": -1737525158539,
             "_type": "request_group"
-        },
-        {
-            "_id": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
-            "parentId": null,
-            "modified": 1725169803329,
-            "created": 1719560965274,
-            "name": "Expensary | Money Trace",
-            "description": "",
-            "scope": "collection",
-            "_type": "workspace"
         },
         {
             "_id": "req_107adfcb0ea24d94b8ffc095fbfcd0b0",
@@ -174,7 +202,7 @@
             "created": 1725167323294,
             "url": "{{ _.baseUrl }}/budget",
             "name": "Get Budget",
-            "description": "### Description\n\n- Retrieve the budget for a given month and year combo\n\n### Request Query Parameters\n\n- `month`: 0-11 corressponding to Jan-Dec.\n- `year`: Current year",
+            "description": "### Description\n\n- Retrieve the bidget for a given month and year combo\n\n### Request Query Parameters\n\n- `month`: 0-11 corressponding to Jan-Dec.\n- `year`: Current year",
             "method": "GET",
             "body": {},
             "parameters": [
@@ -258,9 +286,9 @@
         {
             "_id": "req_1f7bdaa4448b47109e2a9991181f5100",
             "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
-            "modified": 1737532023280,
+            "modified": 1751631914180,
             "created": 1719560968574,
-            "url": "http://localhost:6400/api/app-info/new-release",
+            "url": "{{ _.baseUrl }}/sys-info/new-release",
             "name": "Notify Users on New Release",
             "description": "### Description\n\n- Update the `seenChangelog` field of all users to `false` if it is `true`. \n- Requires admin priviledge via a system password provided in the header. \n- Password is compared against a hashed environment variable set in the server. \n\n### Request Headers\n\n- `x-sys-gate`: Admin Password for allowing bulk user modification.",
             "method": "POST",
@@ -293,9 +321,9 @@
         {
             "_id": "fld_6882873100ee4c1d9f8d8c48c69eb579",
             "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
-            "modified": 1725166492593,
+            "modified": 1751555652631,
             "created": 1725166492593,
-            "name": "Application Info",
+            "name": "System Info",
             "description": "",
             "environment": {},
             "environmentPropertyOrder": null,
@@ -303,11 +331,46 @@
             "_type": "request_group"
         },
         {
+            "_id": "req_cc8e8a2d49684cbbba01556a99f05436",
+            "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
+            "modified": 1752297578157,
+            "created": 1751555814187,
+            "url": "{{ _.baseUrl }}/sys-info/backup",
+            "name": "Clone Data to \"dev\" DB",
+            "description": "### Description\n\n- Copy data from the `prod` database to `dev` database.\n- Config as per the setup of mongo db instance. \n\nRequires admin password provided in the header. \n\n### Request Headers\n\n- `x-sys-gate`: Admin Password for allowing bulk user modification.",
+            "method": "POST",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8",
+                    "id": "pair_7a23afb3a07c4a688c67e59f8003b958"
+                },
+                {
+                    "id": "pair_161393eef34246568b122051af986db0",
+                    "name": "x-sys-gate",
+                    "value": "",
+                    "description": "The password to allow modification."
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725166699689,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
             "_id": "req_713bf94746124c698456db6d4a89ecf6",
             "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
-            "modified": 1725166816463,
+            "modified": 1751629366255,
             "created": 1725166699639,
-            "url": "{{ _.baseUrl }}/changelog",
+            "url": "{{ _.baseUrl }}/sys-info/changelog",
             "name": "Version History",
             "description": "### Description\n\n- Public API to get the version history of all releases created in the github repository. \n- System communicates to the GitHub API via their GraphQL service.",
             "method": "GET",
@@ -333,9 +396,9 @@
         {
             "_id": "req_93ba32b7f7fb426eae126fc5c42a8d2f",
             "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
-            "modified": 1725166851057,
+            "modified": 1751631932683,
             "created": 1725166837379,
-            "url": "{{ _.baseUrl }}/changelog",
+            "url": "{{ _.baseUrl }}/sys-info/changelog",
             "name": "Contributor Info",
             "description": "### Description\n\n- Public API to get the contributor profile details from github. \n- System communicates to the GitHub API via their GraphQL service.",
             "method": "GET",
@@ -411,7 +474,7 @@
         {
             "_id": "req_3ea1b5a9f5474a4d80b47a928f685917",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1725165786303,
+            "modified": 1752297605190,
             "created": 1725118308041,
             "url": "{{ _.baseUrl }}/expenses/summary",
             "name": "Summary of Expenses",
@@ -446,7 +509,8 @@
             ],
             "authentication": {
                 "type": "bearer",
-                "prefix": "Bearer"
+                "prefix": "Bearer",
+                "token": ""
             },
             "metaSortKey": -1725118087775.5,
             "isPrivate": false,
@@ -918,9 +982,9 @@
         {
             "_id": "req_4d1044e9de6544208c93a941ef65b812",
             "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
-            "modified": 1725163370124,
+            "modified": 1751631393192,
             "created": 1725116692381,
-            "url": "{{ _.baseUrl }}/user/change-password",
+            "url": "{{ _.baseUrl }}/user/update-login-key",
             "name": "Change Password",
             "description": "### Description\n\nChange the password of a logged in user. User needs to be logged in to make this request.\n\n### Request Body\n\n```\n{\n\t\"email\": \"\",\n\t\"currentPin\": \"\",\n\t\"newPin\": \"\",\n\t\"confirmNewPin\": \"\"\n}\n```\n",
             "method": "POST",

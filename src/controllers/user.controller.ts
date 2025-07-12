@@ -70,14 +70,14 @@ export const login = routeHandler(
       res.status(StatusCodes.NOT_FOUND);
       throw new Error("Email ID is not registered");
     } else if (await compare(email + pin, user.pin ?? "")) {
-      const { JWT_SECRET = "" } = getEnv();
+      const { JWT_SECRET = "", TOKEN_TTL = "" } = getEnv();
       delete user.pin;
       res.json({
         message: userMessages.loginSuccessful,
         response: {
           user,
-          token: sign({ id: user._id } ?? "", JWT_SECRET, {
-            expiresIn: "7d",
+          token: sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
+            expiresIn: TOKEN_TTL,
           }),
         },
       });
@@ -130,6 +130,11 @@ export const updateUserDetails = routeHandler(
   }
 );
 
+/**
+ * @description Update the login pin for the user.
+ * @method PUT /api/user/update-login-key
+ * @access public
+ */
 export const changePassword = routeHandler(
   async (
     req: TypedRequest<

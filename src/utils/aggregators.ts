@@ -111,11 +111,11 @@ export function monthSummaryAggregator(
       ],
     },
   };
-  if (request.firstDay?.length && request.lastDay?.length)
+  if (request.startDate?.length && request.endDate?.length)
     filter.$match.$and?.push({
       date: {
-        $gte: new Date(request.firstDay),
-        $lte: new Date(request.lastDay),
+        $gte: new Date(request.startDate),
+        $lte: new Date(request.endDate),
       },
     });
 
@@ -221,8 +221,11 @@ export function yearTrendAggregator(req: YearTrendRequest, user: IUser | null) {
           { reverted: false },
           {
             date: {
-              $gte: dayjs(req.query.year).toDate(),
-              $lte: dayjs(req.query.year).endOf("year").toDate(),
+              $gte: dayjs(req.query.year).tz(user?.timeZone).toDate(),
+              $lte: dayjs(req.query.year)
+                .tz(user?.timeZone)
+                .endOf("year")
+                .toDate(),
             },
           },
         ],
