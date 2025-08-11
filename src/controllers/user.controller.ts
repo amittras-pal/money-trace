@@ -3,6 +3,7 @@ import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { sign } from "jsonwebtoken";
 import { userMessages } from "../constants/apimessages";
+import { SUSPUEND_REGISTRATION } from "../constants/common";
 import { getEnv } from "../env/config";
 import User from "../models/user.model";
 import { TypedRequest, TypedResponse } from "../types/requests";
@@ -15,6 +16,13 @@ import { IUser } from "../types/user";
  */
 export const register = routeHandler(
   async (req: TypedRequest<{}, Partial<IUser>>, res: TypedResponse) => {
+    // Indefinitely suspending registration of new users.
+    // May revoke the lock sometime in the future.
+    if (SUSPUEND_REGISTRATION) {
+      res.status(StatusCodes.GONE);
+      throw new Error("No Longer Accepting Registrations.");
+    }
+
     const { userName, email, pin, timeZone } = req.body;
     if (!userName || !email || !pin || !timeZone) {
       res.status(StatusCodes.BAD_REQUEST);
