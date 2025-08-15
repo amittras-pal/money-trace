@@ -3,6 +3,7 @@ import {
   changePassword,
   getUserDetails,
   login,
+  logout,
   register,
   updateUserDetails,
 } from "../controllers/user.controller";
@@ -15,5 +16,6 @@ userRoutes.post("/login", login);
 userRoutes.get("/details", authenticate, getUserDetails);
 userRoutes.put("/update", authenticate, updateUserDetails);
 userRoutes.post("/update-login-key", authenticate, changePassword);
+userRoutes.post("/logout", logout);
 
 export default userRoutes;
