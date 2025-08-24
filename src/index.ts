@@ -1,8 +1,12 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, json, urlencoded } from "express";
+
 import { getEnv } from "./env/config";
+
 import errorHandler from "./middlewares/error.middleware";
-import morganConfig from "./middlewares/logging.middleware";
+import morganLogger from "./middlewares/logging.middleware";
+
 import budgetRoutes from "./routes/budget.routes";
 import categoryRoutes from "./routes/category.routes";
 import expenseRoutes from "./routes/expense.routes";
@@ -15,10 +19,11 @@ import userRoutes from "./routes/user.routes";
 const app: Application = express();
 const { ORIGINS } = getEnv();
 
-app.use(cors({ origin: ORIGINS }));
+app.use(cookieParser());
+app.use(cors({ origin: ORIGINS, credentials: true }));
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(morganConfig);
+app.use(morganLogger);
 
 app.use("/api/user", userRoutes);
 app.use("/api/expenses", expenseRoutes);

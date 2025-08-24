@@ -57,7 +57,7 @@ export const register = routeHandler(
 export const login = routeHandler(
   async (
     req: TypedRequest<{}, { email: string; pin: string }>,
-    res: TypedResponse<{ user: IUser; token: string }>
+    res: TypedResponse<IUser>
   ) => {
     const { email, pin } = req.body;
     if (!email || !pin) {
@@ -70,16 +70,15 @@ export const login = routeHandler(
       res.status(StatusCodes.NOT_FOUND);
       throw new Error("Email ID is not registered");
     } else if (await compare(email + pin, user.pin ?? "")) {
-      const { JWT_SECRET = "", TOKEN_TTL = "" } = getEnv();
       delete user.pin;
-      res.json({
+
+      const { JWT_SECRET = "", TOKEN_TTL = "" } = getEnv();
+      const token = sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
+        expiresIn: TOKEN_TTL,
+      });
+      res.cookie("token", token, { httpOnly: true, secure: true }).json({
         message: userMessages.loginSuccessful,
-        response: {
-          user,
-          token: sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
-            expiresIn: TOKEN_TTL,
-          }),
-        },
+        response: user,
       });
     } else {
       res.status(StatusCodes.UNAUTHORIZED);
@@ -177,3 +176,13 @@ export const changePassword = routeHandler(
     }
   }
 );
+
+/**
+ * @description Update the login pin for the user.
+ * @method POST /api/user/logout
+ * @access public
+ */
+export const logout = routeHandler((_req: TypedRequest, res: TypedResponse) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged Out." });
+});
