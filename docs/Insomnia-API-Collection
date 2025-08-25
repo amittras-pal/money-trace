@@ -1,7 +1,7 @@
 {
     "_type": "export",
     "__export_format": 4,
-    "__export_date": "2025-07-12T05:21:17.508Z",
+    "__export_date": "2025-08-15T06:50:52.284Z",
     "__export_source": "insomnia.desktop.app:v2023.5.8",
     "resources": [
         {
@@ -45,7 +45,7 @@
         {
             "_id": "req_4a13187f46e340eca3fc673795ee9461",
             "parentId": "fld_971945777438457dbcf201dcfb8f3b1d",
-            "modified": 1737531837669,
+            "modified": 1755239842365,
             "created": 1737525163671,
             "url": "{{ _.baseUrl }}/export/plan",
             "name": "Export Plan Details",
@@ -66,11 +66,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "token": "",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1737525163671,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -96,7 +92,7 @@
         {
             "_id": "req_107adfcb0ea24d94b8ffc095fbfcd0b0",
             "parentId": "fld_971945777438457dbcf201dcfb8f3b1d",
-            "modified": 1737531843398,
+            "modified": 1755239849572,
             "created": 1737531664013,
             "url": "{{ _.baseUrl }}/export/range",
             "name": "Export Expenses Range",
@@ -129,11 +125,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "token": "",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1734128221092.5,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -147,7 +139,7 @@
         {
             "_id": "req_5240133d6efb4e7c908400a9af418e11",
             "parentId": "fld_184ae22b6f52435dbfd4c5497340a849",
-            "modified": 1737532179499,
+            "modified": 1755239854148,
             "created": 1725166974925,
             "url": "{{ _.baseUrl }}/budget",
             "name": "Create Budget",
@@ -168,11 +160,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer",
-                "token": ""
-            },
+            "authentication": {},
             "metaSortKey": -1725166974925,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -198,7 +186,7 @@
         {
             "_id": "req_4e38bb4908fa401f83e9dae5283c0ebc",
             "parentId": "fld_184ae22b6f52435dbfd4c5497340a849",
-            "modified": 1737531960624,
+            "modified": 1755239858747,
             "created": 1725167323294,
             "url": "{{ _.baseUrl }}/budget",
             "name": "Get Budget",
@@ -225,11 +213,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer",
-                "token": ""
-            },
+            "authentication": {},
             "metaSortKey": -1725166934733.5,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -243,9 +227,9 @@
         {
             "_id": "req_2c9f761b3a834949bc288394508ad591",
             "parentId": "fld_2d3819716dd44ff88e52e4b5e32e28cd",
-            "modified": 1725170001916,
+            "modified": 1755239885468,
             "created": 1725166894542,
-            "url": "{{ _.baseUrl }}/categories",
+            "url": "{{ _.baseUrl }}/categories/get-all",
             "name": "List Categories",
             "description": "### Description\n\n- Retrieve a list of categories from the DB. ",
             "method": "GET",
@@ -257,10 +241,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725166894542,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -284,9 +265,37 @@
             "_type": "request_group"
         },
         {
+            "_id": "req_b8cd127bf49f41dbb93b6356263cf7a0",
+            "parentId": "fld_2d3819716dd44ff88e52e4b5e32e28cd",
+            "modified": 1755239889753,
+            "created": 1752380135821,
+            "url": "{{ _.baseUrl }}/categories/get-groups",
+            "name": "List Category Groups",
+            "description": "### Description\n\n- Retrieve a list of categories from the DB. ",
+            "method": "GET",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725166797140.5,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
             "_id": "req_1f7bdaa4448b47109e2a9991181f5100",
             "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
-            "modified": 1751631914180,
+            "modified": 1755240604978,
             "created": 1719560968574,
             "url": "{{ _.baseUrl }}/sys-info/new-release",
             "name": "Notify Users on New Release",
@@ -333,7 +342,7 @@
         {
             "_id": "req_cc8e8a2d49684cbbba01556a99f05436",
             "parentId": "fld_6882873100ee4c1d9f8d8c48c69eb579",
-            "modified": 1752297578157,
+            "modified": 1755240378020,
             "created": 1751555814187,
             "url": "{{ _.baseUrl }}/sys-info/backup",
             "name": "Clone Data to \"dev\" DB",
@@ -424,7 +433,7 @@
         {
             "_id": "req_0985658c7b3e49e98e00ba8b5b6fda2f",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1725119053280,
+            "modified": 1755239907491,
             "created": 1725118235786,
             "url": "{{ _.baseUrl }}/expenses",
             "name": "Delete Expense",
@@ -445,10 +454,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725118235786,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -474,7 +480,7 @@
         {
             "_id": "req_3ea1b5a9f5474a4d80b47a928f685917",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1752297605190,
+            "modified": 1755239912027,
             "created": 1725118308041,
             "url": "{{ _.baseUrl }}/expenses/summary",
             "name": "Summary of Expenses",
@@ -507,11 +513,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer",
-                "token": ""
-            },
+            "authentication": {},
             "metaSortKey": -1725118087775.5,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -525,7 +527,7 @@
         {
             "_id": "req_67459b34ccd44a1ba279d658ae5faac7",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1725166009789,
+            "modified": 1755239916809,
             "created": 1725118451021,
             "url": "{{ _.baseUrl }}/expenses",
             "name": "List Expenses",
@@ -546,10 +548,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725118013770.25,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -563,7 +562,7 @@
         {
             "_id": "req_e3ac517565664bb298e49f117fd38b30",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1737532046065,
+            "modified": 1755239922038,
             "created": 1725118612023,
             "url": "{{ _.baseUrl }}/expenses/search",
             "name": "Search Expenses",
@@ -584,11 +583,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer",
-                "token": ""
-            },
+            "authentication": {},
             "metaSortKey": -1725117976767.625,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -602,7 +597,7 @@
         {
             "_id": "req_8931023e68254741820f2bb74f924905",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1725166237152,
+            "modified": 1755239926109,
             "created": 1725117939765,
             "url": "{{ _.baseUrl }}/expenses",
             "name": "Create New Expense",
@@ -623,10 +618,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725117939765,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -640,7 +632,7 @@
         {
             "_id": "req_cbf3ec5979f643b5bab0b66bd72011f3",
             "parentId": "fld_46489c6383554d31af23985e9a8dbfda",
-            "modified": 1725166247548,
+            "modified": 1755239930394,
             "created": 1725118185497,
             "url": "{{ _.baseUrl }}/expenses",
             "name": "Update Expense",
@@ -661,10 +653,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725117858709.5,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -678,7 +667,7 @@
         {
             "_id": "req_609deec9252b4ab397f03682f9fc9089",
             "parentId": "fld_47be40cab122464c9c73082748d0aace",
-            "modified": 1725163862572,
+            "modified": 1755239936518,
             "created": 1725117147748,
             "url": "{{ _.baseUrl }}/expense-plan",
             "name": "Create New Plan",
@@ -699,10 +688,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725117777654,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -728,7 +714,7 @@
         {
             "_id": "req_1dc88c3d61a84b2fb0630c1894a62628",
             "parentId": "fld_47be40cab122464c9c73082748d0aace",
-            "modified": 1725163932957,
+            "modified": 1755239940532,
             "created": 1725117777554,
             "url": "{{ _.baseUrl }}/expense-plan/copy-to-budget",
             "name": "Copy Expenses to Budget",
@@ -749,10 +735,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725117777554,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -766,7 +749,7 @@
         {
             "_id": "req_f1ece73c84184a2088494f010c6b36f2",
             "parentId": "fld_47be40cab122464c9c73082748d0aace",
-            "modified": 1725163982693,
+            "modified": 1755239944790,
             "created": 1725117671101,
             "url": "{{ _.baseUrl }}/expense-plan",
             "name": "Delete Plan",
@@ -787,10 +770,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725117671101,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -804,7 +784,7 @@
         {
             "_id": "req_66a7be16379b4383aeee6dafc53e411e",
             "parentId": "fld_47be40cab122464c9c73082748d0aace",
-            "modified": 1725164118395,
+            "modified": 1755239949408,
             "created": 1725117555496,
             "url": "{{ _.baseUrl }}/expense-plan",
             "name": "Update Plan Details",
@@ -825,10 +805,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725117555496,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -842,7 +819,7 @@
         {
             "_id": "req_2d2237853df14640b9513d34a2831a32",
             "parentId": "fld_47be40cab122464c9c73082748d0aace",
-            "modified": 1725165604029,
+            "modified": 1755239954739,
             "created": 1725117305571,
             "url": "{{ _.baseUrl }}/api/expense-plan/details",
             "name": "Get Plan Details",
@@ -863,11 +840,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer",
-                "token": ""
-            },
+            "authentication": {},
             "metaSortKey": -1725117305571,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -881,7 +854,7 @@
         {
             "_id": "req_84dd75e20ccb4022abad365011ff4f39",
             "parentId": "fld_47be40cab122464c9c73082748d0aace",
-            "modified": 1737532067566,
+            "modified": 1755239959799,
             "created": 1725117241233,
             "url": "{{ _.baseUrl }}/expense-plan",
             "name": "List Plans",
@@ -902,11 +875,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer",
-                "token": ""
-            },
+            "authentication": {},
             "metaSortKey": -1725117241233,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -920,7 +889,7 @@
         {
             "_id": "req_8b71df5cb8804a148a7d9026e6dbc91d",
             "parentId": "fld_46d95345fc2d4525b7c4003d32260e49",
-            "modified": 1725163779642,
+            "modified": 1755239964936,
             "created": 1725116940370,
             "url": "{{ _.baseUrl }}/reports",
             "name": "Generate Report [xlsx]",
@@ -953,10 +922,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725116940370,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -982,7 +948,7 @@
         {
             "_id": "req_4d1044e9de6544208c93a941ef65b812",
             "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
-            "modified": 1751631393192,
+            "modified": 1755239971938,
             "created": 1725116692381,
             "url": "{{ _.baseUrl }}/user/update-login-key",
             "name": "Change Password",
@@ -1003,10 +969,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725116692382,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -1032,7 +995,7 @@
         {
             "_id": "req_ce42ce69580d41069795c1ce0eca30d2",
             "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
-            "modified": 1725163479392,
+            "modified": 1755239976896,
             "created": 1725116521944,
             "url": "{{ _.baseUrl }}/user/update",
             "name": "Update User Details",
@@ -1053,10 +1016,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725116521944,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -1070,7 +1030,7 @@
         {
             "_id": "req_0e085c5f390e4e68961fbc02039205ed",
             "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
-            "modified": 1725163515691,
+            "modified": 1755239981397,
             "created": 1725116425481,
             "url": "{{ _.baseUrl }}/user/details",
             "name": "User Details (not used by FE)",
@@ -1084,10 +1044,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725116425481,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -1101,7 +1058,7 @@
         {
             "_id": "req_091b783ba10946dcbb086a02021947ca",
             "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
-            "modified": 1725163576933,
+            "modified": 1755240435138,
             "created": 1725116301413,
             "url": "{{ _.baseUrl }}/user/register",
             "name": "Register",
@@ -1136,7 +1093,7 @@
         {
             "_id": "req_44335cd68bfa4860850a286bfa9a8943",
             "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
-            "modified": 1737532113418,
+            "modified": 1755240444600,
             "created": 1725109174423,
             "url": "{{ _.baseUrl }}/user/login",
             "name": "Login",
@@ -1169,9 +1126,37 @@
             "_type": "request"
         },
         {
+            "_id": "req_7b369addba55491a96319d6ee257a685",
+            "parentId": "fld_deb1a224d645401aae9219ae600ecef4",
+            "modified": 1755240469489,
+            "created": 1755240123135,
+            "url": "{{ _.baseUrl }}/user/logout",
+            "name": "Logout",
+            "description": "### Description\n\n- Logout a logged in user.",
+            "method": "POST",
+            "body": {},
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "insomnia/2023.5.8"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1725109296840,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
             "_id": "req_9ded21faf9d34e3983530568ab61d0d5",
             "parentId": "fld_655da1fecca548f6b1d3c47decb7e69d",
-            "modified": 1737532128724,
+            "modified": 1755240515574,
             "created": 1730731278514,
             "url": "{{ _.baseUrl }}/statistics/month-stats",
             "name": "Expense Count/Amount by day.",
@@ -1182,13 +1167,13 @@
                 {
                     "id": "pair_dcbd5702f21146a285b43f471daf47a5",
                     "name": "year",
-                    "value": "2024",
+                    "value": "",
                     "description": ""
                 },
                 {
                     "id": "pair_e3d448ce6ba84ec7af836ffc1519dcbc",
                     "name": "month",
-                    "value": "2",
+                    "value": "",
                     "description": ""
                 }
             ],
@@ -1198,11 +1183,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "token": "",
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1730731278514,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -1228,7 +1209,7 @@
         {
             "_id": "req_4225e8a2258c4d409f92c14f032e3351",
             "parentId": "fld_655da1fecca548f6b1d3c47decb7e69d",
-            "modified": 1737532135956,
+            "modified": 1755240005561,
             "created": 1721135548825,
             "url": "{{ _.baseUrl }}/statistics/year-stats",
             "name": "Categories Over Year",
@@ -1249,12 +1230,7 @@
                     "value": "insomnia/2023.5.8"
                 }
             ],
-            "authentication": {
-                "type": "bearer",
-                "token": "",
-                "disabled": false,
-                "prefix": "Bearer"
-            },
+            "authentication": {},
             "metaSortKey": -1725109207478,
             "isPrivate": false,
             "settingStoreCookies": true,
@@ -1287,7 +1263,7 @@
         {
             "_id": "jar_e28b4ce200755009410112466a7c616d9ef64b91",
             "parentId": "wrk_855afbf3b68d49c5ace17c44e2b2015b",
-            "modified": 1719560965288,
+            "modified": 1755240175800,
             "created": 1719560965288,
             "name": "Default Jar",
             "cookies": [],
