@@ -31,12 +31,12 @@ The Corressponding Frontend built on ReactJS can be found [here](https://github.
 PORT=6400
 # PROBE_PORT
 NODE_ENV=development
-JWT_SECRET=
+ACCESS_TOKEN_PK=
 DB_URI=
 ORIGINS=http://localhost:5173
 ```
 
-**Note 1:** _The values for `DB_URI` & `JWT_SECRET` variables will be provided separately._
+**Note 1:** _The values for `DB_URI` & `ACCESS_TOKEN_PK` variables will be provided separately._
 
 **Note 2:** _The option `PROBE_PORT` is optional, as it is for a feature which is not yet planned._
 

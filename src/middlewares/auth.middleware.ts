@@ -2,6 +2,7 @@ import { compareSync } from "bcryptjs";
 import { NextFunction, RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 import { JsonWebTokenError, verify } from "jsonwebtoken";
+import { ACCESS_TOKEN } from "../constants/common";
 import { getEnv } from "../env/config";
 import {
   AuthTokenPayload,
@@ -14,17 +15,17 @@ const authenticate: RequestHandler = (
   res: TypedResponse,
   next: NextFunction
 ) => {
-  const token = req.cookies.token;
+  const token = req.cookies[ACCESS_TOKEN];
   if (token) {
-    const { JWT_SECRET = "" } = getEnv();
+    const { ACCESS_TOKEN_PK = "" } = getEnv();
     try {
-      const value = verify(token, JWT_SECRET) as AuthTokenPayload;
+      const value = verify(token, ACCESS_TOKEN_PK) as AuthTokenPayload;
       req.userId = value.id;
       next();
     } catch (error) {
       if (error instanceof JsonWebTokenError) {
         res.status(StatusCodes.UNAUTHORIZED);
-        res.clearCookie("token");
+        res.clearCookie(ACCESS_TOKEN);
         throw new Error(error.message);
       } else {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR);

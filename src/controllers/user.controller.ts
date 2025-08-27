@@ -1,13 +1,20 @@
 import { compare, genSalt, hash } from "bcryptjs";
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
-import { sign } from "jsonwebtoken";
 import { userMessages } from "../constants/apimessages";
-import { SUSPUEND_REGISTRATION } from "../constants/common";
-import { getEnv } from "../env/config";
+import {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  SUSPUEND_REGISTRATION,
+} from "../constants/common";
 import User from "../models/user.model";
 import { TypedRequest, TypedResponse } from "../types/requests";
 import { IUser } from "../types/user";
+import { generateToken } from "../utils/session";
+import Session from "../models/session.model";
+import dayjs from "dayjs";
+import { CookieOptions } from "express";
+import { ISession } from "../types/session";
 
 /**
  * @description register a new user with unique email address
@@ -64,8 +71,8 @@ export const register = routeHandler(
  */
 export const login = routeHandler(
   async (
-    req: TypedRequest<{}, { email: string; pin: string }>,
-    res: TypedResponse<IUser>
+    req: TypedRequest<{}, { email: string; pin: string; deviceId: string }>,
+    res: TypedResponse<{ user: IUser; session: ISession }>
   ) => {
     const { email, pin } = req.body;
     if (!email || !pin) {
@@ -79,15 +86,39 @@ export const login = routeHandler(
       throw new Error("Email ID is not registered");
     } else if (await compare(email + pin, user.pin ?? "")) {
       delete user.pin;
+      // generate access token
+      const accessPayload = { id: user._id?.toString() ?? "" };
+      const accessToken = generateToken("access", accessPayload);
 
-      const { JWT_SECRET = "", TOKEN_TTL = "" } = getEnv();
-      const token = sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
-        expiresIn: TOKEN_TTL,
+      // Create a new Session entry in DB.
+      const session = await Session.create({
+        user: user._id?.toString(),
+        userAgent: req.headers["user-agent"],
+        deviceId: req.body.deviceId,
+        expireAt: dayjs().add(21, "days").toDate(),
+        // refreshTokenHash: // set later.
       });
-      res.cookie("token", token, { httpOnly: true, secure: true }).json({
-        message: userMessages.loginSuccessful,
-        response: user,
-      });
+
+      // Create Refresh Token.
+      const refreshPayload = { sessionId: session._id, userId: user._id };
+      const refreshToken = generateToken("refresh", refreshPayload);
+      const refreshTokenName = `${REFRESH_TOKEN}:${user._id?.toString()}`;
+
+      // Encrypt Refresh Token and save the token hash to the DB.
+      const salt: string = await genSalt();
+      session.refreshTokenHash = await hash(refreshToken, salt);
+      await session.save();
+
+      const cookieOpts: CookieOptions = { httpOnly: true, secure: true };
+      res
+        // .cookie(ACCESS_TOKEN, accessToken, cookieOpts) // this doesn't need to be stored anymore, keep in memory on the client.
+        .setHeader(ACCESS_TOKEN, accessToken)
+        .cookie(refreshTokenName, refreshToken, cookieOpts)
+        // Attach the response body
+        .json({
+          message: userMessages.loginSuccessful,
+          response: { user, session },
+        });
     } else {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("Invalid Credentials!");
@@ -191,6 +222,6 @@ export const changePassword = routeHandler(
  * @access public
  */
 export const logout = routeHandler((_req: TypedRequest, res: TypedResponse) => {
-  res.clearCookie("token");
+  res.clearCookie(ACCESS_TOKEN);
   res.json({ message: "Logged Out." });
 });

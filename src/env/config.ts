@@ -6,7 +6,6 @@ interface IEnv {
   PORT?: string;
   PROBE_PORT?: string;
   DB_URI?: string;
-  JWT_SECRET?: string;
   SYS_ADM_SECRET?: string;
   NODE_ENV?: string;
   ORIGINS?: (string | RegExp)[];
@@ -15,7 +14,11 @@ interface IEnv {
   OCTO_INST_ID: number;
   GIT_REPO_OWNER?: string;
   GIT_REPO_NAME?: string;
-  TOKEN_TTL?: string;
+  // Auth related env vars.
+  ACCESS_TOKEN_PK?: string;
+  ACCESS_TOKEN_TTL?: string;
+  REFRESH_TOKEN_PK?: string;
+  REFRESH_TOKEN_TTL?: string;
 }
 
 interface IBackupEnv {
@@ -27,7 +30,6 @@ export function getEnv(): IEnv {
     PORT: process.env.PORT ?? "6400",
     PROBE_PORT: process.env.PROBE_PORT ?? "6174",
     DB_URI: process.env.DB_URI ?? "",
-    JWT_SECRET: process.env.JWT_SECRET ?? "",
     SYS_ADM_SECRET: process.env.SYS_ADM_SECRET ?? "",
     NODE_ENV: process.env.NODE_ENV,
     OCTO_PK: process.env.OCTO_PK,
@@ -36,7 +38,10 @@ export function getEnv(): IEnv {
     ORIGINS: [process.env.ORIGINS ?? ""],
     GIT_REPO_OWNER: process.env.GIT_REPO_OWNER ?? "",
     GIT_REPO_NAME: process.env.GIT_REPO_NAME ?? "",
-    TOKEN_TTL: process.env.TOKEN_TTL ?? "",
+    ACCESS_TOKEN_PK: process.env.ACCESS_TOKEN_PK ?? "",
+    ACCESS_TOKEN_TTL: process.env.ACCESS_TOKEN_TTL ?? "",
+    REFRESH_TOKEN_PK: process.env.REFRESH_TOKEN_PK ?? "",
+    REFRESH_TOKEN_TTL: process.env.REFRESH_TOKEN_TTL ?? "",
   };
 }
 
