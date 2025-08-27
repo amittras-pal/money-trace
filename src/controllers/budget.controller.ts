@@ -1,34 +1,3 @@
-/**
- * @description Fetch a list of budgets for a user by an array of {month, year} objects
- * @method POST /api/budget/list
- * @access protected
- */
-export const getBudgetsList = routeHandler(
-  async (
-    req: TypedRequest<{}, { periods: { month: number; year: number }[] }>,
-    res: TypedResponse<{ budgets: IBudget[] }>
-  ) => {
-    const { userId } = req;
-    const { periods } = req.body;
-    if (!Array.isArray(periods) || periods.length === 0) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("Request body must contain a non-empty 'periods' array.");
-    }
-
-    // Build an $or query for all month/year pairs
-    const orQuery = periods.map(({ month, year }) => ({
-      month,
-      year,
-      user: userId,
-    }));
-    const budgets = await Budget.find({ $or: orQuery });
-
-    res.status(StatusCodes.OK).json({
-      message: budgetMessages.budgetRetrievedSuccessfully,
-      response: { budgets },
-    });
-  }
-);
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { budgetMessages } from "../constants/apimessages";
@@ -91,6 +60,38 @@ export const getBudget = routeHandler(
     res.json({
       message: budgetMessages.budgetRetrievedSuccessfully,
       response: budget,
+    });
+  }
+);
+
+/**
+ * @description Fetch a list of budgets for a user by an array of {month, year} objects
+ * @method POST /api/budget/list
+ * @access protected
+ */
+export const getBudgetsList = routeHandler(
+  async (
+    req: TypedRequest<{}, { periods: { month: number; year: number }[] }>,
+    res: TypedResponse<{ budgets: IBudget[] }>
+  ) => {
+    const { userId } = req;
+    const { periods } = req.body;
+    if (!Array.isArray(periods) || periods.length === 0) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("Request body must contain a non-empty 'periods' array.");
+    }
+
+    // Build an $or query for all month/year pairs
+    const orQuery = periods.map(({ month, year }) => ({
+      month,
+      year,
+      user: userId,
+    }));
+    const budgets = await Budget.find({ $or: orQuery });
+
+    res.status(StatusCodes.OK).json({
+      message: budgetMessages.budgetRetrievedSuccessfully,
+      response: { budgets },
     });
   }
 );
