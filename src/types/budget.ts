@@ -6,4 +6,5 @@ export type IBudget = {
   month: number;
   year: number;
   amount: number;
+  remarks?: string;
 };
