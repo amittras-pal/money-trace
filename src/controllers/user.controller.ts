@@ -84,7 +84,7 @@ export const login = routeHandler(
       const token = sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
         expiresIn: TOKEN_TTL,
       });
-      res.cookie("token", token, { httpOnly: true, secure: true }).json({
+      res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" }).json({
         message: userMessages.loginSuccessful,
         response: user,
       });
