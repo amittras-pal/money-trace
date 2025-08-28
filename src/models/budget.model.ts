@@ -11,6 +11,7 @@ const budgetSchema = new Schema<IBudget>({
   },
   year: { type: Number, required: [true, "Please add the year"] },
   amount: { type: Number, required: true },
+  remarks: { type: String },
 });
 
 const Budget = model("Budget", budgetSchema);

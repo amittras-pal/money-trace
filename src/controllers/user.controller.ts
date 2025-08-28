@@ -3,6 +3,7 @@ import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { sign } from "jsonwebtoken";
 import { userMessages } from "../constants/apimessages";
+import { SUSPUEND_REGISTRATION } from "../constants/common";
 import { getEnv } from "../env/config";
 import User from "../models/user.model";
 import { TypedRequest, TypedResponse } from "../types/requests";
@@ -15,6 +16,13 @@ import { IUser } from "../types/user";
  */
 export const register = routeHandler(
   async (req: TypedRequest<{}, Partial<IUser>>, res: TypedResponse) => {
+    // Indefinitely suspending registration of new users.
+    // May revoke the lock sometime in the future.
+    if (SUSPUEND_REGISTRATION) {
+      res.status(StatusCodes.GONE);
+      throw new Error("No Longer Accepting Registrations.");
+    }
+
     const { userName, email, pin, timeZone } = req.body;
     if (!userName || !email || !pin || !timeZone) {
       res.status(StatusCodes.BAD_REQUEST);
@@ -57,7 +65,7 @@ export const register = routeHandler(
 export const login = routeHandler(
   async (
     req: TypedRequest<{}, { email: string; pin: string }>,
-    res: TypedResponse<{ user: IUser; token: string }>
+    res: TypedResponse<IUser>
   ) => {
     const { email, pin } = req.body;
     if (!email || !pin) {
@@ -70,16 +78,15 @@ export const login = routeHandler(
       res.status(StatusCodes.NOT_FOUND);
       throw new Error("Email ID is not registered");
     } else if (await compare(email + pin, user.pin ?? "")) {
-      const { JWT_SECRET = "", TOKEN_TTL = "" } = getEnv();
       delete user.pin;
-      res.json({
+
+      const { JWT_SECRET = "", TOKEN_TTL = "" } = getEnv();
+      const token = sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
+        expiresIn: TOKEN_TTL,
+      });
+      res.cookie("token", token, { httpOnly: true, secure: true }).json({
         message: userMessages.loginSuccessful,
-        response: {
-          user,
-          token: sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
-            expiresIn: TOKEN_TTL,
-          }),
-        },
+        response: user,
       });
     } else {
       res.status(StatusCodes.UNAUTHORIZED);
@@ -177,3 +184,13 @@ export const changePassword = routeHandler(
     }
   }
 );
+
+/**
+ * @description Update the login pin for the user.
+ * @method POST /api/user/logout
+ * @access public
+ */
+export const logout = routeHandler((_req: TypedRequest, res: TypedResponse) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged Out." });
+});

@@ -359,6 +359,6 @@ export function budgetsOfYearAggregator(req: YearTrendRequest) {
       },
     },
     { $addFields: { month: { $sum: ["$month", 1] } } },
-    { $project: { month: 1, amount: 1, _id: 0 } },
+    { $project: { month: 1, amount: 1, remarks: 1, _id: 0 } },
   ];
 }

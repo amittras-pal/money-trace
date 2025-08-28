@@ -14,16 +14,17 @@ const authenticate: RequestHandler = (
   res: TypedResponse,
   next: NextFunction
 ) => {
-  if (req.headers.authorization?.startsWith("Bearer")) {
+  const token = req.cookies.token;
+  if (token) {
     const { JWT_SECRET = "" } = getEnv();
     try {
-      const token = req.headers.authorization.split(" ")[1];
       const value = verify(token, JWT_SECRET) as AuthTokenPayload;
       req.userId = value.id;
       next();
     } catch (error) {
       if (error instanceof JsonWebTokenError) {
         res.status(StatusCodes.UNAUTHORIZED);
+        res.clearCookie("token");
         throw new Error(error.message);
       } else {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -31,7 +32,7 @@ const authenticate: RequestHandler = (
       }
     }
   } else {
-    res.status(StatusCodes.BAD_REQUEST);
+    res.status(StatusCodes.UNAUTHORIZED);
     throw new Error("No Token.");
   }
 };
