@@ -8,6 +8,8 @@ import { getEnv } from "../env/config";
 import User from "../models/user.model";
 import { TypedRequest, TypedResponse } from "../types/requests";
 import { IUser } from "../types/user";
+import dayjs from "dayjs";
+import { CookieOptions } from "express";
 
 /**
  * @description register a new user with unique email address
@@ -84,7 +86,9 @@ export const login = routeHandler(
       const token = sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
         expiresIn: TOKEN_TTL,
       });
-      res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" }).json({
+      const cookieMaxAge = parseInt(TOKEN_TTL) * 24 * 60 * 60 * 1000; // TOKEN_TTL is in days, converting to milliseconds
+      const cookieOpts: CookieOptions = { httpOnly: true, secure: true, sameSite: "none", maxAge: cookieMaxAge };
+      res.cookie("token", token, cookieOpts).json({
         message: userMessages.loginSuccessful,
         response: user,
       });
