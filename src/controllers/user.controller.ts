@@ -1,4 +1,5 @@
 import { compare, genSalt, hash } from "bcryptjs";
+import { CookieOptions } from "express";
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { sign } from "jsonwebtoken";
@@ -8,8 +9,6 @@ import { getEnv } from "../env/config";
 import User from "../models/user.model";
 import { TypedRequest, TypedResponse } from "../types/requests";
 import { IUser } from "../types/user";
-import dayjs from "dayjs";
-import { CookieOptions } from "express";
 
 /**
  * @description register a new user with unique email address
