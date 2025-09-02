@@ -7,6 +7,7 @@ import { getEnv } from "./env/config";
 import errorHandler from "./middlewares/error.middleware";
 import morganLogger from "./middlewares/logging.middleware";
 
+import authRoutes from "./routes/auth.routes";
 import budgetRoutes from "./routes/budget.routes";
 import categoryRoutes from "./routes/category.routes";
 import expenseRoutes from "./routes/expense.routes";
@@ -14,7 +15,6 @@ import expensePlanRoutes from "./routes/expensePlan.routes";
 import exportsRoutes from "./routes/exports.routes";
 import statsRoutes from "./routes/stats.routes";
 import systemRoutes from "./routes/sys-info.routes";
-import userRoutes from "./routes/user.routes";
 
 const app: Application = express();
 const { ORIGINS } = getEnv();
@@ -25,7 +25,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(morganLogger);
 
-app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/budget", budgetRoutes);
 app.use("/api/expense-plan", expensePlanRoutes);

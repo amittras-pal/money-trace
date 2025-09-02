@@ -86,7 +86,12 @@ export const login = routeHandler(
         expiresIn: TOKEN_TTL,
       });
       const cookieMaxAge = parseInt(TOKEN_TTL) * 24 * 60 * 60 * 1000; // TOKEN_TTL is in days, converting to milliseconds
-      const cookieOpts: CookieOptions = { httpOnly: true, secure: true, sameSite: "none", maxAge: cookieMaxAge };
+      const cookieOpts: CookieOptions = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: cookieMaxAge,
+      };
       res.cookie("token", token, cookieOpts).json({
         message: userMessages.loginSuccessful,
         response: user,
@@ -197,3 +202,44 @@ export const logout = routeHandler((_req: TypedRequest, res: TypedResponse) => {
   res.clearCookie("token");
   res.json({ message: "Logged Out." });
 });
+
+/**
+ * @description Delete user account and all associated data
+ * @method DELETE /api/user/delete-account
+ * @access protected
+ */
+export const deleteAccount = routeHandler(
+  async (req: TypedRequest<{}, { pin: string }>, res: TypedResponse) => {
+    const { userId } = req;
+    const { pin } = req.body;
+
+    console.log(req.body);
+
+    // Get user data to validate pin
+    const user: IUser | null = await User.findById(userId);
+
+    // Validate pin similar to login
+    const isValidPin = await compare(
+      (user?.email ?? "") + parseInt(pin),
+      user?.pin ?? ""
+    );
+    if (!isValidPin) {
+      res.status(StatusCodes.FORBIDDEN);
+      throw new Error("Invalid credentials. Account deletion denied.");
+    }
+
+    // TODO: Delete all user-related data in parallel
+    // await Promise.all([
+    //   Budget.deleteMany({ user: new Types.ObjectId(userId) }),
+    //   Expense.deleteMany({ user: new Types.ObjectId(userId) }),
+    //   ExpensePlan.deleteMany({ user: new Types.ObjectId(userId) }),
+    //   User.findByIdAndDelete(userId),
+    // ]);
+
+    // Clear the authentication cookie, logs the user out.
+    res.clearCookie("token");
+    res.status(StatusCodes.OK).json({
+      message: "Account and all associated data deleted successfully.",
+    });
+  }
+);
