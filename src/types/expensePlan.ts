@@ -6,6 +6,11 @@ export type IExpensePlan = {
   description: string;
   user: Types.ObjectId;
   open: Boolean;
+  /** Optional execution range to scope the plan (inclusive). */
+  executionRange?: {
+    from?: Date; // start date of the plan window
+    to?: Date; // end date of the plan window
+  };
   createdAt?: string;
   updatedAt?: string;
   lastAction:

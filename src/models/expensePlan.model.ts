@@ -28,6 +28,10 @@ const expensePlanSchema = new Schema<IExpensePlan>(
       type: String,
       default: "Created",
     },
+    executionRange: {
+      from: { type: Date, required: false },
+      to: { type: Date, required: false },
+    },
   },
   { timestamps: true }
 );
