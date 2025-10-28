@@ -19,6 +19,12 @@
       "icon": "IconHeadphones"
     },
     {
+      "label": "Other",
+      "color": "yellow",
+      "group": "Entertainment",
+      "icon": "IconCategory"
+    },
+    {
       "label": "Sports",
       "color": "yellow",
       "group": "Entertainment",
@@ -31,9 +37,27 @@
       "icon": "IconTicket"
     },
     {
+      "label": "Bills & EMIs",
+      "color": "orange",
+      "group": "Finance",
+      "icon": "IconReceipt2"
+    },
+    {
+      "label": "Insurance",
+      "color": "orange",
+      "group": "Finance",
+      "icon": "IconUserShield"
+    },
+    {
+      "label": "Investments",
+      "color": "orange",
+      "group": "Finance",
+      "icon": "IconCoins"
+    },
+    {
       "label": "Other",
-      "color": "yellow",
-      "group": "Entertainment",
+      "color": "orange",
+      "group": "Finance",
       "icon": "IconCategory"
     },
     {
@@ -41,6 +65,12 @@
       "color": "green",
       "group": "Food & Drinks",
       "icon": "IconToolsKitchen2"
+    },
+    {
+      "label": "Fruits & Vegetables",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconCherry"
     },
     {
       "label": "Groceries",
@@ -55,16 +85,46 @@
       "icon": "IconGlassFull"
     },
     {
+      "label": "Other",
+      "color": "green",
+      "group": "Food & Drinks",
+      "icon": "IconCategory"
+    },
+    {
       "label": "Snacks",
       "color": "green",
       "group": "Food & Drinks",
       "icon": "IconCookie"
     },
     {
-      "label": "Other",
-      "color": "green",
-      "group": "Food & Drinks",
-      "icon": "IconCategory"
+      "label": "Connections",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconRouter"
+    },
+    {
+      "label": "Electricity",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconHomeBolt"
+    },
+    {
+      "label": "Furniture",
+      "group": "House & Utilities",
+      "color": "grape",
+      "icon": "IconArmchair2"
+    },
+    {
+      "label": "Heat & Gas",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconFlame"
+    },
+    {
+      "label": "Househelp",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconHomeHand"
     },
     {
       "label": "Household Supplies",
@@ -79,28 +139,16 @@
       "icon": "IconHomeCog"
     },
     {
+      "label": "Other",
+      "color": "grape",
+      "group": "House & Utilities",
+      "icon": "IconCategory"
+    },
+    {
       "label": "Rent or Mortgage",
       "color": "grape",
       "group": "House & Utilities",
       "icon": "IconHomeDollar"
-    },
-    {
-      "label": "Electricity",
-      "color": "grape",
-      "group": "House & Utilities",
-      "icon": "IconHomeBolt"
-    },
-    {
-      "label": "Heat & Gas",
-      "color": "grape",
-      "group": "House & Utilities",
-      "icon": "IconFlame"
-    },
-    {
-      "label": "TV, Phone & Internet",
-      "color": "grape",
-      "group": "House & Utilities",
-      "icon": "IconRouter"
     },
     {
       "label": "Trash",
@@ -109,46 +157,10 @@
       "icon": "IconTrash"
     },
     {
-      "label": "Household Aid",
-      "color": "grape",
-      "group": "House & Utilities",
-      "icon": "IconHomeHand"
-    },
-    {
-      "label": "Other",
-      "color": "grape",
-      "group": "House & Utilities",
-      "icon": "IconCategory"
-    },
-    {
       "label": "Water",
       "color": "grape",
       "group": "House & Utilities",
       "icon": "IconDroplet"
-    },
-    {
-      "label": "General",
-      "color": "gray",
-      "group": "Uncategorized",
-      "icon": "IconApps"
-    },
-    {
-      "label": "Other",
-      "color": "red",
-      "group": "Lifestyle",
-      "icon": "IconCategory"
-    },
-    {
-      "label": "Shopping",
-      "color": "red",
-      "group": "Lifestyle",
-      "icon": "IconTags"
-    },
-    {
-      "label": "Gifts",
-      "color": "red",
-      "group": "Lifestyle",
-      "icon": "IconGift"
     },
     {
       "label": "Education",
@@ -157,70 +169,10 @@
       "icon": "IconBook"
     },
     {
-      "label": "Investments",
-      "color": "orange",
-      "group": "Finance",
-      "icon": "IconCoins"
-    },
-    {
-      "label": "Insurance",
-      "color": "orange",
-      "group": "Finance",
-      "icon": "IconUserShield"
-    },
-    {
-      "label": "Pets",
+      "label": "Gifts",
       "color": "red",
       "group": "Lifestyle",
-      "icon": "IconPaw"
-    },
-    {
-      "label": "Personal",
-      "color": "red",
-      "group": "Lifestyle",
-      "icon": "IconUserStar"
-    },
-    {
-      "label": "Medical",
-      "color": "red",
-      "group": "Lifestyle",
-      "icon": "IconHeartbeat"
-    },
-    {
-      "label": "Other",
-      "color": "cyan",
-      "group": "Travel/Transportation",
-      "icon": "IconCategory"
-    },
-    {
-      "label": "Public Transport",
-      "color": "cyan",
-      "group": "Travel/Transportation",
-      "icon": "IconTrain"
-    },
-    {
-      "label": "Fuel",
-      "color": "cyan",
-      "group": "Travel/Transportation",
-      "icon": "IconGasStation"
-    },
-    {
-      "label": "Hotel",
-      "color": "cyan",
-      "group": "Travel/Transportation",
-      "icon": "IconHotelService"
-    },
-    {
-      "label": "Parking",
-      "color": "cyan",
-      "group": "Travel/Transportation",
-      "icon": "IconParking"
-    },
-    {
-      "label": "Fruits & Vegetables",
-      "color": "green",
-      "group": "Food & Drinks",
-      "icon": "IconCherry"
+      "icon": "IconGift"
     },
     {
       "label": "Grooming & Hygiene",
@@ -229,22 +181,70 @@
       "icon": "IconScissors"
     },
     {
-      "label": "Furniture",
-      "group": "House & Utilities",
-      "color": "grape",
-      "icon": "IconArmchair2"
-    },
-    {
-      "label": "Bills & EMIs",
-      "color": "orange",
-      "group": "Finance",
-      "icon": "IconReceipt2"
+      "label": "Healthcare",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconHeartbeat"
     },
     {
       "label": "Other",
-      "color": "orange",
-      "group": "Finance",
+      "color": "red",
+      "group": "Lifestyle",
       "icon": "IconCategory"
+    },
+    {
+      "label": "Personal",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconUserStar"
+    },
+    {
+      "label": "Pets",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconPaw"
+    },
+    {
+      "label": "Shopping",
+      "color": "red",
+      "group": "Lifestyle",
+      "icon": "IconTags"
+    },
+    {
+      "label": "Fuel",
+      "color": "cyan",
+      "group": "Travel",
+      "icon": "IconGasStation"
+    },
+    {
+      "label": "Hotel",
+      "color": "cyan",
+      "group": "Travel",
+      "icon": "IconHotelService"
+    },
+    {
+      "label": "Other",
+      "color": "cyan",
+      "group": "Travel",
+      "icon": "IconCategory"
+    },
+    {
+      "label": "Parking",
+      "color": "cyan",
+      "group": "Travel",
+      "icon": "IconParking"
+    },
+    {
+      "label": "Public Transport",
+      "color": "cyan",
+      "group": "Travel",
+      "icon": "IconTrain"
+    },
+    {
+      "label": "General",
+      "color": "gray",
+      "group": "Uncategorized",
+      "icon": "IconApps"
     }
   ]
 }
