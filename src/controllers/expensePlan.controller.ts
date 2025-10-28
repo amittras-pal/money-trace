@@ -45,9 +45,8 @@ export const getExpensePlans = routeHandler(
   ) => {
     const planFilter: FilterQuery<IExpensePlan> = {
       user: new Types.ObjectId(req.userId),
+      open: req.query.open === "true",
     };
-
-    if (req.query.open === "true") planFilter.open = true;
 
     const plans: IExpensePlan[] | null = await ExpensePlan.find(
       planFilter
