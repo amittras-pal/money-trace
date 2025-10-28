@@ -51,7 +51,7 @@ export const getExpensePlans = routeHandler(
 
     const plans: IExpensePlan[] | null = await ExpensePlan.find(
       planFilter
-    ).sort({ updatedAt: -1 });
+    ).sort({ "executionRange.from": -1, updatedAt: -1, });
 
     res.json({
       message: expensePlanMessages.plansRetrieved,
