@@ -16,11 +16,12 @@ import { TypedRequest, TypedResponse } from "../types/requests";
 export const createExpensePlan = routeHandler(
   async (req: TypedRequest<{}, Partial<IExpensePlan>>, res: TypedResponse) => {
     const userId = req.userId;
-    const { name, description } = req.body;
+    const { name, description, executionRange } = req.body;
     const created = await ExpensePlan.create({
       user: userId,
       name,
       description,
+      ...(executionRange?.from || executionRange?.to ? { executionRange } : {}),
     });
     if (created) {
       res.status(StatusCodes.OK).json({
@@ -98,7 +99,13 @@ export const updatePlan = routeHandler(
     const update: IExpensePlan | null = await ExpensePlan.findByIdAndUpdate(
       req.body._id,
       {
-        $set: { ...req.body, lastAction: req.body.open ? "Updated" : "Closed" },
+        $set: {
+          ...req.body,
+          ...(req.body.executionRange
+            ? { executionRange: req.body.executionRange }
+            : {}),
+          lastAction: req.body.open ? "Updated" : "Closed",
+        },
       },
       { new: true }
     );
