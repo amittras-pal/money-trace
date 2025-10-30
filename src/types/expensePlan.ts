@@ -1,11 +1,12 @@
 import { Types } from "mongoose";
+import { IExpense } from "./expense";
 
 export type IExpensePlan = {
   _id?: Types.ObjectId;
   name: string;
   description: string;
   user: Types.ObjectId;
-  open: Boolean;
+  open: boolean;
   /** Optional execution range to scope the plan (inclusive). */
   executionRange?: {
     from?: Date; // start date of the plan window
@@ -21,3 +22,9 @@ export type IExpensePlan = {
     | "Expense Removed"
     | "Closed";
 };
+
+export type IExpensePlanAggregate = (IExpensePlan & {
+  totalExpense?: number;
+  firstExpense?: IExpense;
+  lastExpense?: IExpense;
+})[];
