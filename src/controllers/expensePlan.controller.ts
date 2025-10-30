@@ -1,11 +1,11 @@
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import omit from "lodash/omit";
-import { FilterQuery, Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 import { expensePlanMessages } from "../constants/apimessages";
 import Expense from "../models/expense.model";
 import ExpensePlan from "../models/expensePlan.model";
-import { IExpensePlan } from "../types/expensePlan";
+import { IExpensePlan, IExpensePlanAggregate } from "../types/expensePlan";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
 /**
@@ -42,16 +42,58 @@ export const createExpensePlan = routeHandler(
 export const getExpensePlans = routeHandler(
   async (
     req: TypedRequest<{ open: string }>,
-    res: TypedResponse<IExpensePlan[]>
+    res: TypedResponse<IExpensePlanAggregate>
   ) => {
-    const planFilter: FilterQuery<IExpensePlan> = {
-      user: new Types.ObjectId(req.userId),
-      open: req.query.open === "true",
-    };
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          user: new Types.ObjectId(req.userId),
+          open: req.query.open === "true",
+        },
+      },
+      // Lookup expenses with pipeline to derive total, first, last efficiently
+      {
+        $lookup: {
+          from: "expenses",
+          let: { planId: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$plan", "$$planId"] } } },
+            { $sort: { date: 1, _id: 1 } },
+            {
+              $group: {
+                _id: null,
+                totalExpense: { $sum: { $ifNull: ["$amount", 0] } },
+                firstExpense: { $first: "$$ROOT" },
+                lastExpense: { $last: "$$ROOT" },
+              },
+            },
+          ],
+          as: "_expenseStats",
+        },
+      },
+      {
+        $addFields: {
+          totalExpense: {
+            $ifNull: [{ $first: "$_expenseStats.totalExpense" }, 0],
+          },
+          firstExpense: { $first: "$_expenseStats.firstExpense" },
+          lastExpense: { $first: "$_expenseStats.lastExpense" },
+        },
+      },
+      { $project: { _expenseStats: 0 } },
+      // Sort fallback prior to final sort push
+      { $sort: { updatedAt: -1 } },
+    ];
 
-    const plans: IExpensePlan[] | null = await ExpensePlan.find(
-      planFilter
-    ).sort({ "executionRange.from": -1, updatedAt: -1, });
+    // If we need to prioritize executionRange.from (including handling null), we can add a computed field
+    // but Mongoose type for $sort with dotted path is causing issue; workaround: push another $sort stage using raw any cast.
+    (pipeline as any[]).push({
+      $sort: { "executionRange.from": -1, updatedAt: -1 },
+    });
+
+    const plans = (await ExpensePlan.aggregate(
+      pipeline as any
+    )) as IExpensePlan[];
 
     res.json({
       message: expensePlanMessages.plansRetrieved,
