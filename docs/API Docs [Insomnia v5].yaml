@@ -873,7 +873,7 @@ collection:
             provided.
 
             - `plan`: String ID of a plan to get summary for. The other 2 params
-            are nit required if this is provided. 
+            are nit required if this is provided.
           sortKey: -1725118087775.5
         method: GET
         parameters:
@@ -885,7 +885,8 @@ collection:
             description: "{% now 'iso-8601', '' %}"
           - name: plan
             value: ""
-            description: String ID of plan to get summary of expenses in a plan. Other 2
+            description:
+              String ID of plan to get summary of expenses in a plan. Other 2
               params are not needed if this is provided.
         headers:
           - name: User-Agent
@@ -1166,7 +1167,7 @@ collection:
           description: |-
             ### Description
 
-            - Retrieve a list of categories from the DB. 
+            - Retrieve a list of categories from the DB.
           sortKey: -1725166894542
         method: GET
         headers:
@@ -1190,7 +1191,7 @@ collection:
           description: |-
             ### Description
 
-            - Retrieve a list of categories from the DB. 
+            - Retrieve a list of categories from the DB.
           sortKey: -1725166797140.5
         method: GET
         headers:
@@ -1390,7 +1391,7 @@ cookieJar:
   cookies:
     - id: 0b74c759-0d8f-4eaa-9518-bef52d5d11c0
       key: token
-      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MjEwNDZmY2VkZjRmOTUzZTE1ZGRjYSIsImlhdCI6MTc3MDQzNzY4NiwiZXhwIjoxNzcxMzAxNjg2fQ.ABi-byoFoFUOWuAMLs5yabvhP2RgL6CfwoBhhv4cRho
+      value: ""
       domain: localhost
       path: /
       secure: true
