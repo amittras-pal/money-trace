@@ -1,0 +1,1408 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1769165666097
+  modified: 1769165666097
+  description: ""
+collection:
+  - url: "{{ _.baseUrl }}/wake"
+    name: Ping Server to Wake
+    meta:
+      id: req_cf4a922fafee43578db789ea183fb9ec
+      created: 1751629431236
+      modified: 1751631616907
+      isPrivate: false
+      description: >-
+        Wake up the server from an inactive state. 
+
+
+        Required for deployments to ephemeral hosting providers like
+        `render.com`
+      sortKey: -1751629431236
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - name: Statistics
+    meta:
+      id: fld_1c5f14b4d5084f20b0af3e642bc3acea
+      created: 1725109203461
+      modified: 1730349002123
+      sortKey: -1725109203461
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/statistics/year-stats"
+        name: Categories Over Year
+        meta:
+          id: req_303e29618cdf4f81b97da55df1c45484
+          created: 1721135548825
+          modified: 1755240005561
+          isPrivate: false
+          description: ""
+          sortKey: -1725109207478
+        method: GET
+        parameters:
+          - name: year
+            value: "2023"
+            description: ""
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/statistics/month-stats"
+        name: Expense Count/Amount by day.
+        meta:
+          id: req_1057c0e3a9724a9c8f3c81db8a0f9070
+          created: 1730731278514
+          modified: 1755240515574
+          isPrivate: false
+          description: ""
+          sortKey: -1730731278514
+        method: GET
+        parameters:
+          - name: year
+            value: ""
+            description: ""
+          - name: month
+            value: ""
+            description: ""
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: User & Auth
+    meta:
+      id: fld_67ff71c9883849ee812856077f7a1673
+      created: 1725109380417
+      modified: 1725116418687
+      sortKey: -1725109380417
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/user/login"
+        name: Login
+        meta:
+          id: req_d2fadd912d1340fa9e1757bcb599e354
+          created: 1725109174423
+          modified: 1770437684590
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Login a registered user.
+
+            ### Request Body
+
+            ```
+            {
+              "email": "",
+              "pin": ""
+            }
+            ```
+          sortKey: -1725109386202
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "",
+              "pin": ""
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/user/register"
+        name: Register
+        meta:
+          id: req_014eb0675ff34847be3e2a7269d49a6e
+          created: 1725116301413
+          modified: 1755240435138
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Create a new user in the database.
+
+            ### Request Body
+
+            Additional details are set automatically by the BE.
+
+            ```
+            {
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": ""
+            }
+            ```
+          sortKey: -1725116301413
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": ""
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/user/details"
+        name: User Details (not used by FE)
+        meta:
+          id: req_56b3567597a1444e8f25a229e9765533
+          created: 1725116425481
+          modified: 1755239981397
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Retrieve the details of a logged in user.
+          sortKey: -1725116425481
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/user/update"
+        name: Update User Details
+        meta:
+          id: req_e59ae96616724895a99d216745f25c03
+          created: 1725116521944
+          modified: 1755239976896
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Change the details of a logged in user. 
+            - Any field can be modified for the user. 
+            - User needs to be logged in to make this request.
+
+            ### Request Body
+
+            ```
+            {
+              "_id": "", // Not necessary. 
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": "",
+              "editWindow": 0,
+              "color": "",
+              "seenChangelog": false
+            }
+            ```
+          sortKey: -1725116521944
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "_id": "",
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": "",
+              "editWindow": 0,
+              "color": "",
+              "seenChangelog": false
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/user/update-login-key"
+        name: Change Password
+        meta:
+          id: req_226a26f800d34a8f8b84e1399a9f60f8
+          created: 1725116692381
+          modified: 1755239971938
+          isPrivate: false
+          description: >
+            ### Description
+
+
+            Change the password of a logged in user. User needs to be logged in
+            to make this request.
+
+
+            ### Request Body
+
+
+            ```
+
+            {
+              "email": "",
+              "currentPin": "",
+              "newPin": "",
+              "confirmNewPin": ""
+            }
+
+            ```
+          sortKey: -1725116692382
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "",
+              "currentPin": "",
+              "newPin": "",
+              "confirmNewPin": ""
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/user/logout"
+        name: Logout
+        meta:
+          id: req_c3536576657c4ceaaa7ba1b3890b31ce
+          created: 1755240123135
+          modified: 1755240469489
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Logout a logged in user.
+          sortKey: -1725109296840
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Report Generation
+    meta:
+      id: fld_504af5dacc2b4ed98eb588d0e37dc2bf
+      created: 1725116889355
+      modified: 1725116889355
+      sortKey: -1725116889355
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/reports"
+        name: Generate Report [xlsx]
+        meta:
+          id: req_d890c8e935b04b39bdcf5ec64975a7bd
+          created: 1725116940370
+          modified: 1755239964936
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Download an excel format of expenses in a given date range.
+            Expenses are organized into sheets per month.
+
+
+            ### Request Query Parameters
+
+
+            - `startDate`: ISO-8601 formatted timestamp
+
+            - `endDate`: ISO-8601 formatted timestamp
+
+            - `includeList`: Boolean; whether to include list of expenses or
+            only the summary.
+          sortKey: -1725116940370
+        method: GET
+        parameters:
+          - name: startDate
+            value: ""
+            description: "{% now 'iso-8601', '' %}"
+          - name: endDate
+            value: ""
+            description: "{% now 'iso-8601', '' %}"
+          - name: inclideList
+            value: "false"
+            description: Boolean to include list in the report
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Expense Plans
+    meta:
+      id: fld_623265e76be04cdea35f437a24674903
+      created: 1725117138140
+      modified: 1725117138140
+      sortKey: -1725117138140
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/expense-plan"
+        name: Create New Plan
+        meta:
+          id: req_51cf44e5a3b1489ea037b7a60f0cd69a
+          created: 1725117147748
+          modified: 1755239936518
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Create a new Expense Plan
+
+            ### Request Body
+
+            ```
+            {
+              "name": "",
+              "description": ""
+            }
+            ```
+          sortKey: -1725117777654
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "name": "",
+              "description": ""
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expense-plan"
+        name: List Plans
+        meta:
+          id: req_61a23721c7ed4a7ebf71186a060ae8cb
+          created: 1725117241233
+          modified: 1755239959799
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Retrieve a list of plans
+
+
+            ### Request Query Parameters
+
+
+            - `open`: Boolean; indicate whether to only retrieve the open plans
+            or all plans
+          sortKey: -1725117241233
+        method: GET
+        parameters:
+          - name: open
+            value: "false"
+            description: ""
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/api/expense-plan/details"
+        name: Get Plan Details
+        meta:
+          id: req_9743bdaf98654330983d51d660a22c8c
+          created: 1725117305571
+          modified: 1755239954739
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Get the expense plan details
+
+            ### Request Query Parameters
+
+            - `_id`: String ID of the plan.
+          sortKey: -1725117305571
+        method: GET
+        parameters:
+          - name: _id
+            value: ""
+            description: String ID of the plan
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expense-plan"
+        name: Update Plan Details
+        meta:
+          id: req_5f4691d1abfe4828bc8ead4ebb408ef0
+          created: 1725117555496
+          modified: 1755239949408
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Update the details of an expense plan
+
+
+            ### Request Body
+
+
+            ```
+
+            {
+              "_id": "",
+              "name": "",
+              "description": "",
+              "open": false // if set to false, the plan will be closed and no other expenses can be added to it.
+            }
+
+            ```
+          sortKey: -1725117555496
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "_id": "",
+              "name": "",
+              "description": "",
+              "open": false
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expense-plan"
+        name: Delete Plan
+        meta:
+          id: req_9d4b1059242a40e7894582b64a86bea2
+          created: 1725117671101
+          modified: 1755239944790
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Delete an expense plan.
+
+            ### Request Query Parameters
+
+            - `_id`: String ID of the expense plan to delete.
+          sortKey: -1725117671101
+        method: DELETE
+        parameters:
+          - name: _id
+            value: ""
+            description: "String ID of the plan to delete. "
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expense-plan/copy-to-budget"
+        name: Copy Expenses to Budget
+        meta:
+          id: req_154474326aa34cb7a9f68ce97f38e80d
+          created: 1725117777554
+          modified: 1755239940532
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Copy selected expenses from an expense plan into the regular
+            budget. 
+
+
+            ### Request Body
+
+
+            ```
+
+            {
+              "expenses": [""] // list of string IDs for expenses to be copied.
+            }
+
+            ```
+          sortKey: -1725117777554
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "expenses": [""]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expense-plan/list-lite"
+        name: List Plans (Lite)
+        meta:
+          id: req_218b9d1053994270907fb1e4fb78db88
+          created: 1770437706557
+          modified: 1770440091704
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Retrieve a lightweight list of plans (open/close), for simple list
+            display / selection dropdowns.
+
+
+            ### Request Query Parameters
+
+
+            - `open`: boolean. Select currently open / closed plans.
+          sortKey: -1770437706557
+        method: GET
+        parameters:
+          - name: open
+            value: "false"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Expenses
+    meta:
+      id: fld_98682f74cbca49c4a9efa8418ef419e8
+      created: 1725117933123
+      modified: 1725117933123
+      sortKey: -1725117933123
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/expenses"
+        name: Create New Expense
+        meta:
+          id: req_c56e323a3868493fb9c2c729e892f54c
+          created: 1725117939765
+          modified: 1755239926109
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Create a new expense in the DB.
+
+
+            ### Request Body
+
+
+            ```
+
+            {
+              "title": "",
+              "description": "",
+              "date": "", // ISO-8601 formatted timestamp
+              "categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
+              "plan": null, // String ID of plan if expense is added to a plan
+              "amount": 0,
+              "reverted": false, // not used as of now.
+              "linked": false // system managed field if expense is copied from an expense plan to regular budget.
+            }
+
+            ```
+          sortKey: -1725117939765
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "title": "",
+              "description": "",
+              "date": "",
+              "categoryId": "",
+              "plan": null,
+              "amount": 0,
+              "reverted": false,
+              "linked": false
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expenses"
+        name: Update Expense
+        meta:
+          id: req_14a0ce4f419d4f3bb35dd6f71c9fb6c5
+          created: 1725118185497
+          modified: 1755239930394
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Update an existing expense in the DB.
+
+
+            ### Request Body
+
+
+            ```
+
+            {
+                "_id": "", // string ID of the expense to update.
+              "title": "",
+              "description": "",
+              "date": "", // ISO-8601 formatted timestamp
+              "categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
+              "plan": null, // String ID of plan if expense is added to a plan
+              "amount": 0,
+              "reverted": false, // not used as of now.
+              "linked": false // system managed field if expense is copied from an expense plan to regular budget.
+            }
+
+            ```
+          sortKey: -1725117858709.5
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "_id": "",
+              "title": "",
+              "description": "",
+              "date": "",
+              "categoryId": "",
+              "plan": null,
+              "amount": 0,
+              "reverted": false,
+              "linked": false
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expenses"
+        name: Delete Expense
+        meta:
+          id: req_43d77e7ddbe340f3a88d41c891720108
+          created: 1725118235786
+          modified: 1755239907491
+          isPrivate: false
+          description: |-
+            ### Description:
+
+            Deletes an already present expense 
+
+            ### Request Query Params: 
+
+            `id`: The string ID of the expense to delete.
+          sortKey: -1725118235786
+        method: DELETE
+        parameters:
+          - name: id
+            value: ""
+            description: String ID of the expense to delete.
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expenses/summary"
+        name: Summary of Expenses
+        meta:
+          id: req_1dd0669ab1eb49d6b1d4e59f5abb7988
+          created: 1725118308041
+          modified: 1755239912027
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Get a summary of expenses across a date range or for a plan
+
+
+            ### Request Query Parameters
+
+
+            - `firstDay`: ISO-8601 formatted timestamp. NOT Required if `plan`
+            is provided.
+
+            - `lastDay`: ISO-8601 formatted timestamp. NOT Required if `plan` is
+            provided.
+
+            - `plan`: String ID of a plan to get summary for. The other 2 params
+            are nit required if this is provided.
+          sortKey: -1725118087775.5
+        method: GET
+        parameters:
+          - name: firstDay
+            value: ""
+            description: "{% now 'iso-8601', '' %}"
+          - name: lastDay
+            value: ""
+            description: "{% now 'iso-8601', '' %}"
+          - name: plan
+            value: ""
+            description:
+              String ID of plan to get summary of expenses in a plan. Other 2
+              params are not needed if this is provided.
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expenses"
+        name: List Expenses
+        meta:
+          id: req_cae6ba43ed934011a912091bad2268d2
+          created: 1725118451021
+          modified: 1755239916809
+          isPrivate: false
+          description: >-
+            ### Description:
+
+            - Get a list of expenses
+
+
+            ### Request Body:
+
+
+            ```
+
+            {
+              "startDate": "", // ISO-8601 formatted timestamp
+              "endDate": "", // ISO-8601 formatted timestamp
+              "plan": null, // String ID of the plan to list expenses of. startDate and endDate not required if this is provided.
+              "sort": { // can be any field of the expense object 
+                "date": -1 // +1 = 'Ascending'; -1 = 'Descending'
+              }
+            }
+
+            ```
+          sortKey: -1725118013770.25
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "startDate": "",
+              "endDate": "",
+              "plan": null,
+              "sort": {
+                "date": -1
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/expenses/search"
+        name: Search Expenses
+        meta:
+          id: req_f5cc39e451414e56b6ef1daab57b51ac
+          created: 1725118612023
+          modified: 1755239922038
+          isPrivate: false
+          description: >-
+            ### Description:
+
+            - Search expenses with text match / category / date range.
+
+            - At least one of `q` / combination of `startDate + endDate` /
+            `categories` must be provided.
+
+
+            ### Request Body:
+
+
+            ```
+
+            {
+              "q": "", // query string to match words.
+              "startDate": "", // ISO-8601 formatted timestamp
+              "endDate": "", // ISO-8601 formatted timestamp
+              "categories": [""], // list of category IDs to match against
+              "sort": { // can be any field of the expense object 
+                "date": -1 // +1 = "Ascending"; -1 = "Descending"
+              }
+            }
+
+            ```
+          sortKey: -1725117976767.625
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "q": "roots",
+              "startDate": "",
+              "endDate": "",
+              "plan": null,
+              "categories": [],
+              "sort": {
+                "date": -1
+              }
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: System Info
+    meta:
+      id: fld_737c27e84542403fbd89a3c00ad95018
+      created: 1725166492593
+      modified: 1751555652631
+      sortKey: -1725166492594
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/sys-info/new-release"
+        name: Notify Users on New Release
+        meta:
+          id: req_2e9ac28ed8a546e38b5117913705e6ab
+          created: 1719560968574
+          modified: 1755240604978
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Update the `seenChangelog` field of all users to `false` if it is
+            `true`. 
+
+            - Requires admin priviledge via a system password provided in the
+            header. 
+
+            - Password is compared against a hashed environment variable set in
+            the server. 
+
+
+            ### Request Headers
+
+
+            - `x-sys-gate`: Admin Password for allowing bulk user modification.
+          sortKey: -1725166699739
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+          - name: x-sys-gate
+            value: ""
+            description: The password to allow modification.
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/sys-info/changelog"
+        name: Version History
+        meta:
+          id: req_55490f2429fb48bbb4a2713d76678190
+          created: 1725166699639
+          modified: 1751629366255
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Public API to get the version history of all releases created in
+            the github repository. 
+
+            - System communicates to the GitHub API via their GraphQL service.
+          sortKey: -1725166699639
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/sys-info/changelog"
+        name: Contributor Info
+        meta:
+          id: req_3115e1ebd2fe4ccb8aee5f35f4c89566
+          created: 1725166837379
+          modified: 1751631932683
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Public API to get the contributor profile details from github. 
+            - System communicates to the GitHub API via their GraphQL service.
+          sortKey: -1725142467712.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/sys-info/backup"
+        name: Clone Data to "dev" DB
+        meta:
+          id: req_3c391acbee6d4c8aa328ae89599d72fa
+          created: 1751555814187
+          modified: 1755240378020
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Copy data from the `prod` database to `dev` database.
+            - Config as per the setup of mongo db instance. 
+
+            Requires admin password provided in the header. 
+
+            ### Request Headers
+
+            - `x-sys-gate`: Admin Password for allowing bulk user modification.
+          sortKey: -1725166699689
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+          - name: x-sys-gate
+            value: ""
+            description: The password to allow modification.
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Categories
+    meta:
+      id: fld_85cfe351b1ca42fb9528cb7b1217536b
+      created: 1725166877569
+      modified: 1725166877569
+      sortKey: -1725166877569
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/categories/get-all"
+        name: List Categories
+        meta:
+          id: req_ca96866913524f539beff3d4e41a7b64
+          created: 1725166894542
+          modified: 1755239885468
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Retrieve a list of categories from the DB.
+          sortKey: -1725166894542
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/categories/get-groups"
+        name: List Category Groups
+        meta:
+          id: req_2b875a2016944be7b1f9c8928234be42
+          created: 1752380135821
+          modified: 1755239889753
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Retrieve a list of categories from the DB.
+          sortKey: -1725166797140.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Budget
+    meta:
+      id: fld_bd7178a0a016402d822baf1d04df412d
+      created: 1725166970902
+      modified: 1725166970902
+      sortKey: -1725166970902
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/budget"
+        name: Create Budget
+        meta:
+          id: req_96648d6b711c4af48940fc52e9aaba50
+          created: 1725166974925
+          modified: 1755239854148
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Create a new budget for the logged in user.
+
+            ### Request Body
+
+            ```
+            {
+              "month": 0, // 0-11 corresponding to Jan-Dec
+              "year": 0, // current year
+              "amount": 0,
+            }
+            ```
+          sortKey: -1725166974925
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "month": 0,
+                "year": 0,
+                "amount": 0
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/budget"
+        name: Get Budget
+        meta:
+          id: req_2fda55efbc314c57976f87f429beb133
+          created: 1725167323294
+          modified: 1755239858747
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Retrieve the bidget for a given month and year combo
+
+            ### Request Query Parameters
+
+            - `month`: 0-11 corressponding to Jan-Dec.
+            - `year`: Current year
+          sortKey: -1725166934733.5
+        method: GET
+        parameters:
+          - name: month
+            value: "8"
+            description: ""
+          - name: year
+            value: "2024"
+            description: ""
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Export
+    meta:
+      id: fld_cf7a8d8835064b579e6f58ab070c45cf
+      created: 1737525158539
+      modified: 1737525158539
+      sortKey: -1737525158539
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/export/plan"
+        name: Export Plan Details
+        meta:
+          id: req_e375d84cdea741d9b8faeda03dd2473b
+          created: 1737525163671
+          modified: 1755239842365
+          isPrivate: false
+          description: |-
+            ### Description
+
+            - Export expensescreated in a plan as a Microsoft Excel Document
+
+            ### Request Query Parameters
+
+            - `plan`: ID of the plan to export.
+          sortKey: -1737525163671
+        method: GET
+        parameters:
+          - name: plan
+            value: ""
+            description: ""
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/export/range"
+        name: Export Expenses Range
+        meta:
+          id: req_4946e19da5c44ba2b7432dc69c66a871
+          created: 1737531664013
+          modified: 1755239849572
+          isPrivate: false
+          description: >-
+            ### Description
+
+
+            - Export expenses within a selected date range as a Microsoft Excel
+            Document.
+
+
+            ### Request Query Parameters
+
+
+            - `startDate`: ISO-8601 formatted timestamp from when to retrieve
+            expenses.
+
+            - `endDate`: ISO-8601 formatted timestamp till when to retrieve
+            expenses.
+
+            - `includeList`: If provided `false`; only a summary of the expenses
+            will be exported broken down to subcategory.
+          sortKey: -1734128221092.5
+        method: GET
+        parameters:
+          - name: startDate
+            value: ""
+            description: ""
+          - name: endDate
+            value: ""
+            description: ""
+          - name: includeList
+            value: "false"
+            description: ""
+        headers:
+          - name: User-Agent
+            value: insomnia/2023.5.8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1769165679160
+    modified: 1770437686387
+  cookies:
+    - id: 0b74c759-0d8f-4eaa-9518-bef52d5d11c0
+      key: token
+      value: ""
+      domain: localhost
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1769165679160
+    modified: 1770437676555
+    isPrivate: false
+  data:
+    baseUrl: http://localhost:6400/api
