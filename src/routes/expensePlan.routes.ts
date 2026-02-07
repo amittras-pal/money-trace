@@ -4,6 +4,7 @@ import {
   createExpensePlan,
   deletePlan,
   getExpensePlans,
+  getExpensePlansLite,
   getPlanDetails,
   updatePlan,
 } from "../controllers/expensePlan.controller";
@@ -19,6 +20,7 @@ expensePlanRoutes
   .delete(authenticate, deletePlan);
 
 expensePlanRoutes.get("/details", authenticate, getPlanDetails);
+expensePlanRoutes.get("/list-lite", authenticate, getExpensePlansLite);
 expensePlanRoutes.post("/copy-to-budget", authenticate, copyExpensesToBudget);
 
 export default expensePlanRoutes;

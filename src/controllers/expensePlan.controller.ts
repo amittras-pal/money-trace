@@ -103,6 +103,28 @@ export const getExpensePlans = routeHandler(
 );
 
 /**
+ * @description This method is used to get a lightweight list of expense plans
+ * @method GET /api/expense-plan/list-lite
+ * @access protected
+ */
+export const getExpensePlansLite = routeHandler(
+  async (req: TypedRequest<{ open: string }>, res: TypedResponse) => {
+    const plans = await ExpensePlan.find(
+      {
+        user: new Types.ObjectId(req.userId),
+        open: req.query.open === "true",
+      },
+      { name: 1, _id: 1, executionRange: 1 }
+    ).sort({ "executionRange.from": -1 });
+
+    res.json({
+      message: expensePlanMessages.plansRetrieved,
+      response: plans,
+    });
+  }
+);
+
+/**
  * @description This method is used to get details of a single expense plan
  * @method GET /api/expense-plan/details
  * @access protected
