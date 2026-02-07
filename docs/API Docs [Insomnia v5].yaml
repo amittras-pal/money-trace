@@ -118,8 +118,8 @@ collection:
 
             ```
             {
-            	"email": "",
-            	"pin": ""
+              "email": "",
+              "pin": ""
             }
             ```
           sortKey: -1725109386202
@@ -128,8 +128,8 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"email": "",
-            	"pin": ""
+              "email": "",
+              "pin": ""
             }
         headers:
           - name: Content-Type
@@ -162,10 +162,10 @@ collection:
 
             ```
             {
-            	"userName": "",
-            	"email": "",
-            	"pin": "",
-            	"timeZone": ""
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": ""
             }
             ```
           sortKey: -1725116301413
@@ -174,10 +174,10 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"userName": "",
-            	"email": "",
-            	"pin": "",
-            	"timeZone": ""
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": ""
             }
         headers:
           - name: Content-Type
@@ -234,14 +234,14 @@ collection:
 
             ```
             {
-            	"_id": "", // Not necessary. 
-            	"userName": "",
-            	"email": "",
-            	"pin": "",
-            	"timeZone": "",
-            	"editWindow": 0,
-            	"color": "",
-            	"seenChangelog": false
+              "_id": "", // Not necessary. 
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": "",
+              "editWindow": 0,
+              "color": "",
+              "seenChangelog": false
             }
             ```
           sortKey: -1725116521944
@@ -250,14 +250,14 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"_id": "",
-            	"userName": "",
-            	"email": "",
-            	"pin": "",
-            	"timeZone": "",
-            	"editWindow": 0,
-            	"color": "",
-            	"seenChangelog": false
+              "_id": "",
+              "userName": "",
+              "email": "",
+              "pin": "",
+              "timeZone": "",
+              "editWindow": 0,
+              "color": "",
+              "seenChangelog": false
             }
         headers:
           - name: Content-Type
@@ -293,10 +293,10 @@ collection:
             ```
 
             {
-            	"email": "",
-            	"currentPin": "",
-            	"newPin": "",
-            	"confirmNewPin": ""
+              "email": "",
+              "currentPin": "",
+              "newPin": "",
+              "confirmNewPin": ""
             }
 
             ```
@@ -306,10 +306,10 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"email": "",
-            	"currentPin": "",
-            	"newPin": "",
-            	"confirmNewPin": ""
+              "email": "",
+              "currentPin": "",
+              "newPin": "",
+              "confirmNewPin": ""
             }
         headers:
           - name: Content-Type
@@ -427,8 +427,8 @@ collection:
 
             ```
             {
-            	"name": "",
-            	"description": ""
+              "name": "",
+              "description": ""
             }
             ```
           sortKey: -1725117777654
@@ -437,8 +437,8 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name": "",
-            	"description": ""
+              "name": "",
+              "description": ""
             }
         headers:
           - name: Content-Type
@@ -541,10 +541,10 @@ collection:
             ```
 
             {
-            	"_id": "",
-            	"name": "",
-            	"description": "",
-            	"open": false // if set to false, the plan will be closed and no other expenses can be added to it.
+              "_id": "",
+              "name": "",
+              "description": "",
+              "open": false // if set to false, the plan will be closed and no other expenses can be added to it.
             }
 
             ```
@@ -554,10 +554,10 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"_id": "",
-            	"name": "",
-            	"description": "",
-            	"open": false
+              "_id": "",
+              "name": "",
+              "description": "",
+              "open": false
             }
         headers:
           - name: Content-Type
@@ -625,7 +625,7 @@ collection:
             ```
 
             {
-            	"expenses": [""] // list of string IDs for expenses to be copied.
+              "expenses": [""] // list of string IDs for expenses to be copied.
             }
 
             ```
@@ -635,7 +635,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"expenses": [""]
+              "expenses": [""]
             }
         headers:
           - name: Content-Type
@@ -717,14 +717,14 @@ collection:
             ```
 
             {
-            	"title": "",
-            	"description": "",
-            	"date": "", // ISO-8601 formatted timestamp
-            	"categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
-            	"plan": null, // String ID of plan if expense is added to a plan
-            	"amount": 0,
-            	"reverted": false, // not used as of now.
-            	"linked": false // system managed field if expense is copied from an expense plan to regular budget.
+              "title": "",
+              "description": "",
+              "date": "", // ISO-8601 formatted timestamp
+              "categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
+              "plan": null, // String ID of plan if expense is added to a plan
+              "amount": 0,
+              "reverted": false, // not used as of now.
+              "linked": false // system managed field if expense is copied from an expense plan to regular budget.
             }
 
             ```
@@ -734,14 +734,14 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"title": "",
-            	"description": "",
-            	"date": "",
-            	"categoryId": "",
-            	"plan": null,
-            	"amount": 0,
-            	"reverted": false,
-            	"linked": false
+              "title": "",
+              "description": "",
+              "date": "",
+              "categoryId": "",
+              "plan": null,
+              "amount": 0,
+              "reverted": false,
+              "linked": false
             }
         headers:
           - name: Content-Type
@@ -777,14 +777,14 @@ collection:
 
             {
                 "_id": "", // string ID of the expense to update.
-            	"title": "",
-            	"description": "",
-            	"date": "", // ISO-8601 formatted timestamp
-            	"categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
-            	"plan": null, // String ID of plan if expense is added to a plan
-            	"amount": 0,
-            	"reverted": false, // not used as of now.
-            	"linked": false // system managed field if expense is copied from an expense plan to regular budget.
+              "title": "",
+              "description": "",
+              "date": "", // ISO-8601 formatted timestamp
+              "categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
+              "plan": null, // String ID of plan if expense is added to a plan
+              "amount": 0,
+              "reverted": false, // not used as of now.
+              "linked": false // system managed field if expense is copied from an expense plan to regular budget.
             }
 
             ```
@@ -794,15 +794,15 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"_id": "",
-            	"title": "",
-            	"description": "",
-            	"date": "",
-            	"categoryId": "",
-            	"plan": null,
-            	"amount": 0,
-            	"reverted": false,
-            	"linked": false
+              "_id": "",
+              "title": "",
+              "description": "",
+              "date": "",
+              "categoryId": "",
+              "plan": null,
+              "amount": 0,
+              "reverted": false,
+              "linked": false
             }
         headers:
           - name: Content-Type
@@ -918,12 +918,12 @@ collection:
             ```
 
             {
-            	"startDate": "", // ISO-8601 formatted timestamp
-            	"endDate": "", // ISO-8601 formatted timestamp
-            	"plan": null, // String ID of the plan to list expenses of. startDate and endDate not required if this is provided.
-            	"sort": { // can be any field of the expense object 
-            		"date": -1 // +1 = 'Ascending'; -1 = 'Descending'
-            	}
+              "startDate": "", // ISO-8601 formatted timestamp
+              "endDate": "", // ISO-8601 formatted timestamp
+              "plan": null, // String ID of the plan to list expenses of. startDate and endDate not required if this is provided.
+              "sort": { // can be any field of the expense object 
+                "date": -1 // +1 = 'Ascending'; -1 = 'Descending'
+              }
             }
 
             ```
@@ -933,12 +933,12 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"startDate": "",
-            	"endDate": "",
-            	"plan": null,
-            	"sort": {
-            		"date": -1
-            	}
+              "startDate": "",
+              "endDate": "",
+              "plan": null,
+              "sort": {
+                "date": -1
+              }
             }
         headers:
           - name: Content-Type
@@ -975,13 +975,13 @@ collection:
             ```
 
             {
-            	"q": "", // query string to match words.
-            	"startDate": "", // ISO-8601 formatted timestamp
-            	"endDate": "", // ISO-8601 formatted timestamp
-            	"categories": [""], // list of category IDs to match against
-            	"sort": { // can be any field of the expense object 
-            		"date": -1 // +1 = "Ascending"; -1 = "Descending"
-            	}
+              "q": "", // query string to match words.
+              "startDate": "", // ISO-8601 formatted timestamp
+              "endDate": "", // ISO-8601 formatted timestamp
+              "categories": [""], // list of category IDs to match against
+              "sort": { // can be any field of the expense object 
+                "date": -1 // +1 = "Ascending"; -1 = "Descending"
+              }
             }
 
             ```
@@ -991,14 +991,14 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"q": "roots",
-            	"startDate": "",
-            	"endDate": "",
-            	"plan": null,
-            	"categories": [],
-            	"sort": {
-            		"date": -1
-            	}
+              "q": "roots",
+              "startDate": "",
+              "endDate": "",
+              "plan": null,
+              "categories": [],
+              "sort": {
+                "date": -1
+              }
             }
         headers:
           - name: Content-Type
@@ -1229,9 +1229,9 @@ collection:
 
             ```
             {
-            	"month": 0, // 0-11 corresponding to Jan-Dec
-            	"year": 0, // current year
-            	"amount": 0,
+              "month": 0, // 0-11 corresponding to Jan-Dec
+              "year": 0, // current year
+              "amount": 0,
             }
             ```
           sortKey: -1725166974925
@@ -1320,7 +1320,7 @@ collection:
         method: GET
         parameters:
           - name: plan
-            value: 66c48317dcae0c72a91bb80c
+            value: ""
             description: ""
         headers:
           - name: User-Agent
