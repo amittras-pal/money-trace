@@ -11,7 +11,7 @@ const userSchema = new Schema<IUser>(
     color: { type: "string", required: false, default: "indigo" },
     seenChangelog: { type: "boolean", required: true, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = model<IUser>("User", userSchema);

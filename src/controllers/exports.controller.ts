@@ -47,7 +47,7 @@ export const exportRangeReport = routeHandler(
     // Download and format Data
     const user = await User.findById(req.userId);
     const expenses = await Expense.aggregate(
-      reportExpenseAggregator(req.query, req.userId!)
+      reportExpenseAggregator(req.query, req.userId!),
     );
     const budgets: IExportingBudget[] = (
       await Budget.aggregate(budgetAggregator(req.query, req.userId!))
@@ -175,7 +175,7 @@ export const exportRangeReport = routeHandler(
     res.setHeader("Content-Type", contentTypeXLSX);
     res.setHeader("Content-Disposition", "attachment; filename=report.xlsx");
     book.xlsx.write(res).then(() => res.end());
-  }
+  },
 );
 
 /**
@@ -240,7 +240,7 @@ export const exportPlan = routeHandler(
             [ex.category.group]: { total: ex.amount, color: ex.category.color },
           };
       },
-      {}
+      {},
     );
 
     const book = new Workbook();
@@ -282,7 +282,7 @@ export const exportPlan = routeHandler(
         ...e,
         categoryName: e.category.group,
         subCategoryName: e.category.label,
-      }))
+      })),
     );
     listRows.forEach((row, i) => {
       row.eachCell({ includeEmpty: false }, (cell) => {
@@ -296,8 +296,8 @@ export const exportPlan = routeHandler(
     res.setHeader("Content-Type", contentTypeXLSX);
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=Plan-${planDetails._id}.xlsx`
+      `attachment; filename=Plan-${planDetails._id}.xlsx`,
     );
     book.xlsx.write(res).then(() => res.end());
-  }
+  },
 );

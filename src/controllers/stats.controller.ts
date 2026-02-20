@@ -27,7 +27,7 @@ export const yearStats = routeHandler(
       message: statsMessages.yearStats,
       response: { trend, budgets },
     });
-  }
+  },
 );
 
 /**
@@ -42,5 +42,5 @@ export const monthStats = routeHandler(
     const user: IUser | null = await User.findById(req.userId);
     const data = await Expense.aggregate(monthTrendAggregator(req, user));
     res.json({ message: "Working.", response: data });
-  }
+  },
 );

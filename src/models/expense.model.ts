@@ -17,7 +17,7 @@ const expenseSchema = new Schema<IExpense>(
     reverted: { type: Boolean, required: true, default: false },
     linked: { type: Schema.Types.ObjectId, ref: "Expense", default: null },
   },
-  { timestamps: false }
+  { timestamps: false },
 );
 
 const Expense = model("Expense", expenseSchema);

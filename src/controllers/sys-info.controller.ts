@@ -25,7 +25,7 @@ export const getChangelog = routeHandler(
       headers: { "X-GitHub-Api-Version": "2022-11-28" },
     });
     res.json({ message: appInfoMessages.releaseRetrieved, response: ghRes });
-  }
+  },
 );
 
 /**
@@ -36,7 +36,7 @@ export const getChangelog = routeHandler(
 export const getContributor = routeHandler(
   async (
     req: TypedRequest<{ username: string }>,
-    res: TypedResponse<ContributorInfo>
+    res: TypedResponse<ContributorInfo>,
   ) => {
     const { OCTO_PK, OCTO_APP_ID, OCTO_INST_ID } = getEnv();
     if (!OCTO_PK) throw new Error("Config Error");
@@ -46,13 +46,13 @@ export const getContributor = routeHandler(
 
     const ghRes = await octokit.graphql<ContributorInfo>(
       userQuery(req.query.username),
-      { headers: { "X-GitHub-Api-Version": "2022-11-28" } }
+      { headers: { "X-GitHub-Api-Version": "2022-11-28" } },
     );
     res.json({
       message: appInfoMessages.contributorDetailsRetrieved,
       response: ghRes,
     });
-  }
+  },
 );
 
 /**
@@ -64,12 +64,12 @@ export const updateUsersOnNewRelease = routeHandler(
   async (_req: TypedRequest, res: TypedResponse) => {
     const result = await User.updateMany(
       { seenChangelog: true },
-      { $set: { seenChangelog: false } }
+      { $set: { seenChangelog: false } },
     );
     res.json({
       message: `Changelog Viewership Status of ${result.modifiedCount} user(s) is Updated.`,
     });
-  }
+  },
 );
 
 /**
@@ -99,10 +99,10 @@ export const dataBackup = routeHandler(
     ];
 
     const results = await Promise.all(
-      collections.map((coll) => cloneCollection(p_db, b_db, coll))
+      collections.map((coll) => cloneCollection(p_db, b_db, coll)),
     );
     await p_client.close();
     await b_client.close();
     res.json({ message: "Data Cloned to 'dev' database", response: results });
-  }
+  },
 );

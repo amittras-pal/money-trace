@@ -100,7 +100,7 @@ export function listAggregator(request: IListReqBody, user: string) {
 
 export function monthSummaryAggregator(
   request: ISummaryReqParams,
-  user: string
+  user: string,
 ) {
   const filter: PipelineStage.Match = {
     $match: {
@@ -304,7 +304,7 @@ export function yearTrendAggregator(req: YearTrendRequest, user: IUser | null) {
 
 export function monthTrendAggregator(
   req: MonthTrendRequest,
-  user: IUser | null
+  user: IUser | null,
 ) {
   const { month, year } = req.query;
   const dateStr = `${year}-${padStart(month, 2, "0")}-01`;

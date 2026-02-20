@@ -6,7 +6,7 @@ const errorHandler: ErrorRequestHandler = (
   err: Error | undefined,
   _req: Request,
   res: TypedResponse,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
   const { NODE_ENV } = getEnv();
   res.json({

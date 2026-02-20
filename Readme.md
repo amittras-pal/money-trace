@@ -5,12 +5,14 @@ Backend API server for **MTrace Expense Tracker** application - A comprehensive 
 ## Tech Stack
 
 ### Core Technologies
+
 - **Runtime:** Node.js (v18+ / v20 recommended)
 - **Framework:** Express.js
 - **Language:** TypeScript
 - **Database:** MongoDB with Mongoose ODM
 
 ### Key Dependencies
+
 - **Authentication:** JWT (jsonwebtoken) + bcryptjs for password hashing
 - **Session Management:** Cookie-based authentication (cookie-parser)
 - **CORS:** Configured for multiple origins
@@ -20,6 +22,7 @@ Backend API server for **MTrace Expense Tracker** application - A comprehensive 
 - **Utilities:** Lodash, Day.js for date manipulation
 
 ### Development Tools
+
 - **Build:** TypeScript Compiler (tsc)
 - **Dev Server:** Nodemon with ts-node
 - **API Documentation:** Insomnia/OpenAPI specs (see `docs/`)
@@ -94,32 +97,38 @@ money-trace/
 - **middlewares/**: Authentication, logging, error handling
 - **types/**: TypeScript interfaces and type definitions
 - **utils/**: Reusable utility functions (aggregators, Excel generators, etc.)JWT_SECRET=your_jwt_secret_key_here
-   TOKEN_TTL=7d
-   SYS_ADM_SECRET=your_admin_secret_key
-   
-   # CORS Origins (comma-separated for multiple origins)
-   ORIGINS=http://localhost:5173
-   
-   # GitHub Integration (Optional - for system info features)
-   OCTO_PK=your_github_private_key
-   OCTO_APP_ID=your_github_app_id
-   OCTO_INST_ID=your_github_installation_id
-   GIT_REPO_OWNER=your_github_username
-   GIT_REPO_NAME=your_repository_name
-   
-   # Backup Configuration (Optional)
-   BACKUP_CLUSTER_URL=mongodb://backup-server-url
-   ```
+  TOKEN_TTL=7d
+  SYS_ADM_SECRET=your_admin_secret_key
 
-   **Important Notes:**
-   - **Required variables:** `DB_URI`, `JWT_SECRET` must be set
-   - **JWT_SECRET:** Generate a secure random string (recommended: 64+ characters)
-   - **TOKEN_TTL:** JWT token expiration time (e.g., '7d', '24h', '30d')
-   - **SYS_ADM_SECRET:** Secret key for administrative operations
-   - **GitHub variables:** Only needed if using GitHub integration features
-   - **BACKUP_CLUSTER_URL:** Only needed for database backup features
+  # CORS Origins (comma-separated for multiple origins)
+
+  ORIGINS=http://localhost:5173
+
+  # GitHub Integration (Optional - for system info features)
+
+  OCTO_PK=your_github_private_key
+  OCTO_APP_ID=your_github_app_id
+  OCTO_INST_ID=your_github_installation_id
+  GIT_REPO_OWNER=your_github_username
+  GIT_REPO_NAME=your_repository_name
+
+  # Backup Configuration (Optional)
+
+  BACKUP_CLUSTER_URL=mongodb://backup-server-url
+
+  ```
+
+  **Important Notes:**
+  - **Required variables:** `DB_URI`, `JWT_SECRET` must be set
+  - **JWT_SECRET:** Generate a secure random string (recommended: 64+ characters)
+  - **TOKEN_TTL:** JWT token expiration time (e.g., '7d', '24h', '30d')
+  - **SYS_ADM_SECRET:** Secret key for administrative operations
+  - **GitHub variables:** Only needed if using GitHub integration features
+  - **BACKUP_CLUSTER_URL:** Only needed for database backup features
+  ```
 
 4. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -136,6 +145,7 @@ money-trace/
 ### Testing the API
 
 Once the server is running, you can test the wake endpoint:
+
 ```bash
 curl http://localhost:6400/api/wake
 # Response: {"message": "Server Ready!"}
@@ -145,7 +155,7 @@ For complete API documentation, import the Insomnia spec from `docs/API Docs [In
 
 ### Suggested Folder/File Structure:
 
-```
+````
 root
 |   .env
 |   .gitignore
@@ -207,7 +217,7 @@ Add these to your `.vscode/settings.json`:
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
-```
+````
 
 ## API Endpoints
 
@@ -251,14 +261,17 @@ docker run -p 6400:3000 \
 ## Common Issues
 
 ### MongoDB Connection Issues
+
 - Ensure MongoDB is running locally or your Atlas connection string is correct
 - Check if your IP is whitelisted in MongoDB Atlas
 - Verify the `DB_URI` format in `.env`
 
 ### Port Already in Use
+
 If port 6400 is already in use, change the `PORT` variable in `.env`
 
 ### JWT Token Issues
+
 - Ensure `JWT_SECRET` is set and is a strong random string
 - Check `TOKEN_TTL` format (e.g., '7d', '24h', '30d')
 

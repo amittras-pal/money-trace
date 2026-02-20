@@ -33,7 +33,7 @@ const expensePlanSchema = new Schema<IExpensePlan>(
       to: { type: Date, required: false },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const ExpensePlan = model("ExpensePlan", expensePlanSchema);

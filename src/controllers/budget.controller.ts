@@ -19,7 +19,7 @@ export const createBudget = routeHandler(
     if (existing) {
       res.status(StatusCodes.CONFLICT);
       throw new Error(
-        "Budget is already created for the user for the given month."
+        "Budget is already created for the user for the given month.",
       );
     }
 
@@ -27,7 +27,7 @@ export const createBudget = routeHandler(
     res
       .status(StatusCodes.OK)
       .json({ message: budgetMessages.budgetCreatedSuccessfully });
-  }
+  },
 );
 
 /**
@@ -38,7 +38,7 @@ export const createBudget = routeHandler(
 export const getBudget = routeHandler(
   async (
     req: TypedRequest<{ month: string; year: string }, {}>,
-    res: TypedResponse<IBudget>
+    res: TypedResponse<IBudget>,
   ) => {
     const { month, year } = req.query;
     if (month === undefined || year === undefined) {
@@ -61,7 +61,7 @@ export const getBudget = routeHandler(
       message: budgetMessages.budgetRetrievedSuccessfully,
       response: budget,
     });
-  }
+  },
 );
 
 /**
@@ -72,7 +72,7 @@ export const getBudget = routeHandler(
 export const getBudgetsList = routeHandler(
   async (
     req: TypedRequest<{}, { periods: { month: number; year: number }[] }>,
-    res: TypedResponse<{ budgets: IBudget[] }>
+    res: TypedResponse<{ budgets: IBudget[] }>,
   ) => {
     const { userId } = req;
     const { periods } = req.body;
@@ -93,5 +93,5 @@ export const getBudgetsList = routeHandler(
       message: budgetMessages.budgetRetrievedSuccessfully,
       response: { budgets },
     });
-  }
+  },
 );
