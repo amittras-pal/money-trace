@@ -1,0 +1,31 @@
+{
+    "semi": true,
+    "singleQuote": false,
+    "quoteProps": "as-needed",
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "endOfLine": "lf",
+    "proseWrap": "preserve",
+    "htmlWhitespaceSensitivity": "css",
+    "embeddedLanguageFormatting": "auto",
+    "singleAttributePerLine": false,
+    "plugins": [
+        "@trivago/prettier-plugin-sort-imports"
+    ],
+    "importOrder": [
+        "^express(.*)$",
+        "^mongoose(.*)$",
+        "^dayjs$",
+        "^lodash(.*)$",
+        "^[a-zA-Z]",
+        "^@/(.*)$",
+        "^../(.*)$",
+        "^./(.*)$"
+    ],
+    "importOrderSortSpecifiers": true
+}
