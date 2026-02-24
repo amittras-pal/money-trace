@@ -6,6 +6,7 @@ import { getBackupEnv, getEnv } from "../env/config";
 import User from "../models/user.model";
 import { ContributorInfo, ReleaseResponse } from "../types/app-info";
 import { TypedRequest, TypedResponse } from "../types/requests";
+import BackupTimestamp from "../models/backupTimestamp.model";
 import { cloneCollection, getDbClient } from "../utils/system";
 
 /**
@@ -73,6 +74,21 @@ export const updateUsersOnNewRelease = routeHandler(
 );
 
 /**
+ * @description This method retrieves the latest backup timestamp from the database.
+ * @method GET /api/sys-info/last-backup
+ * @access private
+ */
+export const getLastBackupTimestamp = routeHandler(
+  async (_req: TypedRequest, res: TypedResponse) => {
+    const lastBackup = await BackupTimestamp.findOne().sort({ createdAt: -1 });
+    res.json({
+      message: "Last backup timestamp retrieved.",
+      response: lastBackup ?? undefined,
+    });
+  },
+);
+
+/**
  * @description This method clones the data in the "prod" database into the "dev" database.
  * @method POST /api/sys-info/backup
  * @access private
@@ -101,6 +117,14 @@ export const dataBackup = routeHandler(
     const results = await Promise.all(
       collections.map((coll) => cloneCollection(p_db, b_db, coll)),
     );
+
+    const timestamp = new Date();
+    const backupEntry = { createdAt: timestamp, updatedAt: timestamp };
+    await Promise.all([
+      p_db.collection("backuptimestamps").insertOne({ ...backupEntry }),
+      b_db.collection("backuptimestamps").insertOne({ ...backupEntry }),
+    ]);
+
     await p_client.close();
     await b_client.close();
     res.json({ message: "Data Cloned to 'dev' database", response: results });
