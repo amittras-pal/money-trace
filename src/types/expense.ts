@@ -15,6 +15,8 @@ export type IExpense = {
   amount: number;
   reverted: boolean;
   linked: Types.ObjectId | string;
+  /** Whether this expense was auto-created by the recurring expense processor. */
+  auto: boolean;
 };
 
 export type SummarizedCategory = {
