@@ -2,17 +2,17 @@ type: collection.insomnia.rest/5.0
 schema_version: "5.1"
 name: Scratch Pad
 meta:
-  id: wrk_scratchpad
-  created: 1769165666097
-  modified: 1769165666097
+  id: wrk_0321abb581a84793a4f27b800420632f
+  created: 1770440563814
+  modified: 1770440563814
   description: ""
 collection:
   - url: "{{ _.baseUrl }}/wake"
     name: Ping Server to Wake
     meta:
-      id: req_cf4a922fafee43578db789ea183fb9ec
+      id: req_0e6d25c249bf4b1dac5b276510492db3
       created: 1751629431236
-      modified: 1751631616907
+      modified: 1772101382472
       isPrivate: false
       description: >-
         Wake up the server from an inactive state. 
@@ -35,25 +35,25 @@ collection:
       rebuildPath: true
   - name: Statistics
     meta:
-      id: fld_1c5f14b4d5084f20b0af3e642bc3acea
+      id: fld_97ff1b9f7b1a4b988df20bc7b9b9f629
       created: 1725109203461
       modified: 1730349002123
       sortKey: -1725109203461
       description: ""
     children:
       - url: "{{ _.baseUrl }}/statistics/year-stats"
-        name: Categories Over Year
+        name: Whole Year Stats (incl. Categories)
         meta:
-          id: req_303e29618cdf4f81b97da55df1c45484
+          id: req_7ac3c2a5f8724b8d906f0b395fba7c91
           created: 1721135548825
-          modified: 1755240005561
+          modified: 1772102711916
           isPrivate: false
           description: ""
           sortKey: -1725109207478
         method: GET
         parameters:
           - name: year
-            value: "2023"
+            value: "2026"
             description: ""
         headers:
           - name: User-Agent
@@ -69,9 +69,9 @@ collection:
       - url: "{{ _.baseUrl }}/statistics/month-stats"
         name: Expense Count/Amount by day.
         meta:
-          id: req_1057c0e3a9724a9c8f3c81db8a0f9070
+          id: req_84e1a63c6d394993a3d12df9cf62606b
           created: 1730731278514
-          modified: 1755240515574
+          modified: 1772102728091
           isPrivate: false
           description: ""
           sortKey: -1730731278514
@@ -94,9 +94,38 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: "{{ _.baseUrl }}/statistics/rolling-stats"
+        name: Rolling Stats (incl. Categories)
+        meta:
+          id: req_fbf0eb1e49d74661bcd34c4eb21af307
+          created: 1772102802661
+          modified: 1772102861949
+          isPrivate: false
+          description: Returns a rolling N-month expense trend with budget comparison &
+            category grouping.
+          sortKey: -1772102802661
+        method: GET
+        parameters:
+          - name: months
+            value: "6"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
   - name: User & Auth
     meta:
-      id: fld_67ff71c9883849ee812856077f7a1673
+      id: fld_cac293b5c35042f392db44b69ba9aaaf
       created: 1725109380417
       modified: 1725116418687
       sortKey: -1725109380417
@@ -105,9 +134,9 @@ collection:
       - url: "{{ _.baseUrl }}/user/login"
         name: Login
         meta:
-          id: req_d2fadd912d1340fa9e1757bcb599e354
+          id: req_146000e0cdf4495b80452c35198238f4
           created: 1725109174423
-          modified: 1770437684590
+          modified: 1772101435392
           isPrivate: false
           description: |-
             ### Description
@@ -118,8 +147,8 @@ collection:
 
             ```
             {
-              "email": "",
-              "pin": ""
+            	"email": "",
+            	"pin": ""
             }
             ```
           sortKey: -1725109386202
@@ -128,8 +157,8 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "email": "",
-              "pin": ""
+            	"email": "",
+            	"pin": ""
             }
         headers:
           - name: Content-Type
@@ -147,7 +176,7 @@ collection:
       - url: "{{ _.baseUrl }}/user/register"
         name: Register
         meta:
-          id: req_014eb0675ff34847be3e2a7269d49a6e
+          id: req_ea00497c78dd4a79b9b9e41f6d525204
           created: 1725116301413
           modified: 1755240435138
           isPrivate: false
@@ -162,10 +191,10 @@ collection:
 
             ```
             {
-              "userName": "",
-              "email": "",
-              "pin": "",
-              "timeZone": ""
+            	"userName": "",
+            	"email": "",
+            	"pin": "",
+            	"timeZone": ""
             }
             ```
           sortKey: -1725116301413
@@ -174,10 +203,10 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "userName": "",
-              "email": "",
-              "pin": "",
-              "timeZone": ""
+            	"userName": "",
+            	"email": "",
+            	"pin": "",
+            	"timeZone": ""
             }
         headers:
           - name: Content-Type
@@ -195,7 +224,7 @@ collection:
       - url: "{{ _.baseUrl }}/user/details"
         name: User Details (not used by FE)
         meta:
-          id: req_56b3567597a1444e8f25a229e9765533
+          id: req_fd9d0f78ed4e4ed49f6db684849e7fa9
           created: 1725116425481
           modified: 1755239981397
           isPrivate: false
@@ -219,7 +248,7 @@ collection:
       - url: "{{ _.baseUrl }}/user/update"
         name: Update User Details
         meta:
-          id: req_e59ae96616724895a99d216745f25c03
+          id: req_4e1f00b96287440aa2eb3d54919e686b
           created: 1725116521944
           modified: 1755239976896
           isPrivate: false
@@ -234,14 +263,14 @@ collection:
 
             ```
             {
-              "_id": "", // Not necessary. 
-              "userName": "",
-              "email": "",
-              "pin": "",
-              "timeZone": "",
-              "editWindow": 0,
-              "color": "",
-              "seenChangelog": false
+            	"_id": "", // Not necessary. 
+            	"userName": "",
+            	"email": "",
+            	"pin": "",
+            	"timeZone": "",
+            	"editWindow": 0,
+            	"color": "",
+            	"seenChangelog": false
             }
             ```
           sortKey: -1725116521944
@@ -250,14 +279,14 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "_id": "",
-              "userName": "",
-              "email": "",
-              "pin": "",
-              "timeZone": "",
-              "editWindow": 0,
-              "color": "",
-              "seenChangelog": false
+            	"_id": "",
+            	"userName": "",
+            	"email": "",
+            	"pin": "",
+            	"timeZone": "",
+            	"editWindow": 0,
+            	"color": "",
+            	"seenChangelog": false
             }
         headers:
           - name: Content-Type
@@ -275,7 +304,7 @@ collection:
       - url: "{{ _.baseUrl }}/user/update-login-key"
         name: Change Password
         meta:
-          id: req_226a26f800d34a8f8b84e1399a9f60f8
+          id: req_4ce30592f6ce4873ad9bf2ed23da0028
           created: 1725116692381
           modified: 1755239971938
           isPrivate: false
@@ -293,10 +322,10 @@ collection:
             ```
 
             {
-              "email": "",
-              "currentPin": "",
-              "newPin": "",
-              "confirmNewPin": ""
+            	"email": "",
+            	"currentPin": "",
+            	"newPin": "",
+            	"confirmNewPin": ""
             }
 
             ```
@@ -306,10 +335,10 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "email": "",
-              "currentPin": "",
-              "newPin": "",
-              "confirmNewPin": ""
+            	"email": "",
+            	"currentPin": "",
+            	"newPin": "",
+            	"confirmNewPin": ""
             }
         headers:
           - name: Content-Type
@@ -327,7 +356,7 @@ collection:
       - url: "{{ _.baseUrl }}/user/logout"
         name: Logout
         meta:
-          id: req_c3536576657c4ceaaa7ba1b3890b31ce
+          id: req_23c924073c28496a950fd53b4a03fe18
           created: 1755240123135
           modified: 1755240469489
           isPrivate: false
@@ -350,7 +379,7 @@ collection:
           rebuildPath: true
   - name: Report Generation
     meta:
-      id: fld_504af5dacc2b4ed98eb588d0e37dc2bf
+      id: fld_85835c1daa044cceafdd7f46b0ba9b2e
       created: 1725116889355
       modified: 1725116889355
       sortKey: -1725116889355
@@ -359,7 +388,7 @@ collection:
       - url: "{{ _.baseUrl }}/reports"
         name: Generate Report [xlsx]
         meta:
-          id: req_d890c8e935b04b39bdcf5ec64975a7bd
+          id: req_0a2114c3a77b44b2b63a66737972f396
           created: 1725116940370
           modified: 1755239964936
           isPrivate: false
@@ -405,7 +434,7 @@ collection:
           rebuildPath: true
   - name: Expense Plans
     meta:
-      id: fld_623265e76be04cdea35f437a24674903
+      id: fld_4d9c0f8b5e60457ab2f34d13e7714535
       created: 1725117138140
       modified: 1725117138140
       sortKey: -1725117138140
@@ -414,7 +443,7 @@ collection:
       - url: "{{ _.baseUrl }}/expense-plan"
         name: Create New Plan
         meta:
-          id: req_51cf44e5a3b1489ea037b7a60f0cd69a
+          id: req_522851667c0045899948a3f4818452f5
           created: 1725117147748
           modified: 1755239936518
           isPrivate: false
@@ -427,8 +456,8 @@ collection:
 
             ```
             {
-              "name": "",
-              "description": ""
+            	"name": "",
+            	"description": ""
             }
             ```
           sortKey: -1725117777654
@@ -437,8 +466,8 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "name": "",
-              "description": ""
+            	"name": "",
+            	"description": ""
             }
         headers:
           - name: Content-Type
@@ -456,7 +485,7 @@ collection:
       - url: "{{ _.baseUrl }}/expense-plan"
         name: List Plans
         meta:
-          id: req_61a23721c7ed4a7ebf71186a060ae8cb
+          id: req_88500c4602854d92a808ac80ca6e9c57
           created: 1725117241233
           modified: 1755239959799
           isPrivate: false
@@ -492,7 +521,7 @@ collection:
       - url: "{{ _.baseUrl }}/api/expense-plan/details"
         name: Get Plan Details
         meta:
-          id: req_9743bdaf98654330983d51d660a22c8c
+          id: req_dddadee499d5497a8b721eaf4d2fc4fd
           created: 1725117305571
           modified: 1755239954739
           isPrivate: false
@@ -524,7 +553,7 @@ collection:
       - url: "{{ _.baseUrl }}/expense-plan"
         name: Update Plan Details
         meta:
-          id: req_5f4691d1abfe4828bc8ead4ebb408ef0
+          id: req_da6a07761bcf4840ad659f6b558c0fd8
           created: 1725117555496
           modified: 1755239949408
           isPrivate: false
@@ -541,10 +570,10 @@ collection:
             ```
 
             {
-              "_id": "",
-              "name": "",
-              "description": "",
-              "open": false // if set to false, the plan will be closed and no other expenses can be added to it.
+            	"_id": "",
+            	"name": "",
+            	"description": "",
+            	"open": false // if set to false, the plan will be closed and no other expenses can be added to it.
             }
 
             ```
@@ -554,10 +583,10 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "_id": "",
-              "name": "",
-              "description": "",
-              "open": false
+            	"_id": "",
+            	"name": "",
+            	"description": "",
+            	"open": false
             }
         headers:
           - name: Content-Type
@@ -575,7 +604,7 @@ collection:
       - url: "{{ _.baseUrl }}/expense-plan"
         name: Delete Plan
         meta:
-          id: req_9d4b1059242a40e7894582b64a86bea2
+          id: req_c575bcfad8304b41a3a1ac6eff57deb7
           created: 1725117671101
           modified: 1755239944790
           isPrivate: false
@@ -607,7 +636,7 @@ collection:
       - url: "{{ _.baseUrl }}/expense-plan/copy-to-budget"
         name: Copy Expenses to Budget
         meta:
-          id: req_154474326aa34cb7a9f68ce97f38e80d
+          id: req_55e839e2d7834a82a93f79e3ada1ed93
           created: 1725117777554
           modified: 1755239940532
           isPrivate: false
@@ -625,7 +654,7 @@ collection:
             ```
 
             {
-              "expenses": [""] // list of string IDs for expenses to be copied.
+            	"expenses": [""] // list of string IDs for expenses to be copied.
             }
 
             ```
@@ -635,7 +664,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "expenses": [""]
+            	"expenses": [""]
             }
         headers:
           - name: Content-Type
@@ -653,7 +682,7 @@ collection:
       - url: "{{ _.baseUrl }}/expense-plan/list-lite"
         name: List Plans (Lite)
         meta:
-          id: req_218b9d1053994270907fb1e4fb78db88
+          id: req_6c41a399a33b49dea3bb44c654e32c5b
           created: 1770437706557
           modified: 1770440091704
           isPrivate: false
@@ -691,7 +720,7 @@ collection:
           rebuildPath: true
   - name: Expenses
     meta:
-      id: fld_98682f74cbca49c4a9efa8418ef419e8
+      id: fld_5d1fda4bbfda479e8c937af3823548a3
       created: 1725117933123
       modified: 1725117933123
       sortKey: -1725117933123
@@ -700,7 +729,7 @@ collection:
       - url: "{{ _.baseUrl }}/expenses"
         name: Create New Expense
         meta:
-          id: req_c56e323a3868493fb9c2c729e892f54c
+          id: req_d2fcd43cfc1546cc984b958e2257eda3
           created: 1725117939765
           modified: 1755239926109
           isPrivate: false
@@ -717,14 +746,14 @@ collection:
             ```
 
             {
-              "title": "",
-              "description": "",
-              "date": "", // ISO-8601 formatted timestamp
-              "categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
-              "plan": null, // String ID of plan if expense is added to a plan
-              "amount": 0,
-              "reverted": false, // not used as of now.
-              "linked": false // system managed field if expense is copied from an expense plan to regular budget.
+            	"title": "",
+            	"description": "",
+            	"date": "", // ISO-8601 formatted timestamp
+            	"categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
+            	"plan": null, // String ID of plan if expense is added to a plan
+            	"amount": 0,
+            	"reverted": false, // not used as of now.
+            	"linked": false // system managed field if expense is copied from an expense plan to regular budget.
             }
 
             ```
@@ -734,14 +763,14 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "title": "",
-              "description": "",
-              "date": "",
-              "categoryId": "",
-              "plan": null,
-              "amount": 0,
-              "reverted": false,
-              "linked": false
+            	"title": "",
+            	"description": "",
+            	"date": "",
+            	"categoryId": "",
+            	"plan": null,
+            	"amount": 0,
+            	"reverted": false,
+            	"linked": false
             }
         headers:
           - name: Content-Type
@@ -759,7 +788,7 @@ collection:
       - url: "{{ _.baseUrl }}/expenses"
         name: Update Expense
         meta:
-          id: req_14a0ce4f419d4f3bb35dd6f71c9fb6c5
+          id: req_0e3c904115884d33b6b00a7a7b3a9979
           created: 1725118185497
           modified: 1755239930394
           isPrivate: false
@@ -777,14 +806,14 @@ collection:
 
             {
                 "_id": "", // string ID of the expense to update.
-              "title": "",
-              "description": "",
-              "date": "", // ISO-8601 formatted timestamp
-              "categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
-              "plan": null, // String ID of plan if expense is added to a plan
-              "amount": 0,
-              "reverted": false, // not used as of now.
-              "linked": false // system managed field if expense is copied from an expense plan to regular budget.
+            	"title": "",
+            	"description": "",
+            	"date": "", // ISO-8601 formatted timestamp
+            	"categoryId": "", // String ID should be one of the IDs retrieved from /api/categories
+            	"plan": null, // String ID of plan if expense is added to a plan
+            	"amount": 0,
+            	"reverted": false, // not used as of now.
+            	"linked": false // system managed field if expense is copied from an expense plan to regular budget.
             }
 
             ```
@@ -794,15 +823,15 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "_id": "",
-              "title": "",
-              "description": "",
-              "date": "",
-              "categoryId": "",
-              "plan": null,
-              "amount": 0,
-              "reverted": false,
-              "linked": false
+            	"_id": "",
+            	"title": "",
+            	"description": "",
+            	"date": "",
+            	"categoryId": "",
+            	"plan": null,
+            	"amount": 0,
+            	"reverted": false,
+            	"linked": false
             }
         headers:
           - name: Content-Type
@@ -820,7 +849,7 @@ collection:
       - url: "{{ _.baseUrl }}/expenses"
         name: Delete Expense
         meta:
-          id: req_43d77e7ddbe340f3a88d41c891720108
+          id: req_71975539760046c19f0d77058d2b8148
           created: 1725118235786
           modified: 1755239907491
           isPrivate: false
@@ -852,7 +881,7 @@ collection:
       - url: "{{ _.baseUrl }}/expenses/summary"
         name: Summary of Expenses
         meta:
-          id: req_1dd0669ab1eb49d6b1d4e59f5abb7988
+          id: req_de1f26448a504a6886c9d21499c24097
           created: 1725118308041
           modified: 1755239912027
           isPrivate: false
@@ -873,7 +902,7 @@ collection:
             provided.
 
             - `plan`: String ID of a plan to get summary for. The other 2 params
-            are nit required if this is provided.
+            are nit required if this is provided. 
           sortKey: -1725118087775.5
         method: GET
         parameters:
@@ -885,8 +914,7 @@ collection:
             description: "{% now 'iso-8601', '' %}"
           - name: plan
             value: ""
-            description:
-              String ID of plan to get summary of expenses in a plan. Other 2
+            description: String ID of plan to get summary of expenses in a plan. Other 2
               params are not needed if this is provided.
         headers:
           - name: User-Agent
@@ -902,7 +930,7 @@ collection:
       - url: "{{ _.baseUrl }}/expenses"
         name: List Expenses
         meta:
-          id: req_cae6ba43ed934011a912091bad2268d2
+          id: req_4846a1bc0fb44de4b53695e84abfd511
           created: 1725118451021
           modified: 1755239916809
           isPrivate: false
@@ -918,12 +946,12 @@ collection:
             ```
 
             {
-              "startDate": "", // ISO-8601 formatted timestamp
-              "endDate": "", // ISO-8601 formatted timestamp
-              "plan": null, // String ID of the plan to list expenses of. startDate and endDate not required if this is provided.
-              "sort": { // can be any field of the expense object 
-                "date": -1 // +1 = 'Ascending'; -1 = 'Descending'
-              }
+            	"startDate": "", // ISO-8601 formatted timestamp
+            	"endDate": "", // ISO-8601 formatted timestamp
+            	"plan": null, // String ID of the plan to list expenses of. startDate and endDate not required if this is provided.
+            	"sort": { // can be any field of the expense object 
+            		"date": -1 // +1 = 'Ascending'; -1 = 'Descending'
+            	}
             }
 
             ```
@@ -933,12 +961,12 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "startDate": "",
-              "endDate": "",
-              "plan": null,
-              "sort": {
-                "date": -1
-              }
+            	"startDate": "",
+            	"endDate": "",
+            	"plan": null,
+            	"sort": {
+            		"date": -1
+            	}
             }
         headers:
           - name: Content-Type
@@ -956,7 +984,7 @@ collection:
       - url: "{{ _.baseUrl }}/expenses/search"
         name: Search Expenses
         meta:
-          id: req_f5cc39e451414e56b6ef1daab57b51ac
+          id: req_ffe972a70d874c91ba91433900032eff
           created: 1725118612023
           modified: 1755239922038
           isPrivate: false
@@ -975,13 +1003,13 @@ collection:
             ```
 
             {
-              "q": "", // query string to match words.
-              "startDate": "", // ISO-8601 formatted timestamp
-              "endDate": "", // ISO-8601 formatted timestamp
-              "categories": [""], // list of category IDs to match against
-              "sort": { // can be any field of the expense object 
-                "date": -1 // +1 = "Ascending"; -1 = "Descending"
-              }
+            	"q": "", // query string to match words.
+            	"startDate": "", // ISO-8601 formatted timestamp
+            	"endDate": "", // ISO-8601 formatted timestamp
+            	"categories": [""], // list of category IDs to match against
+            	"sort": { // can be any field of the expense object 
+            		"date": -1 // +1 = "Ascending"; -1 = "Descending"
+            	}
             }
 
             ```
@@ -991,14 +1019,14 @@ collection:
           mimeType: application/json
           text: |-
             {
-              "q": "roots",
-              "startDate": "",
-              "endDate": "",
-              "plan": null,
-              "categories": [],
-              "sort": {
-                "date": -1
-              }
+            	"q": "roots",
+            	"startDate": "",
+            	"endDate": "",
+            	"plan": null,
+            	"categories": [],
+            	"sort": {
+            		"date": -1
+            	}
             }
         headers:
           - name: Content-Type
@@ -1015,7 +1043,7 @@ collection:
           rebuildPath: true
   - name: System Info
     meta:
-      id: fld_737c27e84542403fbd89a3c00ad95018
+      id: fld_5da98714be4a4a8c8bdbd6c747518697
       created: 1725166492593
       modified: 1751555652631
       sortKey: -1725166492594
@@ -1024,7 +1052,7 @@ collection:
       - url: "{{ _.baseUrl }}/sys-info/new-release"
         name: Notify Users on New Release
         meta:
-          id: req_2e9ac28ed8a546e38b5117913705e6ab
+          id: req_764628d74a7b489e9740ec7f21005bf4
           created: 1719560968574
           modified: 1755240604978
           isPrivate: false
@@ -1065,7 +1093,7 @@ collection:
       - url: "{{ _.baseUrl }}/sys-info/changelog"
         name: Version History
         meta:
-          id: req_55490f2429fb48bbb4a2713d76678190
+          id: req_06fe4008cabb447a81f0781ae9e63fa2
           created: 1725166699639
           modified: 1751629366255
           isPrivate: false
@@ -1093,7 +1121,7 @@ collection:
       - url: "{{ _.baseUrl }}/sys-info/changelog"
         name: Contributor Info
         meta:
-          id: req_3115e1ebd2fe4ccb8aee5f35f4c89566
+          id: req_d01d25c8bb62498fbb27fdf23260be51
           created: 1725166837379
           modified: 1751631932683
           isPrivate: false
@@ -1118,7 +1146,7 @@ collection:
       - url: "{{ _.baseUrl }}/sys-info/backup"
         name: Clone Data to "dev" DB
         meta:
-          id: req_3c391acbee6d4c8aa328ae89599d72fa
+          id: req_f1d6c74c7e4641a09f941d028ffe08b4
           created: 1751555814187
           modified: 1755240378020
           isPrivate: false
@@ -1149,9 +1177,36 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: "{{ _.baseUrl }}/sys-info/last-backup"
+        name: Last Backup Info
+        meta:
+          id: req_d5b45a201ce1400d844cbe7c28c9cd53
+          created: 1772102900250
+          modified: 1772103049686
+          isPrivate: false
+          description: ""
+          sortKey: -1772102900250
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+          - name: x-sys-gate
+            value: ""
+            description: System Gate Password
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
   - name: Categories
     meta:
-      id: fld_85cfe351b1ca42fb9528cb7b1217536b
+      id: fld_2da425a3d902473ba36ef5a53107a44a
       created: 1725166877569
       modified: 1725166877569
       sortKey: -1725166877569
@@ -1160,14 +1215,14 @@ collection:
       - url: "{{ _.baseUrl }}/categories/get-all"
         name: List Categories
         meta:
-          id: req_ca96866913524f539beff3d4e41a7b64
+          id: req_ed216dd0e9794ee29e8141035a5e8e34
           created: 1725166894542
           modified: 1755239885468
           isPrivate: false
           description: |-
             ### Description
 
-            - Retrieve a list of categories from the DB.
+            - Retrieve a list of categories from the DB. 
           sortKey: -1725166894542
         method: GET
         headers:
@@ -1184,14 +1239,14 @@ collection:
       - url: "{{ _.baseUrl }}/categories/get-groups"
         name: List Category Groups
         meta:
-          id: req_2b875a2016944be7b1f9c8928234be42
+          id: req_b43c07fcb1a645d3a2ebfa1bb9e3e40c
           created: 1752380135821
           modified: 1755239889753
           isPrivate: false
           description: |-
             ### Description
 
-            - Retrieve a list of categories from the DB.
+            - Retrieve a list of categories from the DB. 
           sortKey: -1725166797140.5
         method: GET
         headers:
@@ -1207,7 +1262,7 @@ collection:
           rebuildPath: true
   - name: Budget
     meta:
-      id: fld_bd7178a0a016402d822baf1d04df412d
+      id: fld_11d0144564ce483883c69cf2b95784ad
       created: 1725166970902
       modified: 1725166970902
       sortKey: -1725166970902
@@ -1216,7 +1271,7 @@ collection:
       - url: "{{ _.baseUrl }}/budget"
         name: Create Budget
         meta:
-          id: req_96648d6b711c4af48940fc52e9aaba50
+          id: req_ab0e025cd2ec48819c8c95ccf3799fbd
           created: 1725166974925
           modified: 1755239854148
           isPrivate: false
@@ -1229,9 +1284,9 @@ collection:
 
             ```
             {
-              "month": 0, // 0-11 corresponding to Jan-Dec
-              "year": 0, // current year
-              "amount": 0,
+            	"month": 0, // 0-11 corresponding to Jan-Dec
+            	"year": 0, // current year
+            	"amount": 0,
             }
             ```
           sortKey: -1725166974925
@@ -1260,7 +1315,7 @@ collection:
       - url: "{{ _.baseUrl }}/budget"
         name: Get Budget
         meta:
-          id: req_2fda55efbc314c57976f87f429beb133
+          id: req_8ed7f784a2254a14818894831140659f
           created: 1725167323294
           modified: 1755239858747
           isPrivate: false
@@ -1295,7 +1350,7 @@ collection:
           rebuildPath: true
   - name: Export
     meta:
-      id: fld_cf7a8d8835064b579e6f58ab070c45cf
+      id: fld_ebfcbb7ba2a8475182bde5a340244e3a
       created: 1737525158539
       modified: 1737525158539
       sortKey: -1737525158539
@@ -1304,7 +1359,7 @@ collection:
       - url: "{{ _.baseUrl }}/export/plan"
         name: Export Plan Details
         meta:
-          id: req_e375d84cdea741d9b8faeda03dd2473b
+          id: req_8f6051afb97440e4bbb4b48d09c34f0c
           created: 1737525163671
           modified: 1755239842365
           isPrivate: false
@@ -1336,7 +1391,7 @@ collection:
       - url: "{{ _.baseUrl }}/export/range"
         name: Export Expenses Range
         meta:
-          id: req_4946e19da5c44ba2b7432dc69c66a871
+          id: req_e5142a7a87724c6ca5597cef0002e311
           created: 1737531664013
           modified: 1755239849572
           isPrivate: false
@@ -1382,14 +1437,225 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: Recurring Expenses
+    meta:
+      id: fld_415235bf979d4f65911f3625bf84c61b
+      created: 1772101455225
+      modified: 1772101472304
+      sortKey: -1725109291939
+      description: ""
+    children:
+      - url: "{{ _.baseUrl }}/recurring-expenses"
+        name: List All
+        meta:
+          id: req_fc39f06dfdb84636b033e9c078d6a436
+          created: 1772101481644
+          modified: 1772101682947
+          isPrivate: false
+          description: Lists all recurring expense rules for the authenticated user.
+          sortKey: -1772101481644
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/recurring-expenses"
+        name: Create New
+        meta:
+          id: req_5b891c691bf0483ebbc51f1476463654
+          created: 1772101511121
+          modified: 1772102646862
+          isPrivate: false
+          description: |-
+            Creates a new recurring expense rule.
+
+            *Request Body*: 
+            ```
+            {
+            	"title": "",
+            	"description": "",
+            	"categoryId": "",
+            	"amount": 0,
+            	"dayOfMonth": 1, // 1-28
+            	"active": true
+            }
+            ```
+          sortKey: -1772101481744
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"title": "",
+            	"description": "",
+            	"categoryId": "",
+            	"amount": 0,
+            	"dayOfMonth": 1,
+            	"active": true
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/recurring-expenses"
+        name: Update
+        meta:
+          id: req_545d83a7527f41f68b4b30be12b15fe0
+          created: 1772101779905
+          modified: 1772101899485
+          isPrivate: false
+          description: |-
+            Creates a new recurring expense rule.
+
+            *Request Body*: 
+            ```
+            {
+            	"title": "",
+            	"description": "",
+            	"categoryId": "",
+            	"amount": 0,
+            	"dayOfMonth": 1, // 1-28
+            	"active": true,
+            	"_id": "" // _id of the rule to update
+            }
+            ```
+          sortKey: -1772101481694
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"title": "",
+            	"description": "",
+            	"categoryId": "",
+            	"amount": 0,
+            	"dayOfMonth": 1,
+            	"active": true,
+            	"_id": ""
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/recurring-expenses"
+        name: Delete
+        meta:
+          id: req_67dd6c7e840046a38eaf65426891e4a5
+          created: 1772101915539
+          modified: 1772102547335
+          isPrivate: false
+          description: Delete a recurring expense rule by `_id` passed as a query param.
+          sortKey: -1771718474271.5
+        method: DELETE
+        parameters:
+          - name: _id
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/recurring-expenses/process"
+        name: Process Rules (User)
+        meta:
+          id: req_e1852c98de4f436594c4e3b148e59372
+          created: 1772102165707
+          modified: 1772102288502
+          isPrivate: false
+          description: Processes all due recurring expenses for the logged-in user
+            (idempotent).
+          sortKey: -1772102165707
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.baseUrl }}/recurring-expenses/process"
+        name: Process Rules (All / Admin)
+        meta:
+          id: req_26bb50a4daf2476f9c3c89148c79b872
+          created: 1772102409941
+          modified: 1772103032499
+          isPrivate: false
+          description: Processes due recurring expenses for all users. Protected by
+            `systemGate` (for external cron/admin)
+          sortKey: -1772101823725.5
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.1
+            description: ""
+            disabled: false
+          - name: x-sys-gate
+            value: ""
+            description: System Gate Password
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
-    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    id: jar_a913ca5065ca43f4afcf0a06153cf52f
     created: 1769165679160
-    modified: 1770437686387
+    modified: 1772101423871
   cookies:
-    - id: 0b74c759-0d8f-4eaa-9518-bef52d5d11c0
+    - id: 3037f2b2-b62b-41fe-9919-1956544a08aa
       key: token
       value: ""
       domain: localhost
@@ -1400,7 +1666,7 @@ cookieJar:
 environments:
   name: Base Environment
   meta:
-    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    id: env_c5636fd6d5ed460ea2e6b529cae3a82a
     created: 1769165679160
     modified: 1770437676555
     isPrivate: false

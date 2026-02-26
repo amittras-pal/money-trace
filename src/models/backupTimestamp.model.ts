@@ -3,7 +3,7 @@ import { IBackupTimestamp } from "../types/backupTimestamp";
 
 const backupTimestampSchema = new Schema<IBackupTimestamp>(
   {},
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const BackupTimestamp = model("BackupTimestamp", backupTimestampSchema);

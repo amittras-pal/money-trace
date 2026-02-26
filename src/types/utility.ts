@@ -40,3 +40,5 @@ export type PlanExportContent = Pick<
 export type YearTrendRequest = TypedRequest<{ year: string }>;
 
 export type MonthTrendRequest = TypedRequest<{ year: string; month: string }>;
+
+export type RollingTrendRequest = TypedRequest<{ months: string }>;

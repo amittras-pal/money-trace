@@ -54,4 +54,5 @@ export const recurringExpenseMessages = {
 export const statsMessages: Record<string, string> = {
   yearStats: "Year stats summary retried successfylly.",
   monthStats: "Month stats summary retrieved successfully.",
+  rollingStats: "Rolling stats fetched successfully.",
 };

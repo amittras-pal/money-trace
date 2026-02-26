@@ -5,10 +5,16 @@ import Expense from "../models/expense.model";
 import User from "../models/user.model";
 import { TypedResponse } from "../types/requests";
 import { IUser } from "../types/user";
-import { MonthTrendRequest, YearTrendRequest } from "../types/utility";
+import {
+  MonthTrendRequest,
+  RollingTrendRequest,
+  YearTrendRequest,
+} from "../types/utility";
 import {
   budgetsOfYearAggregator,
   monthTrendAggregator,
+  rollingBudgetsAggregator,
+  rollingTrendAggregator,
   yearTrendAggregator,
 } from "../utils/aggregators";
 
@@ -26,6 +32,31 @@ export const yearStats = routeHandler(
     res.json({
       message: statsMessages.yearStats,
       response: { trend, budgets },
+    });
+  },
+);
+
+/**
+ * @description Get rolling N-month trend of expense amount against budget, with category grouping.
+ * @method GET /api/statistics/rolling-stats
+ * @access protected
+ */
+export const rollingStats = routeHandler(
+  async (req: RollingTrendRequest, res: TypedResponse) => {
+    const user: IUser | null = await User.findById(req.userId);
+    const months = parseInt(req.query.months) || 6;
+    const clampedMonths = Math.min(Math.max(months, 1), 12);
+
+    const trend = await Expense.aggregate(
+      rollingTrendAggregator(user, clampedMonths),
+    );
+    const budgets = await Budget.aggregate(
+      rollingBudgetsAggregator(req, user, clampedMonths),
+    );
+
+    res.json({
+      message: statsMessages.rollingStats,
+      response: { trend, budgets, months: clampedMonths },
     });
   },
 );
