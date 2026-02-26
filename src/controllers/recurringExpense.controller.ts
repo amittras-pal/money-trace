@@ -108,13 +108,14 @@ export const deleteRecurringExpense = routeHandler(
  * @access protected (authenticate)
  */
 export const processDueForUser = routeHandler(
-  async (req: TypedRequest, res: TypedResponse) => {
+  async (req: TypedRequest, res: TypedResponse<number>) => {
     const count = await processRecurringExpenses({
       user: new Types.ObjectId(req.userId),
     });
 
     res.json({
       message: recurringExpenseMessages.processed(count),
+      response: count
     });
   },
 );
@@ -130,11 +131,12 @@ export const processDueForUser = routeHandler(
  * @access protected (systemGate)
  */
 export const processDueForAllUsers = routeHandler(
-  async (_req: TypedRequest, res: TypedResponse) => {
+  async (_req: TypedRequest, res: TypedResponse<number>) => {
     const count = await processRecurringExpenses({});
 
     res.json({
       message: recurringExpenseMessages.processed(count),
+      response: count
     });
   },
 );
