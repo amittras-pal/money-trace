@@ -44,19 +44,18 @@ export const yearStats = routeHandler(
 export const rollingStats = routeHandler(
   async (req: RollingTrendRequest, res: TypedResponse) => {
     const user: IUser | null = await User.findById(req.userId);
-    const months = parseInt(req.query.months) || 6;
-    const clampedMonths = Math.min(Math.max(months, 1), 12);
+    const months = Number.parseInt(req.query.months) || 6;
 
     const trend = await Expense.aggregate(
-      rollingTrendAggregator(user, clampedMonths),
+      rollingTrendAggregator(user, months),
     );
     const budgets = await Budget.aggregate(
-      rollingBudgetsAggregator(req, user, clampedMonths),
+      rollingBudgetsAggregator(req, user, months),
     );
 
     res.json({
       message: statsMessages.rollingStats,
-      response: { trend, budgets, months: clampedMonths },
+      response: { trend, budgets, months: months },
     });
   },
 );
