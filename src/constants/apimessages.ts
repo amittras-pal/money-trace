@@ -40,7 +40,18 @@ export const userMessages: Record<string, string> = {
   pinChangedSuccessfully: "Pin Changed Successfully!!",
 };
 
+export const recurringExpenseMessages = {
+  created: "Recurring expense created successfully.",
+  listRetrieved: "Recurring expenses retrieved.",
+  updated: "Recurring expense updated successfully.",
+  deleted: "Recurring expense deleted successfully.",
+  processed: (count: number) =>
+    count > 0
+      ? `${count} recurring expense(s) processed.`
+      : "No recurring expenses due today.",
+};
+
 export const statsMessages: Record<string, string> = {
-  yearStats: "Year stats summary retried successfylly.",
   monthStats: "Month stats summary retrieved successfully.",
+  rollingStats: "Rolling stats fetched successfully.",
 };

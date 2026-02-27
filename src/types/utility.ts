@@ -37,6 +37,6 @@ export type PlanExportContent = Pick<
   category: Pick<ICategory, "color" | "group" | "label">;
 };
 
-export type YearTrendRequest = TypedRequest<{ year: string }>;
-
 export type MonthTrendRequest = TypedRequest<{ year: string; month: string }>;
+
+export type RollingTrendRequest = TypedRequest<{ months: string }>;

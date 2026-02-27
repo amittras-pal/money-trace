@@ -34,7 +34,7 @@ export const register = routeHandler(
     if (userInDb !== null) {
       res.status(StatusCodes.CONFLICT);
       throw new Error(
-        "Email is already registered. Please use a different one. If you are the owner, please Login"
+        "Email is already registered. Please use a different one. If you are the owner, please Login",
       );
     }
 
@@ -55,7 +55,7 @@ export const register = routeHandler(
       res.status(StatusCodes.INTERNAL_SERVER_ERROR);
       throw new Error("Something went wrong while creating your account.");
     }
-  }
+  },
 );
 
 /**
@@ -66,7 +66,7 @@ export const register = routeHandler(
 export const login = routeHandler(
   async (
     req: TypedRequest<{}, { email: string; pin: string }>,
-    res: TypedResponse<IUser>
+    res: TypedResponse<IUser>,
   ) => {
     const { email, pin } = req.body;
     if (!email || !pin) {
@@ -86,7 +86,12 @@ export const login = routeHandler(
         expiresIn: TOKEN_TTL,
       });
       const cookieMaxAge = parseInt(TOKEN_TTL) * 24 * 60 * 60 * 1000; // TOKEN_TTL is in days, converting to milliseconds
-      const cookieOpts: CookieOptions = { httpOnly: true, secure: true, sameSite: "none", maxAge: cookieMaxAge };
+      const cookieOpts: CookieOptions = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: cookieMaxAge,
+      };
       res.cookie("token", token, cookieOpts).json({
         message: userMessages.loginSuccessful,
         response: user,
@@ -95,7 +100,7 @@ export const login = routeHandler(
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("Invalid Credentials!");
     }
-  }
+  },
 );
 
 /**
@@ -118,7 +123,7 @@ export const getUserDetails = routeHandler(
       message: userMessages.userDetailsRetrievedSuccessfully,
       response: user,
     });
-  }
+  },
 );
 
 /**
@@ -129,7 +134,7 @@ export const getUserDetails = routeHandler(
 export const updateUserDetails = routeHandler(
   async (
     req: TypedRequest<{}, Partial<IUser>>,
-    res: TypedResponse<IUser | null>
+    res: TypedResponse<IUser | null>,
   ) => {
     await User.findByIdAndUpdate(req.userId, {
       $set: { ...req.body },
@@ -137,7 +142,7 @@ export const updateUserDetails = routeHandler(
 
     const update = await User.findById(req.userId);
     res.json({ message: userMessages.userDetailsUpdated, response: update });
-  }
+  },
 );
 
 /**
@@ -156,7 +161,7 @@ export const changePassword = routeHandler(
         confirmNewPin: number;
       }
     >,
-    res: TypedResponse
+    res: TypedResponse,
   ) => {
     const { currentPin, newPin, confirmNewPin, email } = req.body;
 
@@ -185,7 +190,7 @@ export const changePassword = routeHandler(
       res.status(StatusCodes.FORBIDDEN);
       throw new Error("Current Pin Invalid.");
     }
-  }
+  },
 );
 
 /**

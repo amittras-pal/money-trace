@@ -46,7 +46,7 @@ export const createExpense = routeHandler(
     await expense.save();
 
     res.json({ message: expenseMessages.expenseSavedSuccessfully });
-  }
+  },
 );
 
 /**
@@ -57,7 +57,7 @@ export const createExpense = routeHandler(
 export const updateExpense = routeHandler(
   async (
     req: TypedRequest<{}, IExpense>,
-    res: TypedResponse<IExpense | null>
+    res: TypedResponse<IExpense | null>,
   ) => {
     const { title, date, categoryId, _id }: IExpense = req.body;
     const ex: IExpense = req.body;
@@ -68,9 +68,8 @@ export const updateExpense = routeHandler(
     }
 
     await Expense.findByIdAndUpdate(_id, { $set: ex });
-    const update: IExpense | null = await Expense.findById(_id).populate(
-      "categoryId"
-    );
+    const update: IExpense | null =
+      await Expense.findById(_id).populate("categoryId");
 
     if (update?.plan) {
       await ExpensePlan.findByIdAndUpdate(update.plan, {
@@ -82,7 +81,7 @@ export const updateExpense = routeHandler(
       message: expenseMessages.expenseUpdatedSuccessfully,
       response: update,
     });
-  }
+  },
 );
 
 /**
@@ -101,7 +100,7 @@ export const deleteExpense = routeHandler(
           user: new Types.ObjectId(req.userId),
           _id: new Types.ObjectId(expense.linked),
         },
-        { $set: { linked: null } }
+        { $set: { linked: null } },
       );
     }
 
@@ -112,7 +111,7 @@ export const deleteExpense = routeHandler(
     });
 
     res.json({ message: expenseMessages.expenseDeletedSuccessfully });
-  }
+  },
 );
 
 /**
@@ -124,7 +123,7 @@ export const deleteExpense = routeHandler(
 export const getMonthSummary = routeHandler(
   async (
     req: TypedRequest<ISummaryReqParams, {}>,
-    res: TypedResponse<{ summary: Array<any>; total: number }>
+    res: TypedResponse<{ summary: Array<any>; total: number }>,
   ) => {
     const query = monthSummaryAggregator(req.query, req.userId ?? "");
     // Create a type for this response.
@@ -150,7 +149,7 @@ export const getMonthSummary = routeHandler(
         total: summary.reduce((sum, curr) => sum + curr.value, 0),
       },
     });
-  }
+  },
 );
 
 /**
@@ -161,12 +160,12 @@ export const getMonthSummary = routeHandler(
 export const listExpenses = routeHandler(
   async (
     req: TypedRequest<{}, IListReqBody>,
-    res: TypedResponse<IExpense[]>
+    res: TypedResponse<IExpense[]>,
   ) => {
     const query = listAggregator(req.body, req.userId ?? "");
     const expenses = await (<IExpense[]>(<unknown>Expense.aggregate(query)));
     res.json({ message: expenseMessages.listRetrieved, response: expenses });
-  }
+  },
 );
 
 /**
@@ -182,5 +181,5 @@ export const searchExpense = routeHandler(
       message: expenseMessages.resultsRetrieved,
       response: expenses,
     });
-  }
+  },
 );

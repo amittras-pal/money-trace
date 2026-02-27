@@ -6,6 +6,7 @@ import { getBackupEnv, getEnv } from "../env/config";
 import User from "../models/user.model";
 import { ContributorInfo, ReleaseResponse } from "../types/app-info";
 import { TypedRequest, TypedResponse } from "../types/requests";
+import BackupTimestamp from "../models/backupTimestamp.model";
 import { cloneCollection, getDbClient } from "../utils/system";
 
 /**
@@ -25,7 +26,7 @@ export const getChangelog = routeHandler(
       headers: { "X-GitHub-Api-Version": "2022-11-28" },
     });
     res.json({ message: appInfoMessages.releaseRetrieved, response: ghRes });
-  }
+  },
 );
 
 /**
@@ -36,7 +37,7 @@ export const getChangelog = routeHandler(
 export const getContributor = routeHandler(
   async (
     req: TypedRequest<{ username: string }>,
-    res: TypedResponse<ContributorInfo>
+    res: TypedResponse<ContributorInfo>,
   ) => {
     const { OCTO_PK, OCTO_APP_ID, OCTO_INST_ID } = getEnv();
     if (!OCTO_PK) throw new Error("Config Error");
@@ -46,13 +47,13 @@ export const getContributor = routeHandler(
 
     const ghRes = await octokit.graphql<ContributorInfo>(
       userQuery(req.query.username),
-      { headers: { "X-GitHub-Api-Version": "2022-11-28" } }
+      { headers: { "X-GitHub-Api-Version": "2022-11-28" } },
     );
     res.json({
       message: appInfoMessages.contributorDetailsRetrieved,
       response: ghRes,
     });
-  }
+  },
 );
 
 /**
@@ -64,12 +65,27 @@ export const updateUsersOnNewRelease = routeHandler(
   async (_req: TypedRequest, res: TypedResponse) => {
     const result = await User.updateMany(
       { seenChangelog: true },
-      { $set: { seenChangelog: false } }
+      { $set: { seenChangelog: false } },
     );
     res.json({
       message: `Changelog Viewership Status of ${result.modifiedCount} user(s) is Updated.`,
     });
-  }
+  },
+);
+
+/**
+ * @description This method retrieves the latest backup timestamp from the database.
+ * @method GET /api/sys-info/last-backup
+ * @access private
+ */
+export const getLastBackupTimestamp = routeHandler(
+  async (_req: TypedRequest, res: TypedResponse) => {
+    const lastBackup = await BackupTimestamp.findOne().sort({ createdAt: -1 });
+    res.json({
+      message: "Last backup timestamp retrieved.",
+      response: lastBackup ?? undefined,
+    });
+  },
 );
 
 /**
@@ -99,10 +115,18 @@ export const dataBackup = routeHandler(
     ];
 
     const results = await Promise.all(
-      collections.map((coll) => cloneCollection(p_db, b_db, coll))
+      collections.map((coll) => cloneCollection(p_db, b_db, coll)),
     );
+
+    const timestamp = new Date();
+    const backupEntry = { createdAt: timestamp, updatedAt: timestamp };
+    await Promise.all([
+      p_db.collection("backuptimestamps").insertOne({ ...backupEntry }),
+      b_db.collection("backuptimestamps").insertOne({ ...backupEntry }),
+    ]);
+
     await p_client.close();
     await b_client.close();
     res.json({ message: "Data Cloned to 'dev' database", response: results });
-  }
+  },
 );

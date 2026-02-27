@@ -12,7 +12,7 @@ import {
 const authenticate: RequestHandler = (
   req: TypedRequest,
   res: TypedResponse,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const token = req.cookies.token;
   if (token) {
@@ -40,7 +40,7 @@ const authenticate: RequestHandler = (
 export const systemGate: RequestHandler = (
   req: TypedRequest,
   res: TypedResponse,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (req.headers["x-sys-gate"]) {
     const { SYS_ADM_SECRET = "" } = getEnv();

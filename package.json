@@ -8,7 +8,8 @@
     "dev": "nodemon ./dev.ts",
     "probe": "nodemon ./probe.ts",
     "render-postbuild": "npm i && npx tsc",
-    "start": "node ./prod.js"
+    "start": "node ./prod.js",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -31,6 +32,7 @@
     "octokit": "^3.2.1"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.13",
@@ -40,6 +42,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^18.11.18",
     "nodemon": "^2.0.20",
+    "prettier": "^3.8.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   }

@@ -19,7 +19,7 @@ export const getCategories = routeHandler(
       message: categoryMessages.categoriesRetrieved,
       response: categories,
     });
-  }
+  },
 );
 
 /**
@@ -50,5 +50,5 @@ export const getCategoryGroups = routeHandler(
       message: "Category Groups Loaded",
       response: groups,
     });
-  }
+  },
 );

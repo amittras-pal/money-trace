@@ -31,7 +31,7 @@ export const createExpensePlan = routeHandler(
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: expensePlanMessages.somethingWentWrongWhileCreatingExpensePlan,
       });
-  }
+  },
 );
 
 /**
@@ -42,7 +42,7 @@ export const createExpensePlan = routeHandler(
 export const getExpensePlans = routeHandler(
   async (
     req: TypedRequest<{ open: string }>,
-    res: TypedResponse<IExpensePlanAggregate>
+    res: TypedResponse<IExpensePlanAggregate>,
   ) => {
     const pipeline: PipelineStage[] = [
       {
@@ -92,14 +92,14 @@ export const getExpensePlans = routeHandler(
     });
 
     const plans = (await ExpensePlan.aggregate(
-      pipeline as any
+      pipeline as any,
     )) as IExpensePlan[];
 
     res.json({
       message: expensePlanMessages.plansRetrieved,
       response: plans,
     });
-  }
+  },
 );
 
 /**
@@ -114,14 +114,14 @@ export const getExpensePlansLite = routeHandler(
         user: new Types.ObjectId(req.userId),
         open: req.query.open === "true",
       },
-      { name: 1, _id: 1, executionRange: 1 }
+      { name: 1, _id: 1, executionRange: 1 },
     ).sort({ "executionRange.from": -1 });
 
     res.json({
       message: expensePlanMessages.plansRetrieved,
       response: plans,
     });
-  }
+  },
 );
 
 /**
@@ -144,7 +144,7 @@ export const getPlanDetails = routeHandler(
       message: expensePlanMessages.detailsRetrieved,
       response: plan,
     });
-  }
+  },
 );
 
 /**
@@ -155,7 +155,7 @@ export const getPlanDetails = routeHandler(
 export const updatePlan = routeHandler(
   async (
     req: TypedRequest<{}, Partial<IExpensePlan>>,
-    res: TypedResponse<IExpensePlan | null>
+    res: TypedResponse<IExpensePlan | null>,
   ) => {
     const plan: IExpensePlan | null = await ExpensePlan.findById(req.body._id);
 
@@ -171,13 +171,13 @@ export const updatePlan = routeHandler(
           lastAction: req.body.open ? "Updated" : "Closed",
         },
       },
-      { new: true }
+      { new: true },
     );
     res.json({
       message: expensePlanMessages.expensePlanUpdatedSuccessfully,
       response: update,
     });
-  }
+  },
 );
 
 /**
@@ -198,7 +198,7 @@ export const deletePlan = routeHandler(
     res.json({
       message: `Expense plan deleted! ${result.deletedCount} Expenses deleted`,
     });
-  }
+  },
 );
 
 /**
@@ -222,7 +222,7 @@ export const copyExpensesToBudget = routeHandler(
     // Update the original expenses with linked values from the new ones.
     selectedExpenses.forEach((oldEx) => {
       oldEx.linked = new Types.ObjectId(
-        created.find((newEx) => newEx.linked === oldEx._id)?._id
+        created.find((newEx) => newEx.linked === oldEx._id)?._id,
       );
       oldEx.save();
     });
@@ -231,5 +231,5 @@ export const copyExpensesToBudget = routeHandler(
       message: `${req.body.expenses.length} expenses successfullly copied to budget.`,
       response: created,
     });
-  }
+  },
 );

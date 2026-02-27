@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import { Query, Send } from "express-serve-static-core";
 import { JwtPayload } from "jsonwebtoken";
 
-export interface TypedRequest<QueryParams extends Query = {}, Body = {}>
-  extends Request {
+export interface TypedRequest<
+  QueryParams extends Query = {},
+  Body = {},
+> extends Request {
   query: QueryParams;
   body: Body;
   userId?: string;

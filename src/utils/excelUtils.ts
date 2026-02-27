@@ -117,7 +117,7 @@ export function getDataFont(color: string, bold: boolean): Partial<Font> {
 export function getZonedTime(
   user: any,
   date: string | Date,
-  includeTime?: boolean
+  includeTime?: boolean,
 ) {
   return dayjs(date)
     .tz(user.timeZone)
@@ -130,7 +130,7 @@ function getRangeCaps(
   user: any,
   month: IExpenseByMonth,
   startDate: string,
-  endDate: string
+  endDate: string,
 ) {
   const beginningMismatch =
     dayjs(month._id).tz(user.timeZone).month() ===
@@ -149,7 +149,7 @@ function getRangeCaps(
 export function getIncompleteNotice(
   user: any,
   req: IReportRequest,
-  month: IExpenseByMonth
+  month: IExpenseByMonth,
 ): RichText[] {
   const cap = getRangeCaps(user, month, req.startDate, req.endDate);
   if (!cap.beginningMismatch && !cap.endingMismatch) return [];
@@ -168,7 +168,7 @@ export function getIncompleteNotice(
       {
         text: getZonedTime(user, req.startDate),
         font: { bold: true, color: noticeColor },
-      }
+      },
     );
   // separator if both start and end are not the month extremes
   if (cap.beginningMismatch && cap.endingMismatch)
@@ -181,7 +181,7 @@ export function getIncompleteNotice(
       {
         text: getZonedTime(user, req.endDate),
         font: { bold: true, color: noticeColor },
-      }
+      },
     );
 
   return notice;
@@ -229,7 +229,7 @@ export function generateSummary(expenses: ReportedExpense[]) {
 // Extract category info for an expense
 function getCategory(month: any, ex: ReportedExpense) {
   const category = month.categories?.find(
-    (cat: any) => cat._id?.toString() === ex.categoryId?.toString()
+    (cat: any) => cat._id?.toString() === ex.categoryId?.toString(),
   );
   return pick(category, ["label", "color", "group"]);
 }

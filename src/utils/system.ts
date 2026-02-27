@@ -3,7 +3,7 @@ import { Db, MongoClient } from "mongodb";
 export async function cloneCollection(
   sourceDb: Db,
   targetDb: Db,
-  collName: string
+  collName: string,
 ) {
   const documents = await sourceDb.collection(collName).find().toArray();
   await targetDb.collection(collName).deleteMany();

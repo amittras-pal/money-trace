@@ -5,29 +5,38 @@ import Expense from "../models/expense.model";
 import User from "../models/user.model";
 import { TypedResponse } from "../types/requests";
 import { IUser } from "../types/user";
-import { MonthTrendRequest, YearTrendRequest } from "../types/utility";
 import {
-  budgetsOfYearAggregator,
+  MonthTrendRequest,
+  RollingTrendRequest,
+} from "../types/utility";
+import {
   monthTrendAggregator,
-  yearTrendAggregator,
+  rollingBudgetsAggregator,
+  rollingTrendAggregator,
 } from "../utils/aggregators";
 
 /**
- * @description Get the trend of expense amount against budget per month; along with category grouping for each month.
- * @method POST /api/statistics/year-stats
+ * @description Get rolling N-month trend of expense amount against budget, with category grouping.
+ * @method GET /api/statistics/rolling-stats
  * @access protected
  */
-export const yearStats = routeHandler(
-  async (req: YearTrendRequest, res: TypedResponse) => {
+export const rollingStats = routeHandler(
+  async (req: RollingTrendRequest, res: TypedResponse) => {
     const user: IUser | null = await User.findById(req.userId);
-    const budgets = await Budget.aggregate(budgetsOfYearAggregator(req));
-    const trend = await Expense.aggregate(yearTrendAggregator(req, user));
+    const months = Number.parseInt(req.query.months) || 6;
+
+    const trend = await Expense.aggregate(
+      rollingTrendAggregator(user, months),
+    );
+    const budgets = await Budget.aggregate(
+      rollingBudgetsAggregator(req, user, months),
+    );
 
     res.json({
-      message: statsMessages.yearStats,
-      response: { trend, budgets },
+      message: statsMessages.rollingStats,
+      response: { trend, budgets, months: months },
     });
-  }
+  },
 );
 
 /**
@@ -42,5 +51,5 @@ export const monthStats = routeHandler(
     const user: IUser | null = await User.findById(req.userId);
     const data = await Expense.aggregate(monthTrendAggregator(req, user));
     res.json({ message: "Working.", response: data });
-  }
+  },
 );

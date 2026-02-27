@@ -8,7 +8,7 @@ import {
   ISearchReqBody,
   ISummaryReqParams,
   MonthTrendRequest,
-  YearTrendRequest,
+  RollingTrendRequest,
 } from "../types/utility";
 
 export function searchAggregator(request: ISearchReqBody, user: string) {
@@ -100,7 +100,7 @@ export function listAggregator(request: IListReqBody, user: string) {
 
 export function monthSummaryAggregator(
   request: ISummaryReqParams,
-  user: string
+  user: string,
 ) {
   const filter: PipelineStage.Match = {
     $match: {
@@ -211,100 +211,9 @@ export function budgetAggregator(request: IReportRequest, user: string) {
   return [search, project];
 }
 
-export function yearTrendAggregator(req: YearTrendRequest, user: IUser | null) {
-  const prepareDocuments: PipelineStage[] = [
-    {
-      $match: {
-        $and: [
-          { user: new Types.ObjectId(req.userId) },
-          { plan: null },
-          { reverted: false },
-          {
-            date: {
-              $gte: dayjs(req.query.year).tz(user?.timeZone).toDate(),
-              $lte: dayjs(req.query.year)
-                .tz(user?.timeZone)
-                .endOf("year")
-                .toDate(),
-            },
-          },
-        ],
-      },
-    },
-    {
-      $addFields: {
-        month: { $month: { date: "$date", timezone: user?.timeZone } },
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "categoryId",
-        foreignField: "_id",
-        as: "category",
-      },
-    },
-    { $unwind: "$category" },
-  ];
-
-  const groupByCategory: PipelineStage[] = [
-    {
-      $group: {
-        _id: {
-          category: "$category.group",
-          color: "$category.color",
-          month: "$month",
-        },
-        amount: { $sum: "$amount" },
-        items: { $count: {} },
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        amount: 1,
-        items: 1,
-        name: "$_id.category",
-        month: "$_id.month",
-        color: "$_id.color",
-      },
-    },
-  ];
-
-  const groupByMonth: PipelineStage[] = [
-    {
-      $group: {
-        _id: "$month",
-        total: { $sum: "$amount" },
-        categories: { $addToSet: "$$ROOT" },
-      },
-    },
-    { $project: { "categories.month": 0 } },
-  ];
-
-  const prepareOutput: PipelineStage[] = [
-    { $sort: { _id: 1 } },
-    {
-      $project: {
-        month: "$_id",
-        _id: 0,
-        total: 1,
-        categories: 1,
-      },
-    },
-  ];
-
-  return [
-    ...prepareDocuments,
-    ...groupByCategory,
-    ...groupByMonth,
-    ...prepareOutput,
-  ];
-}
-
 export function monthTrendAggregator(
   req: MonthTrendRequest,
-  user: IUser | null
+  user: IUser | null,
 ) {
   const { month, year } = req.query;
   const dateStr = `${year}-${padStart(month, 2, "0")}-01`;
@@ -350,15 +259,138 @@ export function monthTrendAggregator(
   return [...prepareDocuments, groupByDate, ...prepareOutput];
 }
 
-export function budgetsOfYearAggregator(req: YearTrendRequest) {
+export function rollingTrendAggregator(user: IUser | null, months: number) {
+  const endDate = dayjs().tz(user?.timeZone).endOf("month").toDate();
+  const startDate = dayjs()
+    .tz(user?.timeZone)
+    .subtract(months - 1, "month")
+    .startOf("month")
+    .toDate();
+
+  const prepareDocuments: PipelineStage[] = [
+    {
+      $match: {
+        $and: [
+          { user: new Types.ObjectId(user?._id) },
+          { plan: null },
+          { reverted: false },
+          { date: { $gte: startDate, $lte: endDate } },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        month: { $month: { date: "$date", timezone: user?.timeZone } },
+        year: { $year: { date: "$date", timezone: user?.timeZone } },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "categoryId",
+        foreignField: "_id",
+        as: "category",
+      },
+    },
+    { $unwind: "$category" },
+  ];
+
+  const groupByCategory: PipelineStage[] = [
+    {
+      $group: {
+        _id: {
+          category: "$category.group",
+          color: "$category.color",
+          month: "$month",
+          year: "$year",
+        },
+        amount: { $sum: "$amount" },
+        items: { $count: {} },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        amount: 1,
+        items: 1,
+        name: "$_id.category",
+        month: "$_id.month",
+        year: "$_id.year",
+        color: "$_id.color",
+      },
+    },
+  ];
+
+  const groupByMonth: PipelineStage[] = [
+    {
+      $group: {
+        _id: { month: "$month", year: "$year" },
+        total: { $sum: "$amount" },
+        categories: { $addToSet: "$$ROOT" },
+      },
+    },
+    { $project: { "categories.month": 0, "categories.year": 0 } },
+  ];
+
+  const prepareOutput: PipelineStage[] = [
+    { $sort: { "_id.year": 1, "_id.month": 1 } },
+    {
+      $project: {
+        month: "$_id.month",
+        year: "$_id.year",
+        _id: 0,
+        total: 1,
+        categories: 1,
+      },
+    },
+  ];
+
+  return [
+    ...prepareDocuments,
+    ...groupByCategory,
+    ...groupByMonth,
+    ...prepareOutput,
+  ];
+}
+
+export function rollingBudgetsAggregator(
+  req: RollingTrendRequest,
+  user: IUser | null,
+  months: number,
+) {
+  const pairs: { month: number; year: number }[] = [];
+  for (let i = 0; i < months; i++) {
+    const d = dayjs()
+      .tz(user?.timeZone)
+      .subtract(months - 1 - i, "month");
+    // Budget model stores month 0-indexed (0=Jan, 11=Dec)
+    pairs.push({ month: d.month(), year: d.year() });
+  }
+
+  // Group by year for efficient $or query
+  const byYear: Record<number, number[]> = {};
+  pairs.forEach(({ month, year }) => {
+    if (!byYear[year]) byYear[year] = [];
+    byYear[year].push(month);
+  });
+
+  const orConditions = Object.entries(byYear).map(([yr, mnths]) => ({
+    year: Number.parseInt(yr),
+    month: { $in: mnths },
+  }));
+
   return [
     {
       $match: {
         user: new Types.ObjectId(req.userId),
-        year: parseInt(req.query.year),
+        $or: orConditions,
       },
     },
-    { $addFields: { month: { $sum: ["$month", 1] } } },
-    { $project: { month: 1, amount: 1, remarks: 1, _id: 0 } },
+    {
+      $addFields: {
+        month: { $sum: ["$month", 1] },
+      },
+    },
+    { $project: { month: 1, year: 1, amount: 1, remarks: 1, _id: 0 } },
   ];
 }
