@@ -41,31 +41,6 @@ collection:
       sortKey: -1725109203461
       description: ""
     children:
-      - url: "{{ _.baseUrl }}/statistics/year-stats"
-        name: Whole Year Stats (incl. Categories)
-        meta:
-          id: req_7ac3c2a5f8724b8d906f0b395fba7c91
-          created: 1721135548825
-          modified: 1772102711916
-          isPrivate: false
-          description: ""
-          sortKey: -1725109207478
-        method: GET
-        parameters:
-          - name: year
-            value: "2026"
-            description: ""
-        headers:
-          - name: User-Agent
-            value: insomnia/2023.5.8
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
       - url: "{{ _.baseUrl }}/statistics/month-stats"
         name: Expense Count/Amount by day.
         meta:

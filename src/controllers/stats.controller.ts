@@ -8,33 +8,12 @@ import { IUser } from "../types/user";
 import {
   MonthTrendRequest,
   RollingTrendRequest,
-  YearTrendRequest,
 } from "../types/utility";
 import {
-  budgetsOfYearAggregator,
   monthTrendAggregator,
   rollingBudgetsAggregator,
   rollingTrendAggregator,
-  yearTrendAggregator,
 } from "../utils/aggregators";
-
-/**
- * @description Get the trend of expense amount against budget per month; along with category grouping for each month.
- * @method POST /api/statistics/year-stats
- * @access protected
- */
-export const yearStats = routeHandler(
-  async (req: YearTrendRequest, res: TypedResponse) => {
-    const user: IUser | null = await User.findById(req.userId);
-    const budgets = await Budget.aggregate(budgetsOfYearAggregator(req));
-    const trend = await Expense.aggregate(yearTrendAggregator(req, user));
-
-    res.json({
-      message: statsMessages.yearStats,
-      response: { trend, budgets },
-    });
-  },
-);
 
 /**
  * @description Get rolling N-month trend of expense amount against budget, with category grouping.
