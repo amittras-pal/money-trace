@@ -375,7 +375,7 @@ export function rollingBudgetsAggregator(
   });
 
   const orConditions = Object.entries(byYear).map(([yr, mnths]) => ({
-    year: parseInt(yr),
+    year: Number.parseInt(yr),
     month: { $in: mnths },
   }));
 
