@@ -16,6 +16,7 @@ interface IEnv {
   GIT_REPO_OWNER?: string;
   GIT_REPO_NAME?: string;
   TOKEN_TTL?: string;
+  MAX_DEVICE_ACCOUNTS?: string;
 }
 
 interface IBackupEnv {
@@ -37,6 +38,7 @@ export function getEnv(): IEnv {
     GIT_REPO_OWNER: process.env.GIT_REPO_OWNER ?? "",
     GIT_REPO_NAME: process.env.GIT_REPO_NAME ?? "",
     TOKEN_TTL: process.env.TOKEN_TTL ?? "",
+    MAX_DEVICE_ACCOUNTS: process.env.MAX_DEVICE_ACCOUNTS ?? "",
   };
 }
 
