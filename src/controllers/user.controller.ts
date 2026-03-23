@@ -214,7 +214,11 @@ export const switchActiveAccount = routeHandler(
         );
       }
 
-      const user = await User.findById(tokenUserId, { __v: false, pin: false });
+      const user = await User.findById(tokenUserId, {
+        _id: true,
+        __v: false,
+        pin: false,
+      });
       if (!user) {
         clearAccountSessionCookie(res, accountId);
         throwApiError(
