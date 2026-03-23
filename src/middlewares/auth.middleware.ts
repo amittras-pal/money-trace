@@ -1,40 +1,88 @@
 import { compareSync } from "bcryptjs";
 import { NextFunction, RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
-import { JsonWebTokenError, verify } from "jsonwebtoken";
+import { AUTH_ERROR_CODES } from "../constants/auth";
 import { getEnv } from "../env/config";
+import { ApiError } from "../types/errors";
+import { TypedRequest, TypedResponse } from "../types/requests";
 import {
-  AuthTokenPayload,
-  TypedRequest,
-  TypedResponse,
-} from "../types/requests";
+  clearAccountSessionCookie,
+  clearActiveAccountCookie,
+  clearLegacyTokenCookie,
+  getActiveAccountId,
+  setAccountSessionCookie,
+  setActiveAccountCookie,
+  validateActiveAccountSession,
+  validateLegacySessionToken,
+} from "../utils/auth-session";
 
 const authenticate: RequestHandler = (
   req: TypedRequest,
   res: TypedResponse,
   next: NextFunction,
 ) => {
-  const token = req.cookies.token;
-  if (token) {
-    const { JWT_SECRET = "" } = getEnv();
-    try {
-      const value = verify(token, JWT_SECRET) as AuthTokenPayload;
-      req.userId = value.id;
-      next();
-    } catch (error) {
-      if (error instanceof JsonWebTokenError) {
-        res.status(StatusCodes.UNAUTHORIZED);
-        res.clearCookie("token");
-        throw new Error(error.message);
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR);
-        throw new Error("Something went wrong");
-      }
+  const { JWT_SECRET = "" } = getEnv();
+  const activeAccountId = getActiveAccountId(req);
+
+  if (activeAccountId) {
+    const activeSession = validateActiveAccountSession(
+      req,
+      activeAccountId,
+      JWT_SECRET,
+    );
+
+    if (activeSession.status === "missing-token") {
+      clearActiveAccountCookie(res);
+      clearLegacyTokenCookie(res);
+
+      res.status(StatusCodes.UNAUTHORIZED);
+      throw new ApiError(
+        "No active session found for selected account.",
+        AUTH_ERROR_CODES.noActiveSession,
+      );
     }
-  } else {
-    res.status(StatusCodes.UNAUTHORIZED);
-    throw new Error("No Token.");
+
+    if (activeSession.status === "invalid-session") {
+      clearAccountSessionCookie(res, activeAccountId);
+      clearActiveAccountCookie(res);
+      clearLegacyTokenCookie(res);
+
+      res.status(StatusCodes.UNAUTHORIZED);
+      throw new ApiError(
+        activeSession.message,
+        AUTH_ERROR_CODES.activeSessionExpired,
+      );
+    }
+
+    req.userId = activeSession.userId;
+    next();
+    return;
   }
+
+  const legacySession = validateLegacySessionToken(req, JWT_SECRET);
+  if (legacySession.status === "invalid-session") {
+    clearLegacyTokenCookie(res);
+
+    res.status(StatusCodes.UNAUTHORIZED);
+    throw new ApiError(
+      legacySession.message,
+      AUTH_ERROR_CODES.activeSessionExpired,
+    );
+  }
+
+  if (legacySession.status === "ok") {
+    req.userId = legacySession.userId;
+
+    // Progressive migration from single-session clients.
+    setAccountSessionCookie(res, legacySession.userId, legacySession.token);
+    setActiveAccountCookie(res, legacySession.userId);
+
+    next();
+    return;
+  }
+
+  res.status(StatusCodes.UNAUTHORIZED);
+  throw new ApiError("No Token.", AUTH_ERROR_CODES.noActiveSession);
 };
 
 export const systemGate: RequestHandler = (

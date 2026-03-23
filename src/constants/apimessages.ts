@@ -38,6 +38,10 @@ export const userMessages: Record<string, string> = {
   userDetailsRetrievedSuccessfully: "User Details Retrieved Successfully!",
   userDetailsUpdated: "User details updated",
   pinChangedSuccessfully: "Pin Changed Successfully!!",
+  activeAccountSwitched: "Active account switched",
+  targetSessionRequiresReAuthentication:
+    "Target account requires re-authentication",
+  logoutSuccessful: "Logged Out.",
 };
 
 export const recurringExpenseMessages = {

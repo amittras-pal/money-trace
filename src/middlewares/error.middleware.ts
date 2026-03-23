@@ -1,5 +1,6 @@
 import { ErrorRequestHandler, NextFunction, Request } from "express";
 import { getEnv } from "../env/config";
+import { ApiError } from "../types/errors";
 import { TypedResponse } from "../types/requests";
 
 const errorHandler: ErrorRequestHandler = (
@@ -9,8 +10,11 @@ const errorHandler: ErrorRequestHandler = (
   _next: NextFunction,
 ) => {
   const { NODE_ENV } = getEnv();
+  const code = err instanceof ApiError ? err.code : undefined;
+
   res.json({
     message: err?.message ?? "",
+    code,
     stack: NODE_ENV === "development" ? err?.stack : null,
   });
 };

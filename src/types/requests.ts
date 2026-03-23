@@ -12,7 +12,16 @@ export interface TypedRequest<
 }
 
 export interface TypedResponse<Body = {}> extends Response {
-  json: Send<{ message: string; stack?: string | null; response?: Body }, this>;
+  json: Send<
+    {
+      message: string;
+      stack?: string | null;
+      code?: string;
+      response?: Body;
+      [key: string]: unknown;
+    },
+    this
+  >;
 }
 
 export interface AuthTokenPayload extends JwtPayload {

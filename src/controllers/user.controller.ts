@@ -1,14 +1,42 @@
 import { compare, genSalt, hash } from "bcryptjs";
-import { CookieOptions } from "express";
 import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
-import { sign } from "jsonwebtoken";
+import { JsonWebTokenError, sign, verify } from "jsonwebtoken";
 import { userMessages } from "../constants/apimessages";
+import { AUTH_ERROR_CODES } from "../constants/auth";
 import { SUSPUEND_REGISTRATION } from "../constants/common";
 import { getEnv } from "../env/config";
 import User from "../models/user.model";
-import { TypedRequest, TypedResponse } from "../types/requests";
+import { ApiError } from "../types/errors";
+import {
+  AuthTokenPayload,
+  TypedRequest,
+  TypedResponse,
+} from "../types/requests";
 import { IUser } from "../types/user";
+import {
+  clearAccountSessionCookie,
+  clearActiveAccountCookie,
+  clearLegacyTokenCookie,
+  getAccountSessionToken,
+  getActiveAccountId,
+  getMaxDeviceAccounts,
+  getSessionAccountIds,
+  getTokenTTLForJWT,
+  setAccountSessionCookie,
+  setActiveAccountCookie,
+  setLegacyTokenCookie,
+} from "../utils/auth-session";
+
+function throwApiError<Body>(
+  res: TypedResponse<Body>,
+  status: number,
+  message: string,
+  code?: string,
+): never {
+  res.status(status);
+  throw new ApiError(message, code);
+}
 
 /**
  * @description register a new user with unique email address
@@ -70,35 +98,164 @@ export const login = routeHandler(
   ) => {
     const { email, pin } = req.body;
     if (!email || !pin) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("Required Fields are not provided.");
+      throwApiError(
+        res,
+        StatusCodes.BAD_REQUEST,
+        "Required Fields are not provided.",
+      );
     }
 
     const user: IUser | null = await User.findOne({ email }, { __v: false });
     if (!user) {
-      res.status(StatusCodes.NOT_FOUND);
-      throw new Error("Email ID is not registered");
-    } else if (await compare(email + pin, user.pin ?? "")) {
-      delete user.pin;
+      throwApiError(res, StatusCodes.NOT_FOUND, "Email ID is not registered");
+    }
 
-      const { JWT_SECRET = "", TOKEN_TTL = "" } = getEnv();
-      const token = sign({ id: user._id?.toString() ?? "" }, JWT_SECRET, {
-        expiresIn: TOKEN_TTL,
+    const validCredentials = await compare(email + pin, user.pin ?? "");
+    if (!validCredentials) {
+      throwApiError(
+        res,
+        StatusCodes.UNAUTHORIZED,
+        "Invalid Credentials!",
+        AUTH_ERROR_CODES.invalidCredentials,
+      );
+    }
+
+    delete user.pin;
+
+    const accountId = user._id?.toString() ?? "";
+    if (!accountId) {
+      throwApiError(
+        res,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        "Unable to establish account session.",
+      );
+    }
+
+    const maxDeviceAccounts = getMaxDeviceAccounts();
+    const activeSessionAccountIds = getSessionAccountIds(req);
+    const accountAlreadySaved = activeSessionAccountIds.includes(accountId);
+
+    if (
+      !accountAlreadySaved &&
+      activeSessionAccountIds.length >= maxDeviceAccounts
+    ) {
+      throwApiError(
+        res,
+        StatusCodes.CONFLICT,
+        `This device has reached the max limit of ${maxDeviceAccounts} active accounts.`,
+        AUTH_ERROR_CODES.maxDeviceAccountsReached,
+      );
+    }
+
+    const { JWT_SECRET = "" } = getEnv();
+    const token = sign({ id: accountId }, JWT_SECRET, {
+      expiresIn: getTokenTTLForJWT(),
+    });
+
+    setAccountSessionCookie(res, accountId, token);
+    setActiveAccountCookie(res, accountId);
+
+    // Legacy cookie fallback during migration from single-session clients.
+    setLegacyTokenCookie(res, token);
+
+    res.json({
+      message: userMessages.loginSuccessful,
+      response: user,
+      sessionMeta: {
+        activeAccountId: accountId,
+        maxDeviceAccounts,
+      },
+    });
+  },
+);
+
+/**
+ * @description switch active account to another valid device session
+ * @method POST /api/user/switch-active-account
+ * @access public
+ */
+export const switchActiveAccount = routeHandler(
+  async (
+    req: TypedRequest<{}, { accountId: string }>,
+    res: TypedResponse<IUser>,
+  ) => {
+    const { accountId } = req.body;
+    if (!accountId) {
+      throwApiError(
+        res,
+        StatusCodes.BAD_REQUEST,
+        "Target accountId is required.",
+      );
+    }
+
+    const token = getAccountSessionToken(req, accountId);
+    if (!token) {
+      throwApiError(
+        res,
+        StatusCodes.UNAUTHORIZED,
+        userMessages.targetSessionRequiresReAuthentication,
+        AUTH_ERROR_CODES.reauthRequired,
+      );
+    }
+
+    const { JWT_SECRET = "" } = getEnv();
+
+    try {
+      const tokenPayload = verify(token, JWT_SECRET) as AuthTokenPayload;
+      const tokenUserId = tokenPayload.id ?? "";
+
+      if (!tokenUserId || tokenUserId !== accountId) {
+        clearAccountSessionCookie(res, accountId);
+        throwApiError(
+          res,
+          StatusCodes.UNAUTHORIZED,
+          userMessages.targetSessionRequiresReAuthentication,
+          AUTH_ERROR_CODES.reauthRequired,
+        );
+      }
+
+      const user = await User.findById(tokenUserId, {
+        _id: true,
+        __v: false,
+        pin: false,
       });
-      const cookieMaxAge = parseInt(TOKEN_TTL) * 24 * 60 * 60 * 1000; // TOKEN_TTL is in days, converting to milliseconds
-      const cookieOpts: CookieOptions = {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: cookieMaxAge,
-      };
-      res.cookie("token", token, cookieOpts).json({
-        message: userMessages.loginSuccessful,
+      if (!user) {
+        clearAccountSessionCookie(res, accountId);
+        throwApiError(
+          res,
+          StatusCodes.UNAUTHORIZED,
+          userMessages.targetSessionRequiresReAuthentication,
+          AUTH_ERROR_CODES.reauthRequired,
+        );
+      }
+
+      setActiveAccountCookie(res, accountId);
+
+      // Legacy cookie fallback during migration from single-session clients.
+      setLegacyTokenCookie(res, token);
+
+      res.status(StatusCodes.OK).json({
+        message: userMessages.activeAccountSwitched,
         response: user,
       });
-    } else {
-      res.status(StatusCodes.UNAUTHORIZED);
-      throw new Error("Invalid Credentials!");
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+
+      if (error instanceof JsonWebTokenError) {
+        clearAccountSessionCookie(res, accountId);
+        throwApiError(
+          res,
+          StatusCodes.UNAUTHORIZED,
+          userMessages.targetSessionRequiresReAuthentication,
+          AUTH_ERROR_CODES.reauthRequired,
+        );
+      }
+
+      throwApiError(
+        res,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        "Something went wrong",
+      );
     }
   },
 );
@@ -198,7 +355,44 @@ export const changePassword = routeHandler(
  * @method POST /api/user/logout
  * @access public
  */
-export const logout = routeHandler((_req: TypedRequest, res: TypedResponse) => {
-  res.clearCookie("token");
-  res.json({ message: "Logged Out." });
-});
+export const logout = routeHandler(
+  (
+    req: TypedRequest<{}, { scope?: "current" | "all" }>,
+    res: TypedResponse<{ remainingAccountIds: string[] }>,
+  ) => {
+    const scope = req.body?.scope === "all" ? "all" : "current";
+    const accountIds = getSessionAccountIds(req);
+    const activeAccountId = getActiveAccountId(req);
+
+    if (scope === "all") {
+      accountIds.forEach((accountId) => {
+        clearAccountSessionCookie(res, accountId);
+      });
+
+      clearActiveAccountCookie(res);
+      clearLegacyTokenCookie(res);
+
+      res.json({
+        message: userMessages.logoutSuccessful,
+        response: { remainingAccountIds: [] },
+      });
+      return;
+    }
+
+    if (activeAccountId) {
+      clearAccountSessionCookie(res, activeAccountId);
+    }
+
+    clearActiveAccountCookie(res);
+    clearLegacyTokenCookie(res);
+
+    const remainingAccountIds = accountIds.filter(
+      (accountId) => accountId !== activeAccountId,
+    );
+
+    res.json({
+      message: userMessages.logoutSuccessful,
+      response: { remainingAccountIds },
+    });
+  },
+);
