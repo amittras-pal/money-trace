@@ -1,12 +1,15 @@
 import { CookieOptions, Request, Response } from "express";
+import { JsonWebTokenError, verify } from "jsonwebtoken";
 import {
   AUTH_COOKIES,
   DEFAULT_MAX_DEVICE_ACCOUNTS,
 } from "../constants/auth";
 import { getEnv } from "../env/config";
+import { AuthTokenPayload } from "../types/requests";
 
 const DEFAULT_TOKEN_TTL = "10d";
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
+const TTL_WITH_UNIT_REGEX = /^(\d+)(ms|s|m|h|d|w)$/i;
 
 const UNIT_TO_MS: Record<string, number> = {
   ms: 1,
@@ -23,7 +26,7 @@ type TokenTTLConfig = {
 };
 
 function parseTTLWithUnit(ttl: string): TokenTTLConfig | null {
-  const match = ttl.match(/^(\d+)(ms|s|m|h|d|w)$/i);
+  const match = TTL_WITH_UNIT_REGEX.exec(ttl);
   if (!match) return null;
 
   const value = Number.parseInt(match[1], 10);
@@ -130,6 +133,80 @@ export function getAccountSessionToken(
 export function getActiveAccountId(req: Request): string | undefined {
   const cookieMap = (req.cookies ?? {}) as Record<string, string | undefined>;
   return cookieMap[AUTH_COOKIES.activeAccount];
+}
+
+export function getLegacyToken(req: Request): string {
+  const cookieMap = (req.cookies ?? {}) as Record<string, string | undefined>;
+  return cookieMap[AUTH_COOKIES.legacyToken] ?? "";
+}
+
+export function parseUserIdFromToken(token: string, secret: string): string {
+  const value = verify(token, secret) as AuthTokenPayload;
+  if (!value.id) {
+    throw new JsonWebTokenError("Invalid session payload");
+  }
+
+  return value.id;
+}
+
+export type ActiveAccountValidationResult =
+  | { status: "ok"; userId: string }
+  | { status: "missing-token" }
+  | { status: "invalid-session"; message: string };
+
+export function validateActiveAccountSession(
+  req: Request,
+  activeAccountId: string,
+  secret: string,
+): ActiveAccountValidationResult {
+  const token = getAccountSessionToken(req, activeAccountId);
+  if (!token) {
+    return { status: "missing-token" };
+  }
+
+  try {
+    const userId = parseUserIdFromToken(token, secret);
+    if (userId !== activeAccountId) {
+      return {
+        status: "invalid-session",
+        message: "Active account session is invalid.",
+      };
+    }
+
+    return { status: "ok", userId };
+  } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      return { status: "invalid-session", message: error.message };
+    }
+
+    throw error;
+  }
+}
+
+export type LegacyTokenValidationResult =
+  | { status: "none" }
+  | { status: "ok"; userId: string; token: string }
+  | { status: "invalid-session"; message: string };
+
+export function validateLegacySessionToken(
+  req: Request,
+  secret: string,
+): LegacyTokenValidationResult {
+  const legacyToken = getLegacyToken(req);
+  if (!legacyToken) {
+    return { status: "none" };
+  }
+
+  try {
+    const userId = parseUserIdFromToken(legacyToken, secret);
+    return { status: "ok", userId, token: legacyToken };
+  } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      return { status: "invalid-session", message: error.message };
+    }
+
+    throw error;
+  }
 }
 
 export function setAccountSessionCookie(

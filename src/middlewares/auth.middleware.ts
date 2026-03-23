@@ -1,33 +1,20 @@
 import { compareSync } from "bcryptjs";
 import { NextFunction, RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
-import { JsonWebTokenError, verify } from "jsonwebtoken";
-import { AUTH_COOKIES, AUTH_ERROR_CODES } from "../constants/auth";
+import { AUTH_ERROR_CODES } from "../constants/auth";
 import { getEnv } from "../env/config";
 import { ApiError } from "../types/errors";
-import {
-  AuthTokenPayload,
-  TypedRequest,
-  TypedResponse,
-} from "../types/requests";
+import { TypedRequest, TypedResponse } from "../types/requests";
 import {
   clearAccountSessionCookie,
   clearActiveAccountCookie,
   clearLegacyTokenCookie,
-  getAccountSessionToken,
   getActiveAccountId,
   setAccountSessionCookie,
   setActiveAccountCookie,
+  validateActiveAccountSession,
+  validateLegacySessionToken,
 } from "../utils/auth-session";
-
-function parseUserIdFromToken(token: string, secret: string): string {
-  const value = verify(token, secret) as AuthTokenPayload;
-  if (!value.id) {
-    throw new JsonWebTokenError("Invalid session payload");
-  }
-
-  return value.id;
-}
 
 const authenticate: RequestHandler = (
   req: TypedRequest,
@@ -38,8 +25,13 @@ const authenticate: RequestHandler = (
   const activeAccountId = getActiveAccountId(req);
 
   if (activeAccountId) {
-    const token = getAccountSessionToken(req, activeAccountId);
-    if (!token) {
+    const activeSession = validateActiveAccountSession(
+      req,
+      activeAccountId,
+      JWT_SECRET,
+    );
+
+    if (activeSession.status === "missing-token") {
       clearActiveAccountCookie(res);
       clearLegacyTokenCookie(res);
 
@@ -50,70 +42,43 @@ const authenticate: RequestHandler = (
       );
     }
 
-    try {
-      const userId = parseUserIdFromToken(token, JWT_SECRET);
-      if (userId !== activeAccountId) {
-        clearAccountSessionCookie(res, activeAccountId);
-        clearActiveAccountCookie(res);
-        clearLegacyTokenCookie(res);
+    if (activeSession.status === "invalid-session") {
+      clearAccountSessionCookie(res, activeAccountId);
+      clearActiveAccountCookie(res);
+      clearLegacyTokenCookie(res);
 
-        res.status(StatusCodes.UNAUTHORIZED);
-        throw new ApiError(
-          "Active account session is invalid.",
-          AUTH_ERROR_CODES.activeSessionExpired,
-        );
-      }
-
-      req.userId = userId;
-      next();
-      return;
-    } catch (error) {
-      if (error instanceof ApiError) throw error;
-
-      if (error instanceof JsonWebTokenError) {
-        clearAccountSessionCookie(res, activeAccountId);
-        clearActiveAccountCookie(res);
-        clearLegacyTokenCookie(res);
-
-        res.status(StatusCodes.UNAUTHORIZED);
-        throw new ApiError(
-          error.message,
-          AUTH_ERROR_CODES.activeSessionExpired,
-        );
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR);
-        throw new Error("Something went wrong");
-      }
+      res.status(StatusCodes.UNAUTHORIZED);
+      throw new ApiError(
+        activeSession.message,
+        AUTH_ERROR_CODES.activeSessionExpired,
+      );
     }
+
+    req.userId = activeSession.userId;
+    next();
+    return;
   }
 
-  const legacyToken = (req.cookies?.[AUTH_COOKIES.legacyToken] ?? "") as string;
-  if (legacyToken) {
-    try {
-      const userId = parseUserIdFromToken(legacyToken, JWT_SECRET);
+  const legacySession = validateLegacySessionToken(req, JWT_SECRET);
+  if (legacySession.status === "invalid-session") {
+    clearLegacyTokenCookie(res);
 
-      req.userId = userId;
+    res.status(StatusCodes.UNAUTHORIZED);
+    throw new ApiError(
+      legacySession.message,
+      AUTH_ERROR_CODES.activeSessionExpired,
+    );
+  }
 
-      // Progressive migration from single-session clients.
-      setAccountSessionCookie(res, userId, legacyToken);
-      setActiveAccountCookie(res, userId);
+  if (legacySession.status === "ok") {
+    req.userId = legacySession.userId;
 
-      next();
-      return;
-    } catch (error) {
-      if (error instanceof JsonWebTokenError) {
-        clearLegacyTokenCookie(res);
+    // Progressive migration from single-session clients.
+    setAccountSessionCookie(res, legacySession.userId, legacySession.token);
+    setActiveAccountCookie(res, legacySession.userId);
 
-        res.status(StatusCodes.UNAUTHORIZED);
-        throw new ApiError(
-          error.message,
-          AUTH_ERROR_CODES.activeSessionExpired,
-        );
-      }
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR);
-      throw new Error("Something went wrong");
-    }
+    next();
+    return;
   }
 
   res.status(StatusCodes.UNAUTHORIZED);
