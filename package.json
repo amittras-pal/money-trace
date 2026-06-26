@@ -29,7 +29,8 @@
     "mongodb": "^6.17.0",
     "mongoose": "^6.8.3",
     "morgan": "^1.10.0",
-    "octokit": "^3.2.1"
+    "octokit": "^3.2.1",
+    "onnxruntime-node": "^1.27.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",

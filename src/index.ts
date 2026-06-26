@@ -16,6 +16,7 @@ import exportsRoutes from "./routes/exports.routes";
 import statsRoutes from "./routes/stats.routes";
 import systemRoutes from "./routes/sys-info.routes";
 import userRoutes from "./routes/user.routes";
+import mlRoutes from "./routes/ml.routes";
 
 const app: Application = express();
 const { ORIGINS } = getEnv();
@@ -35,6 +36,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/export", exportsRoutes);
 app.use("/api/sys-info", systemRoutes);
 app.use("/api/statistics", statsRoutes);
+app.use("/api/ml", mlRoutes);
 
 // This is required since server is hosted on an ephemeral container, which takes time to come up;
 // This allows the FE to show an animation state and not load the rest of the app until the server is ready.
