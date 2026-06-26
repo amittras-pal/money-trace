@@ -6,7 +6,7 @@ import { predictExpenseCategory } from "../utils/ml";
 
 /**
  * @desc    Predict category from expense title and description
- * @route   POST /api/ml/predict-category
+ * @route   POST /api/ml/categorise-expense
  * @access  Private
  */
 export const predictCategory = routeHandler(async (
