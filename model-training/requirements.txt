@@ -1,0 +1,12 @@
+pymongo
+pandas
+scikit-learn
+xgboost
+fastapi
+uvicorn
+pydantic
+python-dotenv
+tqdm
+skl2onnx
+onnx
+onnxruntime
