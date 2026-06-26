@@ -2,6 +2,8 @@ name: Train and Update Expense Classifier Model
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *'
 
 permissions:
   contents: write
@@ -33,18 +35,17 @@ jobs:
           cd model-training
           python train_pipeline.py
           
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Stage the specific model artifacts
-          git add src/ml-models/expense_classifier.onnx
-          git add src/ml-models/classes.json
-          git add src/ml-models/evaluation_report.csv
-          
-          # Commit only if there are changes
-          git diff --staged --quiet || git commit -m "Update expense classifier model and artifacts [skip ci]"
-          
-          # Push the changes back to the repository
-          git push
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update expense classifier model and artifacts [skip ci]"
+          title: "Update Expense Classifier Model"
+          body: "This PR updates the expense classifier ONNX model, classes map, and evaluation report."
+          branch: "update-model-artifacts"
+          branch-suffix: "timestamp"
+          base: "main"
+          add-paths: |
+            src/ml-models/expense_classifier.onnx
+            src/ml-models/classes.json
+            src/ml-models/evaluation_report.csv
