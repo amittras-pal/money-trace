@@ -91,4 +91,4 @@ if __name__ == "__main__":
             X_train_vectorized = features.fit_transform(X_train)
             logger.info(f"Vectorized training data shape: {X_train_vectorized.shape}")
     except Exception as e:
-        logger.error(f"Error during preprocessing: {e}")
+        logger.exception(f"Error during preprocessing: {e}")

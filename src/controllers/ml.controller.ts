@@ -1,8 +1,8 @@
-import asyncHandler from "express-async-handler";
+import routeHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import * as ort from "onnxruntime-node";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { TypedRequest, TypedResponse } from "../types/requests";
 
 // Initialize ONNX Session and classes map globally to reuse across requests
@@ -46,7 +46,7 @@ type PredictResponse = {
  * @route   POST /api/ml/predict-category
  * @access  Private
  */
-export const predictCategory = asyncHandler(async (
+export const predictCategory = routeHandler(async (
   req: TypedRequest<{}, PredictRequest>,
   res: TypedResponse<PredictResponse>
 ) => {
@@ -83,22 +83,17 @@ export const predictCategory = asyncHandler(async (
     const labelTensor = results[labelOutputName];
     const probTensor = results[probOutputName];
     
-    let predictedClassId: string | number;
-    if (labelTensor.type === "int64") {
-      predictedClassId = labelTensor.data[0].toString();
-    } else {
-      predictedClassId = labelTensor.data[0].toString();
-    }
+    const predictedClassId = labelTensor.data[0].toString();
     
     const categoryId = classesMap[predictedClassId];
     
     // Find the maximum probability score
     let confidence = 0;
-    if (probTensor && probTensor.data) {
+    if (probTensor?.data) {
       const probabilities = probTensor.data as Float32Array | Float64Array;
-      for (let i = 0; i < probabilities.length; i++) {
-        if (probabilities[i] > confidence) {
-          confidence = Number(probabilities[i]);
+      for (const probability of probabilities) {
+        if (probability > confidence) {
+          confidence = Number(probability);
         }
       }
     }

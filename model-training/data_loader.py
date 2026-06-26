@@ -31,7 +31,7 @@ def get_database():
         client.admin.command('ping')
         logger.info("Successfully connected to MongoDB.")
     except Exception as e:
-        logger.error(f"Failed to connect to MongoDB: {e}")
+        logger.exception(f"Failed to connect to MongoDB: {e}")
         raise
         
     return client.get_default_database()
@@ -95,7 +95,8 @@ def load_data():
         categories_df, 
         on='categoryId', 
         how='left', 
-        suffixes=('_expense', '_category')
+        suffixes=('_expense', '_category'),
+        validate='many_to_one'
     )
     
     logger.info(f"Merged dataset contains {len(merged_df)} rows and {len(merged_df.columns)} columns.")
@@ -108,4 +109,4 @@ if __name__ == "__main__":
         print("\nFirst 5 rows of merged data:")
         print(df.head())
     except Exception as e:
-        logger.error(f"Error during data loading: {e}")
+        logger.exception(f"Error during data loading: {e}")

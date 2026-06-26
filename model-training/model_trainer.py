@@ -15,9 +15,9 @@ def get_models():
     """
     return {
         'Logistic_Regression': LogisticRegression(max_iter=1000, random_state=42, class_weight='balanced'),
-        'Random_Forest': RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced', n_jobs=-1),
+        'Random_Forest': RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced', n_jobs=-1, min_samples_leaf=1, max_features='sqrt'),
         'XGBoost': XGBClassifier(random_state=42, n_jobs=-1),
-        'SVM': SVC(kernel='linear', probability=True, random_state=42, class_weight='balanced')
+        'SVM': SVC(kernel='linear', probability=True, random_state=42, class_weight='balanced', C=1.0, gamma='scale')
     }
 
 def train_models(X_train, y_train_encoded):
@@ -37,7 +37,7 @@ def train_models(X_train, y_train_encoded):
         pipeline = Pipeline([
             ('features', build_feature_union(title_weight=2.0, desc_weight=1.0)),
             ('classifier', model)
-        ])
+        ], memory=None)
         
         # Train the pipeline
         pipeline.fit(X_train, y_train_encoded)

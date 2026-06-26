@@ -47,7 +47,7 @@ def run_pipeline():
     
     # 4. Evaluate Models
     logger.info("--- Step 4: Evaluating Models ---")
-    results = evaluate_models(trained_pipelines, X_test, y_test_encoded, label_encoder)
+    results = evaluate_models(trained_pipelines, X_test, y_test_encoded)
     
     # 5. Save Report and Best Model
     logger.info("--- Step 5: Saving Artifacts ---")
@@ -60,4 +60,4 @@ if __name__ == "__main__":
     try:
         run_pipeline()
     except Exception as e:
-        logger.error(f"Pipeline failed with error: {e}", exc_info=True)
+        logger.exception(f"Pipeline failed with error: {e}")

@@ -53,9 +53,9 @@ async def startup_event():
         label_encoder = model_artifact['label_encoder']
         logger.info("Successfully loaded model and label encoder.")
     except Exception as e:
-        logger.error(f"Failed to load model: {e}")
+        logger.exception(f"Failed to load model: {e}")
 
-@app.post("/predict", response_model=PredictionResponse)
+@app.post("/predict", response_model=PredictionResponse, responses={500: {"description": "Internal Server Error"}, 503: {"description": "Service Unavailable"}})
 async def predict_expense(request: PredictionRequest):
     global model_pipeline, label_encoder
     
@@ -82,5 +82,5 @@ async def predict_expense(request: PredictionRequest):
             confidence_score=confidence_score
         )
     except Exception as e:
-        logger.error(f"Error during prediction: {e}", exc_info=True)
+        logger.exception(f"Error during prediction: {e}")
         raise HTTPException(status_code=500, detail=str(e))

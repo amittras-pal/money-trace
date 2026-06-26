@@ -10,7 +10,7 @@ from skl2onnx.common.data_types import StringTensorType
 
 logger = logging.getLogger(__name__)
 
-def evaluate_models(trained_pipelines, X_test, y_test_encoded, label_encoder):
+def evaluate_models(trained_pipelines, X_test, y_test_encoded):
     """
     Evaluates all trained pipelines on the test set.
     Returns a list of dictionaries containing evaluation metrics.
@@ -65,7 +65,7 @@ def save_report_and_model(results, trained_pipelines, label_encoder, output_dir=
     
     if os.path.exists(report_path):
         df_existing = pd.read_csv(report_path, dtype=str)
-        sep_row = pd.DataFrame([{col: '---' for col in cols}])
+        sep_row = pd.DataFrame([dict.fromkeys(cols, '---')])
         df_combined = pd.concat([df_existing, sep_row, df_results], ignore_index=True)
         
         sep_indices = df_combined.index[df_combined['Model'] == '---'].tolist()
@@ -110,7 +110,7 @@ def save_report_and_model(results, trained_pipelines, label_encoder, output_dir=
             f.write(onx.SerializeToString())
         logger.info(f"Saved ONNX model to {onnx_path}")
     except Exception as e:
-        logger.error(f"Failed to export ONNX model: {e}")
+        logger.exception(f"Failed to export ONNX model: {e}")
 
     # Save classes.json
     classes_dict = {str(i): cls for i, cls in enumerate(label_encoder.classes_)}
