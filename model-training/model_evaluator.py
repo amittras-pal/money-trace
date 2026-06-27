@@ -49,37 +49,30 @@ def save_report_and_model(results, trained_pipelines, label_encoder, total_recor
         
     timestamp = datetime.now().strftime('%Y%m%dT%H%M%S')
     
-    # 1. Save the report
+    # 1. Save the report (as markdown)
     eval_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    for row in results:
-        row['Evaluation Time'] = eval_time
-        row['Total Records'] = total_records
-        row['Training Records'] = train_records
-        row['Test Records'] = test_records
-
-    df_results = pd.DataFrame(results)
-    cols = ['Evaluation Time', 'Model', 'Accuracy', 'Precision', 'Recall', 'F1_Score', 'Total Records', 'Training Records', 'Test Records']
-    df_results = df_results[cols]
+    report_lines = [
+        "# Model Evaluation Report",
+        f"**Date:** {eval_time}",
+        f"**Total Records:** {total_records} | **Training:** {train_records} | **Testing:** {test_records}",
+        "",
+        "| Model | Accuracy | Precision | Recall | F1 Score |",
+        "|-------|----------|-----------|--------|----------|"
+    ]
     
-    report_filename = "evaluation_report.csv"
+    for row in results:
+        report_lines.append(f"| {row['Model']} | {row['Accuracy']:.4f} | {row['Precision']:.4f} | {row['Recall']:.4f} | {row['F1_Score']:.4f} |")
+        
+    report_filename = "report.md"
     report_path = os.path.join(output_dir, report_filename)
     
-    MAX_RUNS = 20
+    with open(report_path, "w") as f:
+        f.write("\n".join(report_lines))
+        
+    logger.info(f"Saved markdown evaluation report to {report_path}")
     
-    if os.path.exists(report_path):
-        df_existing = pd.read_csv(report_path, dtype=str)
-        sep_row = pd.DataFrame([dict.fromkeys(cols, '---')])
-        df_combined = pd.concat([df_existing, sep_row, df_results], ignore_index=True)
-        
-        sep_indices = df_combined.index[df_combined['Model'] == '---'].tolist()
-        if len(sep_indices) >= MAX_RUNS:
-            cut_idx = sep_indices[len(sep_indices) - MAX_RUNS]
-            df_combined = df_combined.iloc[cut_idx + 1:].reset_index(drop=True)
-    else:
-        df_combined = df_results
-        
-    df_combined.to_csv(report_path, index=False)
-    logger.info(f"Saved evaluation report to {report_path}")
+    # Reconstruct df_results to find the best model
+    df_results = pd.DataFrame(results)
     
     # 2. Find and save the best model
     best_model_row = df_results.loc[df_results['F1_Score'].idxmax()]

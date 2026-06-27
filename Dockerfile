@@ -12,6 +12,12 @@ RUN npm install
 # Copy the rest of the application source code
 COPY . .
 
+# Fetch the latest ML model bundle from GitHub Releases
+RUN curl -fsSL -o model_bundle.tar.gz https://github.com/amittras-pal/money-trace/releases/latest/download/model_bundle.tar.gz \
+    && mkdir -p src/ml-models \
+    && tar -xzvf model_bundle.tar.gz -C src/ml-models/ \
+    && rm model_bundle.tar.gz
+
 # Build the TypeScript code and copy non-TS assets
 RUN npx tsc && node scripts/copy-assets.js
 
