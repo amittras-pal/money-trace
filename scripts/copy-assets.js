@@ -7,8 +7,8 @@
  *
  * Used by: render-postbuild script, and can be used in any build pipeline.
  */
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const ASSETS_TO_COPY = ["ml-models", "data", "assets"];
 
