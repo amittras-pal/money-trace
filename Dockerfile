@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM node:20-alpine AS builder
+FROM node:22-slim AS builder
 
 WORKDIR /usr/src/app
 
@@ -12,17 +12,20 @@ RUN npm install
 # Copy the rest of the application source code
 COPY . .
 
-# Build the TypeScript code
-RUN npx tsc
-
-# Copy non-TypeScript assets to build directory as they are not automatically copied by tsc
-# Using checks to prevent failure if these directories don't exist
-RUN [ -d src/data ] && cp -r src/data build/ || true
-RUN [ -d src/assets ] && cp -r src/assets build/ || true
-RUN [ -d src/ml-models ] && cp -r src/ml-models build/ || true
+# Build the TypeScript code and copy non-TS assets
+RUN npx tsc && node scripts/copy-assets.js
 
 # --- Production Stage ---
-FROM node:20-alpine
+FROM node:22-slim
+
+# Install locale support required by onnxruntime's StringNormalizer
+RUN apt-get update && apt-get install -y --no-install-recommends locales \
+    && sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
+    && locale-gen \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 WORKDIR /usr/src/app
 
