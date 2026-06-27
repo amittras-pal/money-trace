@@ -52,7 +52,15 @@ def run_pipeline():
     # 5. Save Report and Best Model
     logger.info("--- Step 5: Saving Artifacts ---")
     output_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'ml-models')
-    save_report_and_model(results, trained_pipelines, label_encoder, output_dir=output_path)
+    save_report_and_model(
+        results, 
+        trained_pipelines, 
+        label_encoder, 
+        total_records=len(clean_data),
+        train_records=len(X_train),
+        test_records=len(X_test),
+        output_dir=output_path
+    )
     
     logger.info("=== Pipeline Execution Completed Successfully ===")
 

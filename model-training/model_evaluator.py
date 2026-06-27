@@ -40,7 +40,7 @@ def evaluate_models(trained_pipelines, X_test, y_test_encoded):
         
     return results
 
-def save_report_and_model(results, trained_pipelines, label_encoder, output_dir='models'):
+def save_report_and_model(results, trained_pipelines, label_encoder, total_records=0, train_records=0, test_records=0, output_dir='models'):
     """
     Saves the evaluation report to a CSV and persists the best model to disk.
     """
@@ -53,9 +53,12 @@ def save_report_and_model(results, trained_pipelines, label_encoder, output_dir=
     eval_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     for row in results:
         row['Evaluation Time'] = eval_time
+        row['Total Records'] = total_records
+        row['Training Records'] = train_records
+        row['Test Records'] = test_records
 
     df_results = pd.DataFrame(results)
-    cols = ['Evaluation Time', 'Model', 'Accuracy', 'Precision', 'Recall', 'F1_Score']
+    cols = ['Evaluation Time', 'Model', 'Accuracy', 'Precision', 'Recall', 'F1_Score', 'Total Records', 'Training Records', 'Test Records']
     df_results = df_results[cols]
     
     report_filename = "evaluation_report.csv"
