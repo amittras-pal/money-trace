@@ -12,3 +12,7 @@ __pycache__/
 venv/
 *.pyc
 *.joblib
+src/ml-models/*.onnx
+src/ml-models/*.json
+src/ml-models/*.csv
+src/ml-models/*.tar.gz
