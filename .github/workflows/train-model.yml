@@ -2,8 +2,6 @@ name: Train and Update Expense Classifier Model
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 1 * *'
 
 permissions:
   contents: write
@@ -36,17 +34,29 @@ jobs:
           cd model-training
           python train_pipeline.py
           
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Re-train classifier model on latest data. [skip ci]"
-          title: "[automation] Re-train classifier model on latest data"
-          body: "This PR updates the expense classifier ONNX model, classes map, and evaluation report."
-          branch: "update-model-artifacts"
-          branch-suffix: "timestamp"
-          base: "main"
-          add-paths: |
-            src/ml-models/expense_classifier.onnx
-            src/ml-models/classes.json
-            src/ml-models/evaluation_report.csv
+      - name: Create Model Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd src/ml-models
+          
+          # Bundle the model and classes
+          tar -czvf model_bundle.tar.gz expense_classifier.onnx classes.json
+          
+          # Generate a unique release tag
+          TAG_NAME="model-update-$(date +'%Y%m%d-%H%M%S')"
+          
+          # Create the GitHub Release with the bundle and report, using report as body
+          gh release create "$TAG_NAME" \
+            model_bundle.tar.gz report.md \
+            --title "Automated Model Update: $TAG_NAME" \
+            --notes-file report.md
+
+      - name: Trigger Render Deployment
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+            echo "Triggered Render deployment."
+          else
+            echo "No RENDER_DEPLOY_HOOK_URL secret found. Skipping automatic deployment."
+          fi
