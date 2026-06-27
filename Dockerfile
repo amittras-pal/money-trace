@@ -32,8 +32,17 @@ WORKDIR /usr/src/app
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm install --only=production
+# Install only production dependencies, then prune unused onnxruntime-node
+# platform binaries to reduce image size (~500 MB savings).
+# Dynamically detects the build platform's OS and arch to keep only what's needed.
+RUN npm install --only=production \
+    && CURRENT_OS="linux" \
+    && CURRENT_ARCH=$(dpkg --print-architecture | sed 's/amd64/x64/' | sed 's/arm64/arm64/') \
+    && ONNX_BIN="node_modules/onnxruntime-node/bin/napi-v6" \
+    && if [ -d "$ONNX_BIN" ]; then \
+         find "$ONNX_BIN" -mindepth 1 -maxdepth 1 -type d ! -name "$CURRENT_OS" -exec rm -rf {} + \
+         && find "$ONNX_BIN/$CURRENT_OS" -mindepth 1 -maxdepth 1 -type d ! -name "$CURRENT_ARCH" -exec rm -rf {} + ; \
+       fi
 
 # Copy built files from the builder stage
 COPY --from=builder /usr/src/app/build ./build
