@@ -12,6 +12,10 @@ RUN npm install
 # Copy the rest of the application source code
 COPY . .
 
+# Install curl
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Fetch the latest ML model bundle from GitHub Releases
 RUN curl -fsSL -o model_bundle.tar.gz https://github.com/amittras-pal/money-trace/releases/latest/download/model_bundle.tar.gz \
     && mkdir -p src/ml-models \
