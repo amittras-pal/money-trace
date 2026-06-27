@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM node:20-alpine AS builder
+FROM node:22-slim AS builder
 
 WORKDIR /usr/src/app
 
@@ -12,25 +12,37 @@ RUN npm install
 # Copy the rest of the application source code
 COPY . .
 
-# Build the TypeScript code
-RUN npx tsc
-
-# Copy non-TypeScript assets to build directory as they are not automatically copied by tsc
-# Using checks to prevent failure if these directories don't exist
-RUN [ -d src/data ] && cp -r src/data build/ || true
-RUN [ -d src/assets ] && cp -r src/assets build/ || true
-RUN [ -d src/ml-models ] && cp -r src/ml-models build/ || true
+# Build the TypeScript code and copy non-TS assets
+RUN npx tsc && node scripts/copy-assets.js
 
 # --- Production Stage ---
-FROM node:20-alpine
+FROM node:22-slim
+
+# Install locale support required by onnxruntime's StringNormalizer
+RUN apt-get update && apt-get install -y --no-install-recommends locales \
+    && sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
+    && locale-gen \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 WORKDIR /usr/src/app
 
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm install --only=production
+# Install only production dependencies, then prune unused onnxruntime-node
+# platform binaries to reduce image size (~500 MB savings).
+# Dynamically detects the build platform's OS and arch to keep only what's needed.
+RUN npm install --only=production \
+    && CURRENT_OS="linux" \
+    && CURRENT_ARCH=$(dpkg --print-architecture | sed 's/amd64/x64/' | sed 's/arm64/arm64/') \
+    && ONNX_BIN="node_modules/onnxruntime-node/bin/napi-v6" \
+    && if [ -d "$ONNX_BIN" ]; then \
+         find "$ONNX_BIN" -mindepth 1 -maxdepth 1 -type d ! -name "$CURRENT_OS" -exec rm -rf {} + \
+         && find "$ONNX_BIN/$CURRENT_OS" -mindepth 1 -maxdepth 1 -type d ! -name "$CURRENT_ARCH" -exec rm -rf {} + ; \
+       fi
 
 # Copy built files from the builder stage
 COPY --from=builder /usr/src/app/build ./build
