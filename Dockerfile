@@ -19,6 +19,7 @@ RUN npx tsc
 # Using checks to prevent failure if these directories don't exist
 RUN [ -d src/data ] && cp -r src/data build/ || true
 RUN [ -d src/assets ] && cp -r src/assets build/ || true
+RUN [ -d src/ml-models ] && cp -r src/ml-models build/ || true
 
 # --- Production Stage ---
 FROM node:20-alpine
