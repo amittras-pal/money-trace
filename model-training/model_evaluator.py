@@ -52,7 +52,7 @@ def save_report_and_model(results, trained_pipelines, label_encoder, total_recor
     # 1. Save the report (as markdown)
     eval_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     report_lines = [
-        f"# Model Evaluation Report",
+        "# Model Evaluation Report",
         f"**Date:** {eval_time}",
         f"**Total Records:** {total_records} | **Training:** {train_records} | **Testing:** {test_records}",
         "",
